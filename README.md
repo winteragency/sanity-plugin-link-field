@@ -5,7 +5,7 @@
 
 A custom Link field (and associated React component) that allows editors to easily create internal and external links, as well as `mailto` and `tel`-links, all using the same intuitive UI.
 
-https://github.com/winteragency/sanity-plugin-link-field/assets/1009069/5948b1d5-514b-4204-ab54-0bd710c6a6bc
+<video controls src="https://github.com/winteragency/sanity-plugin-link-field/assets/1009069/5948b1d5-514b-4204-ab54-0bd710c6a6bc"></video>
 
 ## 🔌 Installation
 
@@ -194,6 +194,8 @@ defineArrayMember({
 
 In this example, the built-in link annotation in Sanity will be replaced with a much more user-friendly and powerful link selector. If you want to keep the built-in link annotation as well, you can use a different `name`, such as `customLink`, in your own annotation.
 
+<img width="504" alt="link-in-portable-text" src="https://github.com/winteragency/sanity-plugin-link-field/assets/1009069/ff302977-80aa-47b6-aff2-92746661032b">
+
 You will need to adjust your groq queries to spread internal links:
 
 ```groq
@@ -266,7 +268,7 @@ export default defineConfig({
 
 The "Archive Page" type will now show up as an option when editing a link field, and selecting it will present the user with a dropdown menu with the available routes:
 
-https://github.com/winteragency/sanity-plugin-link-field/assets/1009069/59e79abf-a2a0-413f-bf80-c08b0f64b72a
+<video controls src="https://github.com/winteragency/sanity-plugin-link-field/assets/1009069/59e79abf-a2a0-413f-bf80-c08b0f64b72a"></video>
 
 You can also provide a callback for the `options` parameter to load the available options dynamically. The callback will receive the current document, the path to the link field being edited, as well as the current user:
 
