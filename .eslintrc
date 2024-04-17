@@ -1,0 +1,21 @@
+{
+  "root": true,
+  "env": {
+    "node": true,
+    "browser": true,
+  },
+  "extends": [
+    "sanity",
+    "sanity/typescript",
+    "sanity/react",
+    "plugin:react-hooks/recommended",
+    "plugin:prettier/recommended",
+    "plugin:react/jsx-runtime",
+  ],
+  "rules": {
+    "no-nested-ternary": "off",
+    "no-shadow": "off",
+    "react/jsx-no-bind": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+  },
+}

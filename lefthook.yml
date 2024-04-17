@@ -1,0 +1,17 @@
+commit-msg:
+  parallel: true
+  commands:
+    lint-commit-msg:
+      run: npx -y commitlint --edit
+
+pre-commit:
+  parallel: true
+  commands:
+    prettier:
+      run: npx -y prettier --check {staged_files}
+    types:
+      glob: '*.{ts,tsx}'
+      run: npm run check:types
+    lint:
+      glob: 'src/**/*.{js,jsx,ts,tsx}'
+      run: npx -y eslint {staged_files}

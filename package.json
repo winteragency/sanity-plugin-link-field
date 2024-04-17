@@ -1,0 +1,111 @@
+{
+  "name": "sanity-plugin-link-field",
+  "version": "1.0.0",
+  "description": "A custom Link field for Sanity Studio",
+  "keywords": [
+    "sanity",
+    "sanity-plugin",
+    "links",
+    "portable-text"
+  ],
+  "homepage": "https://github.com/winteragency/sanity-plugin-link-field#readme",
+  "bugs": {
+    "url": "https://github.com/winteragency/sanity-plugin-link-field/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/winteragency/sanity-plugin-link-field.git"
+  },
+  "license": "MIT",
+  "author": "Winter Agency <info@winteragency.se>",
+  "sideEffects": false,
+  "type": "commonjs",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.js"
+    },
+    "./helpers": {
+      "source": "./src/helpers.ts",
+      "import": "./dist/helpers.mjs",
+      "default": "./dist/helpers.js"
+    },
+    "./component": {
+      "source": "./src/component.ts",
+      "import": "./dist/component.mjs",
+      "default": "./dist/component.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "helpers": [
+        "./dist/index.d.ts"
+      ],
+      "component": [
+        "./dist/index.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist",
+    "sanity.json",
+    "src",
+    "v2-incompatible.js"
+  ],
+  "scripts": {
+    "build": "plugin-kit verify-package --silent && pkg-utils build --strict --check --clean",
+    "format": "prettier --write --cache --ignore-unknown .",
+    "link-watch": "plugin-kit link-watch",
+    "lint": "eslint .",
+    "prepublishOnly": "npm run build",
+    "prepare": "lefthook install",
+    "watch": "pkg-utils watch --strict",
+    "check:types": "tsc --pretty --noEmit",
+    "check:format": "prettier --check .",
+    "fix:format": "prettier --write .",
+    "fix:lint": "eslint src/ --fix --quiet"
+  },
+  "dependencies": {
+    "@sanity/incompatible-plugin": "^1.0.4",
+    "@sanity/ui": "^2.1.3",
+    "lucide-react": "^0.368.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.2.2",
+    "@commitlint/config-conventional": "^19.2.2",
+    "@sanity/pkg-utils": "^6.6.6",
+    "@sanity/plugin-kit": "^4.0.4",
+    "@sanity/semantic-release-preset": "^4.1.7",
+    "@types/react": "^18.2.79",
+    "@typescript-eslint/eslint-plugin": "^7.7.0",
+    "@typescript-eslint/parser": "^7.7.0",
+    "eslint": "^8.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-sanity": "^7.1.2",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "lefthook": "^1.6.10",
+    "prettier": "^3.2.5",
+    "prettier-plugin-packagejson": "^2.5.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "sanity": "^3.37.2",
+    "styled-components": "^6.0.0",
+    "typescript": "^5.4.5"
+  },
+  "peerDependencies": {
+    "react": "^18",
+    "sanity": "^3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix"
+  }
+}
