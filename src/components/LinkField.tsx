@@ -55,7 +55,7 @@ export function LinkField(props: ObjectInputProps & {customLinkTypes: CustomLink
   return (
     <Stack space={4}>
       <Stack space={3}>
-        <Flex gap={2}>
+        <Flex gap={2} align="center">
           {/* Render the type field (without its label) */}
           <ObjectInputMember
             member={{
