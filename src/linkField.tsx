@@ -7,7 +7,8 @@ import {isCustomLink} from './helpers/typeGuards'
 import type {LinkFieldOptions, LinkValue} from './types'
 
 /**
- * A plugin that adds a "link" type that can be used for both external and internal links.
+ * A plugin that adds a custom Link field for creating internal and external links,
+ * as well as `mailto` and `tel`-links, all using the same intuitive UI.
  *
  * @param options - Options for the plugin. See {@link LinkFieldOptions}
  *
@@ -15,7 +16,7 @@ import type {LinkFieldOptions, LinkValue} from './types'
  * ```ts
  * // sanity.config.ts
  * import { defineConfig } from 'sanity'
- * import { linkField } from '@winteragency/sanity-plugin-link-field'
+ * import { linkField } from 'sanity-plugin-link-field'
  *
  * export default defineConfig((
  *  // ...
