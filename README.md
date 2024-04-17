@@ -5,6 +5,8 @@
 
 A custom Link field (and associated React component) that allows editors to easily create internal and external links, as well as `mailto` and `tel`-links, all using the same intuitive UI.
 
+https://github.com/winteragency/sanity-plugin-link-field/assets/1009069/5948b1d5-514b-4204-ab54-0bd710c6a6bc
+
 ## 🔌 Installation
 
 ```sh
@@ -65,9 +67,12 @@ export const mySchema = defineType({
 })
 ```
 
-Editors will be able to switch between internal links (using native references in Sanity), external links (for linking to other websites) as well as e-mail (`mailto`) and phone (`tel`) links.
+Editors will be able to switch between internal links (using native references in Sanity), external links (for linking to other websites) as well as e-mail (`mailto`) and phone (`tel`) links:
 
 The link object also includes additional fields for adding custom URL parameters and/or URL fragments to the end of an internal or external link. This can be used to add UTM campaign tracking or link to specific sections of a page, respectively. If you use the provided `Link` component, these will be handled automatically on the frontend.
+
+<img width="456" alt="link-field" src="https://github.com/winteragency/sanity-plugin-link-field/assets/1009069/ebbe0f9f-a2e1-4f13-8a7f-9972a5237296">
+
 
 ### 3. Making a required link field
 
@@ -259,7 +264,9 @@ export default defineConfig({
 })
 ```
 
-The "Archive Page" type will now show up as an option when editing a link field, and selecting it will present the user with a dropdown menu with the available routes.
+The "Archive Page" type will now show up as an option when editing a link field, and selecting it will present the user with a dropdown menu with the available routes:
+
+https://github.com/winteragency/sanity-plugin-link-field/assets/1009069/59e79abf-a2a0-413f-bf80-c08b0f64b72a
 
 You can also provide a callback for the `options` parameter to load the available options dynamically. The callback will receive the current document, the path to the link field being edited, as well as the current user:
 
