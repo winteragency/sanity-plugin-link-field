@@ -17,6 +17,10 @@ const ValidationErrorWrapper = styled(Box)`
   margin-right: 12px;
 `
 
+const FullWidthStack = styled(Stack)`
+  width: 100%;
+`
+
 /**
  * Custom field component for the link object.
  * Nicely renders the type and link fields next to each other, with the
@@ -55,7 +59,7 @@ export function LinkField(props: ObjectInputProps & {customLinkTypes: CustomLink
   return (
     <Stack space={4}>
       <Stack space={3}>
-        <Flex gap={2} align="center">
+        <Flex gap={2} align="flex-start">
           {/* Render the type field (without its label) */}
           <ObjectInputMember
             member={{
@@ -71,7 +75,7 @@ export function LinkField(props: ObjectInputProps & {customLinkTypes: CustomLink
             {...renderProps}
           />
 
-          <Stack space={2}>
+          <FullWidthStack space={2}>
             {/* Render the input for the selected type of link (withouts its label) */}
             <ObjectInputMember
               member={{
@@ -97,7 +101,7 @@ export function LinkField(props: ObjectInputProps & {customLinkTypes: CustomLink
                 />
               </ValidationErrorWrapper>
             )}
-          </Stack>
+          </FullWidthStack>
         </Flex>
 
         {/* Render the description of the selected link field, if any */}
