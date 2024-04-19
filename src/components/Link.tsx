@@ -1,37 +1,9 @@
 import React, {type ElementType, type ForwardedRef, forwardRef} from 'react'
 
-import {
-  isCustomLink,
-  isEmailLink,
-  isExternalLink,
-  isInternalLink,
-  isPhoneLink,
-} from '../helpers/typeGuards'
+import {generateHref} from '../helpers/generateHref'
+import {getLinkText} from '../helpers/getLinkText'
+import {isCustomLink, isEmailLink, isPhoneLink} from '../helpers/typeGuards'
 import {InternalLink, LinkValue} from '../types'
-
-const generateHref = {
-  internal: (link: LinkValue, hrefResolver?: (link: InternalLink) => string) =>
-    isInternalLink(link) && link.internalLink
-      ? hrefResolver
-        ? hrefResolver(link)
-        : `/${link.internalLink.slug?.current}`
-      : '#',
-  external: (link: LinkValue) =>
-    isExternalLink(link) && link.url
-      ? link.url.trim() + (link.parameters?.trim() || '') + (link.anchor?.trim() || '')
-      : '#',
-  email: (link: LinkValue) =>
-    isEmailLink(link) && link.email ? `mailto:${link.email.trim()}` : '#',
-  phone: (link: LinkValue) =>
-    isPhoneLink(link) && link.phone
-      ? // Tel links cannot contain spaces
-        `tel:${link.phone?.replace(/\s+/g, '').trim()}`
-      : '#',
-  custom: (link: LinkValue) =>
-    isCustomLink(link) && link.value
-      ? link.value.trim() + (link.parameters?.trim() || '') + (link.anchor?.trim() || '')
-      : '#',
-}
 
 type LinkProps = {
   link?: LinkValue
@@ -46,6 +18,12 @@ const Link = forwardRef(
   ) => {
     if (!link) {
       return null
+    }
+
+    // If no link text is provided, try and find a fallback
+    if (!children) {
+      // eslint-disable-next-line no-param-reassign
+      children = getLinkText(link)
     }
 
     return (

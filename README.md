@@ -73,7 +73,6 @@ The link object also includes additional fields for adding custom URL parameters
 
 <img width="456" alt="link-field" src="https://github.com/winteragency/sanity-plugin-link-field/assets/1009069/ebbe0f9f-a2e1-4f13-8a7f-9972a5237296">
 
-
 ### 3. Making a required link field
 
 Since the link field is just an object field internally, the normal `.required()` validator _will not work_. Instead, the plugin includes a helper to properly validate a link field and make it required:
@@ -225,6 +224,17 @@ marks: {
   )
 }
 ```
+
+## 🔧 Options
+
+### Field level
+
+For each individual link field you add to your schema, you can set these options:
+
+| Option | Default Value | Description |
+| ------------- | ------------- | ------------- |
+| enableText  | `false`  | Whether the link should include an optional field for setting the link text/label. If enabled, this will be available on the resulting link object under the `.text` property. |
+| textLabel  | `Text`  | The label for the text input field, if enabled using the `enableText` option. |
 
 ## ⚙️ Advanced
 
