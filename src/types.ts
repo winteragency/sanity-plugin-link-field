@@ -77,7 +77,7 @@ export interface LinkFieldOptions {
    */
   linkableSchemaTypes: string[]
 
-  /** Override the descriptions of the different link types. */
+  /** Override the descriptions of the different subfields. */
   descriptions?: {
     internal?: string
     external?: string

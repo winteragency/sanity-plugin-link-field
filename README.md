@@ -46,6 +46,9 @@ export default defineConfig({
 
 If you set it to an empty array, the internal link option will be hidden entirely for all link fields.
 
+> [!TIP]
+> See [Options](#options) for all the plugin level options you can set.
+
 ### 2. Add the field to your schema
 
 You can now use the `link` type throughout your schema:
@@ -66,6 +69,9 @@ export const mySchema = defineType({
   ],
 })
 ```
+
+> [!TIP]
+> See [Options](#options) for all the field level options you can set.
 
 Editors will be able to switch between internal links (using native references in Sanity), external links (for linking to other websites) as well as e-mail (`mailto`) and phone (`tel`) links:
 
@@ -317,6 +323,29 @@ Custom link objects have the following structure in the schema, where `url` will
 How you handle this on the frontend is up to you; you can either pass the `value` directly to your `<a>` as its `href` or do any other processing you like with it; it's just a string value.
 
 If you're using the built-in `Link` component, it will handle custom links just like external links, and use the `value` as the `href`. It will also add any custom parameters or anchors configured by the user, if enabled.
+
+## 🔧 Options
+
+### Plugin level
+
+When configuring the plugin in `sanity.config.ts`, these are the global options you can set. These will affect all link fields throughout your Studio.
+
+| Option | Default Value | Description |
+| ------------- | ------------- | ------------- |
+| linkableSchemaTypes | `['page']` | An array of schema types that should be allowed in internal links. |
+| descriptions | *See [linkField.tsx](https://github.com/winteragency/sanity-plugin-link-field/blob/main/src/linkField.tsx)* | Override the descriptions of the different subfields. |
+| enableLinkParameters | `true` | Whether the user should be able to set custom URL parameters for internal and external links. |
+| enableAnchorLinks | `true` | Whether the user should be able to set custom anchors (URL fragments) for internal and external links. |
+| customLinkTypes | `[]` | Any custom link types that should be available in the dropdown. This can be used to allow users to link to pre-defined routes that don't exist within Sanity, such as hardcoded routes in the frontend application, or dynamic content that is pulled in from an external system. See [Custom link types](#custom-link-types) |
+
+### Field level
+
+For each individual link field you add to your schema, you can set these options:
+
+| Option | Default Value | Description |
+| ------------- | ------------- | ------------- |
+| enableText  | `false`  | Whether the link should include an optional field for setting the link text/label. If enabled, this will be available on the resulting link object under the `.text` property. |
+| textLabel  | `Text`  | The label for the text input field, if enabled using the `enableText` option. |
 
 ## 🔏 License
 
