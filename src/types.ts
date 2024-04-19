@@ -13,11 +13,13 @@ export interface InternalLink extends CustomizableLink {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any
   }
+  blank?: boolean
 }
 
 export interface ExternalLink extends CustomizableLink {
   type: 'external'
   url?: string
+  blank?: boolean
 }
 
 export interface EmailLink {
@@ -33,12 +35,12 @@ export interface PhoneLink {
 export interface CustomLink extends CustomizableLink {
   type: string
   value?: string
+  blank?: boolean
 }
 
 export type LinkValue = {
   _key?: string
   _type?: 'link'
-  blank?: boolean
 } & (InternalLink | ExternalLink | EmailLink | PhoneLink | CustomLink)
 
 export interface LinkType {

@@ -55,7 +55,7 @@ const Link = forwardRef(
             ? generateHref[link.type]?.(link, hrefResolver)
             : generateHref[isCustomLink(link) ? 'custom' : link.type]?.(link)
         }
-        target={link.blank && !isPhoneLink(link) && !isEmailLink(link) ? '_blank' : undefined}
+        target={!isPhoneLink(link) && !isEmailLink(link) && link.blank ? '_blank' : undefined}
         ref={ref}
         {...props}
       >
