@@ -79,14 +79,13 @@ The link object also includes additional fields for adding custom URL parameters
 You can also choose to enable an additional input field for setting the link's text/label:
 
 ```ts
-// ...
-export default defineConfig({
-  //...
-  plugins: [
-    linkField({
-      enableText: true
-    }),
-  ],
+defineField({
+  name: 'link',
+  title: 'Link',
+  type: 'link',
+  options: {
+    enableText: true
+  }
 })
 ```
 
