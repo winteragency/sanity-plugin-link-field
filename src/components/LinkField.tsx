@@ -77,6 +77,14 @@ export function LinkField(props: ObjectInputProps & {customLinkTypes: CustomLink
       )}
 
       <Stack space={3}>
+        {/* Render a label for the link field if there's also a text field enabled. */}
+        {/* If there's no text field, the label here is irrelevant */}
+        {options?.enableText && (
+          <Text as="label" weight="medium" size={1}>
+            Link
+          </Text>
+        )}
+
         <Flex gap={2} align="flex-start">
           {/* Render the type field (without its label) */}
           <ObjectInputMember
