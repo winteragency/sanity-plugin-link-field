@@ -74,8 +74,13 @@ export const linkField = definePlugin<LinkFieldOptions>(
       ],
       fields: [
         defineField({
+          name: 'text',
+          type: 'string',
+          description: descriptions.text,
+        }),
+
+        defineField({
           name: 'type',
-          title: 'Type',
           type: 'string',
           initialValue: 'internal',
           validation: (Rule) => Rule.required(),

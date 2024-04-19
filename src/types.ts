@@ -41,6 +41,7 @@ export interface CustomLink extends CustomizableLink {
 export type LinkValue = {
   _key?: string
   _type?: 'link'
+  text?: string
 } & (InternalLink | ExternalLink | EmailLink | PhoneLink | CustomLink)
 
 export interface LinkType {
@@ -82,6 +83,7 @@ export interface LinkFieldOptions {
     external?: string
     email?: string
     phone?: string
+    text?: string
     blank?: string
     advanced?: string
     parameters?: string

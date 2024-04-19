@@ -29,7 +29,8 @@ const FullWidthStack = styled(Stack)`
  * The rest of the fields ("blank" and "advanced") are rendered as usual.
  */
 export function LinkField(props: ObjectInputProps & {customLinkTypes: CustomLinkType[]}) {
-  const [typeField, linkField, ...otherFields] = props.members as FieldMember[]
+  const [textField, typeField, linkField, ...otherFields] = props.members as FieldMember[]
+  const {options} = props.schemaType
 
   const {
     field: {
@@ -58,6 +59,23 @@ export function LinkField(props: ObjectInputProps & {customLinkTypes: CustomLink
 
   return (
     <Stack space={4}>
+      {/* Render the text field if enabled */}
+      {options?.enableText && (
+        <ObjectInputMember
+          member={{
+            ...textField,
+            field: {
+              ...textField.field,
+              schemaType: {
+                ...textField.field.schemaType,
+                title: options?.textLabel || textField.field.schemaType.title,
+              },
+            },
+          }}
+          {...renderProps}
+        />
+      )}
+
       <Stack space={3}>
         <Flex gap={2} align="flex-start">
           {/* Render the type field (without its label) */}
