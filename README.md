@@ -47,7 +47,7 @@ export default defineConfig({
 If you set it to an empty array, the internal link option will be hidden entirely for all link fields.
 
 > [!TIP]
-> See [Options](#options) for all the plugin level options you can set.
+> See [Options](#-options) for all the plugin level options you can set.
 
 ### 2. Add the field to your schema
 
@@ -70,14 +70,31 @@ export const mySchema = defineType({
 })
 ```
 
-> [!TIP]
-> See [Options](#options) for all the field level options you can set.
-
 Editors will be able to switch between internal links (using native references in Sanity), external links (for linking to other websites) as well as e-mail (`mailto`) and phone (`tel`) links:
 
 The link object also includes additional fields for adding custom URL parameters and/or URL fragments to the end of an internal or external link. This can be used to add UTM campaign tracking or link to specific sections of a page, respectively. If you use the provided `Link` component, these will be handled automatically on the frontend.
 
 <img width="456" alt="link-field" src="https://github.com/winteragency/sanity-plugin-link-field/assets/1009069/ebbe0f9f-a2e1-4f13-8a7f-9972a5237296">
+
+You can also choose to enable an additional input field for setting the link's text/label:
+
+```ts
+// ...
+export default defineConfig({
+  //...
+  plugins: [
+    linkField({
+      enableText: true
+    }),
+  ],
+})
+```
+
+<img width="457" alt="Screenshot 2024-04-19 at 15 45 30" src="https://github.com/winteragency/sanity-plugin-link-field/assets/1009069/32a9381c-505f-458e-a07c-185edfb735f7">
+
+ 
+> [!TIP]
+> See [Options](#-options) for all the field level options you can set.
 
 ### 3. Making a required link field
 
@@ -135,7 +152,7 @@ Notice the `hrefResolver` property. This is a callback used to resolve the `href
 
 If a `hrefResolver` is not provided, the component will naively attempt to look at the `slug` property of the linked document and generate a `href` like so: `/${link.internalLink.slug?.current}`. This will of course only work on the off chance that your documents all have a `slug` property (like if you're using [this approach to managing slugs](https://www.simeongriggs.dev/nextjs-sanity-slug-patterns)).
 
-Regardless of how you choose to manage slugs for internal links, the component will automatically handle external links, add `target="_blank"` as needed, and add `mailto:` to e-mail links as well as `tel:` to phone links. For `tel:` links, it will strip any spaces in the phone number since these are not allowed in such links.
+Regardless of how you choose to manage slugs for internal links, the component will automatically handle external links, add `target="_blank"` as needed, and add `mailto:` to e-mail links as well as `tel:` to phone links. For `tel:` links, it will strip any spaces in the phone number since these are not allowed in such links. Additionally, it will render [the link's text label (if enabled)](#field-level-1), or try and fall back to a good textual representation of the link if one hasn't been passed to the component (using the `children` property).
 
 #### Using `next/link` or similar framework specific components
 
