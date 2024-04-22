@@ -1,14 +1,9 @@
 import {Box, Flex, Stack, Text} from '@sanity/ui'
-import {
-  type FieldMember,
-  FormFieldValidationStatus,
-  ObjectInputMember,
-  type ObjectInputProps,
-} from 'sanity'
+import {type FieldMember, FormFieldValidationStatus, ObjectInputMember} from 'sanity'
 import styled from 'styled-components'
 
 import {isCustomLink} from '../helpers/typeGuards'
-import {CustomLinkType, LinkValue} from '../types'
+import {LinkInputProps} from '../types'
 
 const ValidationErrorWrapper = styled(Box)`
   contain: size;
@@ -22,13 +17,13 @@ const FullWidthStack = styled(Stack)`
 `
 
 /**
- * Custom field component for the link object.
+ * Custom input component for the link object.
  * Nicely renders the type and link fields next to each other, with the
  * description and any validation errors for the link field below them.
  *
  * The rest of the fields ("blank" and "advanced") are rendered as usual.
  */
-export function LinkField(props: ObjectInputProps & {customLinkTypes: CustomLinkType[]}) {
+export function LinkInput(props: LinkInputProps) {
   const [textField, typeField, linkField, ...otherFields] = props.members as FieldMember[]
   const {options} = props.schemaType
 
@@ -41,9 +36,8 @@ export function LinkField(props: ObjectInputProps & {customLinkTypes: CustomLink
 
   const description =
     // If a custom link type is used, use its description if it has one.
-    props.value && isCustomLink(props.value as LinkValue)
-      ? props.customLinkTypes.find((type) => type.value === (props.value as LinkValue).type)
-          ?.description
+    props.value && isCustomLink(props.value)
+      ? props.customLinkTypes.find((type) => type.value === props.value?.type)?.description
       : // Fallback to the description of the current link type field.
         linkFieldDescription
 

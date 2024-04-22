@@ -4,7 +4,7 @@ import {AtSignIcon, GlobeIcon, LinkIcon, PhoneIcon} from 'lucide-react'
 import {set, type StringInputProps} from 'sanity'
 import styled from 'styled-components'
 
-import {CustomLinkType, LinkFieldOptions, LinkType} from '../types'
+import {CustomLinkType, LinkFieldPluginOptions, LinkType} from '../types'
 
 const defaultLinkTypes: LinkType[] = [
   {title: 'Internal', value: 'internal', icon: LinkIcon},
@@ -40,7 +40,7 @@ export function LinkTypeInput({
   linkableSchemaTypes,
 }: StringInputProps & {
   customLinkTypes?: CustomLinkType[]
-  linkableSchemaTypes: LinkFieldOptions['linkableSchemaTypes']
+  linkableSchemaTypes: LinkFieldPluginOptions['linkableSchemaTypes']
 }) {
   const linkTypes = [
     // Disable internal links if not enabled for any schema types

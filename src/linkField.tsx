@@ -1,16 +1,16 @@
 import {defineField, definePlugin, defineType, type ObjectInputProps} from 'sanity'
 
 import {CustomLinkInput} from './components/CustomLinkInput'
-import {LinkField} from './components/LinkField'
+import {LinkInput} from './components/LinkInput'
 import {LinkTypeInput} from './components/LinkTypeInput'
 import {isCustomLink} from './helpers/typeGuards'
-import type {LinkFieldOptions, LinkValue} from './types'
+import type {LinkFieldPluginOptions, LinkValue} from './types'
 
 /**
  * A plugin that adds a custom Link field for creating internal and external links,
  * as well as `mailto` and `tel`-links, all using the same intuitive UI.
  *
- * @param options - Options for the plugin. See {@link LinkFieldOptions}
+ * @param options - Options for the plugin. See {@link LinkFieldPluginOptions}
  *
  * @example Minimal example
  * ```ts
@@ -41,7 +41,7 @@ import type {LinkFieldOptions, LinkValue} from './types'
  *});
  * ```
  */
-export const linkField = definePlugin<LinkFieldOptions>(
+export const linkField = definePlugin<LinkFieldPluginOptions>(
   ({
     linkableSchemaTypes = ['page'],
     descriptions = {
@@ -248,7 +248,8 @@ export const linkField = definePlugin<LinkFieldOptions>(
           : []),
       ],
       components: {
-        input: (props: ObjectInputProps) => LinkField({customLinkTypes, ...props}),
+        input: (props: ObjectInputProps) =>
+          LinkInput({customLinkTypes, ...props, value: props.value as LinkValue}),
       },
     }
 

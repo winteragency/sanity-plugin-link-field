@@ -1,5 +1,5 @@
 import {ComponentType} from 'react'
-import type {CurrentUser, Path, SanityDocument} from 'sanity'
+import type {CurrentUser, ObjectInputProps, ObjectSchemaType, Path, SanityDocument} from 'sanity'
 
 export interface CustomizableLink {
   parameters?: string
@@ -67,12 +67,13 @@ export interface CustomLinkType extends LinkType {
 }
 
 /**
- * Options for the link field plugin
+ * Global options for the link field plugin
  *
  * @todo: Should be overridable on the field level
  */
-export interface LinkFieldOptions {
-  /** An array of schema types that should be allowed in internal links.
+export interface LinkFieldPluginOptions {
+  /**
+   * An array of schema types that should be allowed in internal links.
    * @defaultValue ['page']
    */
   linkableSchemaTypes: string[]
@@ -90,7 +91,8 @@ export interface LinkFieldOptions {
     anchor?: string
   }
 
-  /** Whether the user should be able to set custom URL parameters for internal and external links.
+  /**
+   * Whether the user should be able to set custom URL parameters for internal and external links.
    * @defaultValue true
    */
   enableLinkParameters?: boolean
@@ -135,4 +137,29 @@ export interface LinkFieldOptions {
    * ```
    */
   customLinkTypes?: CustomLinkType[]
+}
+
+/**
+ * Options for an individual link field
+ */
+export interface LinkFieldOptions {
+  /**
+   * Whether the link should include an optional field for setting the link text/label.
+   * @defaultValue false
+   */
+  enableText?: boolean
+
+  /**
+   * The label for the text input field, if enabled using the `enableText` option.
+   * @defaultValue Text
+   */
+  textLabel?: string
+}
+
+export type LinkSchemaType = Omit<ObjectSchemaType, 'options'> & {
+  options?: LinkFieldOptions
+}
+
+export type LinkInputProps = ObjectInputProps<LinkValue, LinkSchemaType> & {
+  customLinkTypes: CustomLinkType[]
 }
