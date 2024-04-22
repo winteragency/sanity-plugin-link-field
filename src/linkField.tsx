@@ -100,7 +100,7 @@ export const linkField = definePlugin<LinkFieldOptions>(
             disableNew: true,
           },
           description: descriptions?.internal,
-          hidden: ({parent}) => parent?.type !== 'internal',
+          hidden: ({parent}) => !!parent?.type && parent?.type !== 'internal',
         }),
 
         // External
