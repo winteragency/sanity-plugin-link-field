@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.1.0...v1.1.1) (2024-04-22)
+
+### Bug Fixes
+
+- adjust types throughout and add missing ones ([09cadb4](https://github.com/winteragency/sanity-plugin-link-field/commit/09cadb4c31d19f4b8d7e97e47fe6f0be53b7d1d7))
+- don't crash when there's no type selected ([#6](https://github.com/winteragency/sanity-plugin-link-field/issues/6)) ([7b15fe8](https://github.com/winteragency/sanity-plugin-link-field/commit/7b15fe805d9e6dbfc3351ffc8773ae50c2681989))
+
 ## [1.1.0](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.0.1...v1.1.0) (2024-04-19)
 
 ### Features
