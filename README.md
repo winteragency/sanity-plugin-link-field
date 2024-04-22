@@ -151,7 +151,7 @@ Notice the `hrefResolver` property. This is a callback used to resolve the `href
 
 If a `hrefResolver` is not provided, the component will naively attempt to look at the `slug` property of the linked document and generate a `href` like so: `/${link.internalLink.slug?.current}`. This will of course only work on the off chance that your documents all have a `slug` property (like if you're using [this approach to managing slugs](https://www.simeongriggs.dev/nextjs-sanity-slug-patterns)).
 
-Regardless of how you choose to manage slugs for internal links, the component will automatically handle external links, add `target="_blank"` as needed, and add `mailto:` to e-mail links as well as `tel:` to phone links. For `tel:` links, it will strip any spaces in the phone number since these are not allowed in such links. Additionally, it will render [the link's text label (if enabled)](#field-level-1), or try and fall back to a good textual representation of the link if one hasn't been passed to the component (using the `children` property).
+Regardless of how you choose to manage slugs for internal links, the component will automatically handle external links, add `target="_blank"` as needed, and add `mailto:` to e-mail links as well as `tel:` to phone links. For `tel:` links, it will strip any spaces in the phone number since these are not allowed in such links. Additionally, it will render [the link's text label (if enabled)](#field-level), or try and fall back to a good textual representation of the link if one hasn't been passed to the component (using the `children` property).
 
 #### Using `next/link` or similar framework specific components
 
@@ -246,17 +246,6 @@ marks: {
   )
 }
 ```
-
-## 🔧 Options
-
-### Field level
-
-For each individual link field you add to your schema, you can set these options:
-
-| Option | Default Value | Description |
-| ------------- | ------------- | ------------- |
-| enableText  | `false`  | Whether the link should include an optional field for setting the link text/label. If enabled, this will be available on the resulting link object under the `.text` property. |
-| textLabel  | `Text`  | The label for the text input field, if enabled using the `enableText` option. |
 
 ## ⚙️ Advanced
 
