@@ -16,4 +16,4 @@ export const isEmailLink = (link: LinkValue): link is EmailLink => link.type ===
 export const isPhoneLink = (link: LinkValue): link is PhoneLink => link.type === 'phone'
 
 export const isCustomLink = (link: LinkValue): link is CustomLink =>
-  !['internal', 'external', 'email', 'phone'].includes(link.type)
+  !!link.type && !['internal', 'external', 'email', 'phone'].includes(link.type)
