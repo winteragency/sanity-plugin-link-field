@@ -23,18 +23,20 @@ export function CustomLinkInput(
   const linkValue = useFormValue(props.path.slice(0, -1)) as LinkValue | null
   const [options, setOptions] = useState<CustomLinkTypeOptions[] | null>(null)
 
-  const customLinkType = props.customLinkTypes.find((type) => type.value === linkValue!.type)!
+  const customLinkType = props.customLinkTypes.find((type) => type.value === linkValue!.type)
 
   useEffect(() => {
-    if (Array.isArray(customLinkType.options)) {
-      setOptions(customLinkType.options)
-    } else {
-      customLinkType
-        .options(document, props.path, workspace.currentUser)
-        .then((options) => setOptions(options))
+    if (customLinkType) {
+      if (Array.isArray(customLinkType?.options)) {
+        setOptions(customLinkType.options)
+      } else {
+        customLinkType
+          .options(document, props.path, workspace.currentUser)
+          .then((options) => setOptions(options))
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customLinkType.options, props.path, workspace.currentUser])
+  }, [customLinkType, props.path, workspace.currentUser])
 
   return options ? (
     <Select
