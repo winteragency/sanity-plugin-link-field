@@ -5,6 +5,7 @@ import {set, type StringInputProps} from 'sanity'
 import styled from 'styled-components'
 
 import {CustomLinkType, LinkFieldPluginOptions, LinkType} from '../types'
+import {useEffect} from 'react'
 
 const defaultLinkTypes: LinkType[] = [
   {title: 'Internal', value: 'internal', icon: LinkIcon},
@@ -51,6 +52,13 @@ export function LinkTypeInput({
   ]
 
   const selectedType = linkTypes.find((type) => type.value === value) || linkTypes[0]
+
+  useEffect(() => {
+    // Make sure there's always a default value
+    if (!value) {
+      onChange(set('internal'))
+    }
+  }, [onChange, value])
 
   return (
     <MenuButton
