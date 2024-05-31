@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.0](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.1.3...v1.2.0) (2024-05-31)
+
+### Features
+
+- allow passing filter options to the reference field, and add the option to use weak references ([2d441a7](https://github.com/winteragency/sanity-plugin-link-field/commit/2d441a7f9fcb0fd053407f242d5ed2b58813629a))
+
 ## [1.1.3](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.1.2...v1.1.3) (2024-05-06)
 
 ### Bug Fixes
