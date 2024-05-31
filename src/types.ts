@@ -1,5 +1,12 @@
 import {ComponentType} from 'react'
-import type {CurrentUser, ObjectInputProps, ObjectSchemaType, Path, SanityDocument} from 'sanity'
+import type {
+  CurrentUser,
+  ObjectInputProps,
+  ObjectSchemaType,
+  Path,
+  ReferenceFilterOptions,
+  SanityDocument,
+} from 'sanity'
 
 export interface CustomizableLink {
   parameters?: string
@@ -75,6 +82,22 @@ export interface LinkFieldPluginOptions {
    * @defaultValue ['page']
    */
   linkableSchemaTypes: string[]
+
+  /**
+   * Custom filter options passed to the reference input component for internal links.
+   * Use it to filter the documents that should be available for linking, eg. by locale.
+   *
+   * @see https://www.sanity.io/docs/reference-type#1ecd78ab1655
+   * @defaultValue undefined
+   */
+  referenceFilterOptions?: ReferenceFilterOptions
+
+  /**
+   * Make internal links use weak references
+   * @see https://www.sanity.io/docs/reference-type#f45f659e7b28
+   * @defaultValue false
+   */
+  weakReferences?: boolean
 
   /** Override the descriptions of the different subfields. */
   descriptions?: {

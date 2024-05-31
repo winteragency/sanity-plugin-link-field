@@ -338,6 +338,8 @@ When configuring the plugin in `sanity.config.ts`, these are the global options 
 | Option | Default Value | Description |
 | ------------- | ------------- | ------------- |
 | linkableSchemaTypes | `['page']` | An array of schema types that should be allowed in internal links. |
+| weakReferences | false | Make internal links use [weak references](https://www.sanity.io/docs/reference-type#f45f659e7b28) |
+| referenceFilterOptions | undefined | Custom [filter options](https://www.sanity.io/docs/reference-type#1ecd78ab1655) passed to the reference input component for internal links. Use it to filter the documents that should be available for linking, eg. by locale. |
 | descriptions | *See [linkField.tsx](https://github.com/winteragency/sanity-plugin-link-field/blob/main/src/linkField.tsx)* | Override the descriptions of the different subfields. |
 | enableLinkParameters | `true` | Whether the user should be able to set custom URL parameters for internal and external links. |
 | enableAnchorLinks | `true` | Whether the user should be able to set custom anchors (URL fragments) for internal and external links. |

@@ -44,6 +44,8 @@ import type {LinkFieldPluginOptions, LinkValue} from './types'
 export const linkField = definePlugin<LinkFieldPluginOptions>(
   ({
     linkableSchemaTypes = ['page'],
+    weakReferences = false,
+    referenceFilterOptions,
     descriptions = {
       internal: 'Link to another page or document on the website.',
       external: 'Link to an absolute URL to a page on another website.',
@@ -96,8 +98,10 @@ export const linkField = definePlugin<LinkFieldPluginOptions>(
           to: linkableSchemaTypes.map((type) => ({
             type,
           })),
+          weak: weakReferences,
           options: {
             disableNew: true,
+            ...referenceFilterOptions,
           },
           description: descriptions?.internal,
           hidden: ({parent}) => !!parent?.type && parent?.type !== 'internal',
