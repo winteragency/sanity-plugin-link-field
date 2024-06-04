@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.2](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.2.1...v1.2.2) (2024-06-04)
+
+### Bug Fixes
+
+- regression from 1.2.1 when internal links cannot be resolved ([2e0b0eb](https://github.com/winteragency/sanity-plugin-link-field/commit/2e0b0eb39ab6d52465d0d77df153f72537346156))
+
 ## [1.2.1](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.2.0...v1.2.1) (2024-06-04)
 
 ### Bug Fixes
