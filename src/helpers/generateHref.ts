@@ -6,7 +6,7 @@ export const generateHref = {
     isInternalLink(link) && link.internalLink
       ? hrefResolver
         ? hrefResolver(link)
-        : `/${link.internalLink.slug?.current}`
+        : `/${link.internalLink.slug?.current?.replace(/^\//, '')}`
       : '#',
   external: (link: LinkValue) =>
     isExternalLink(link) && link.url
