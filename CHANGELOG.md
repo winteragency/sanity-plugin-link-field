@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.1](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.2.0...v1.2.1) (2024-06-04)
+
+### Bug Fixes
+
+- avoid double leading slashes in default href resolver ([b9fa67a](https://github.com/winteragency/sanity-plugin-link-field/commit/b9fa67ac94c587eac141c0a5e784d8792e2b6040))
+- correct dependencies in package.json to avoid 3rd party code in bundle (=smaller Studio bundle) ([b87f200](https://github.com/winteragency/sanity-plugin-link-field/commit/b87f200b7b4512b6431caac0f8f00518fcf0e42d))
+- properly include URL parameters and anchors for internal links ([7707a13](https://github.com/winteragency/sanity-plugin-link-field/commit/7707a135290896ffe5d06c5a198c55051f4db24a))
+
 ## [1.2.0](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.1.3...v1.2.0) (2024-05-31)
 
 ### Features
