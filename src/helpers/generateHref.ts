@@ -4,9 +4,11 @@ import {isCustomLink, isEmailLink, isExternalLink, isInternalLink, isPhoneLink} 
 export const generateHref = {
   internal: (link: LinkValue, hrefResolver?: (link: InternalLink) => string) =>
     isInternalLink(link) && link.internalLink
-      ? hrefResolver
-        ? hrefResolver(link)
-        : `/${link.internalLink.slug?.current?.replace(/^\//, '')}`
+      ? (hrefResolver
+          ? hrefResolver(link)
+          : `/${link.internalLink.slug?.current?.replace(/^\//, '')}`) +
+        (link.parameters?.trim() || '') +
+        (link.anchor?.trim() || '')
       : '#',
   external: (link: LinkValue) =>
     isExternalLink(link) && link.url
