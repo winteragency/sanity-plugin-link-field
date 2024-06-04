@@ -1,15 +1,20 @@
 import {InternalLink, LinkValue} from '../types'
-import {isCustomLink, isEmailLink, isExternalLink, isInternalLink, isPhoneLink} from './typeGuards'
+import {isCustomLink, isEmailLink, isExternalLink, isPhoneLink} from './typeGuards'
 
 export const generateHref = {
-  internal: (link: LinkValue, hrefResolver?: (link: InternalLink) => string) =>
-    isInternalLink(link) && link.internalLink
-      ? (hrefResolver
-          ? hrefResolver(link)
-          : `/${link.internalLink.slug?.current?.replace(/^\//, '')}`) +
-        (link.parameters?.trim() || '') +
-        (link.anchor?.trim() || '')
-      : '#',
+  internal: (link: LinkValue, hrefResolver?: (link: InternalLink) => string) => {
+    const internalLink = link as InternalLink
+
+    const href = internalLink.internalLink
+      ? hrefResolver
+        ? hrefResolver(internalLink)
+        : `/${internalLink.internalLink.slug?.current?.replace(/^\//, '')}`
+      : undefined
+
+    return href
+      ? href + (internalLink.parameters?.trim() || '') + (internalLink.anchor?.trim() || '')
+      : '#'
+  },
   external: (link: LinkValue) =>
     isExternalLink(link) && link.url
       ? link.url.trim() + (link.parameters?.trim() || '') + (link.anchor?.trim() || '')
