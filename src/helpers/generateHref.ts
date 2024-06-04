@@ -1,19 +1,43 @@
+import {type UrlObject} from 'url'
+
 import {InternalLink, LinkValue} from '../types'
 import {isCustomLink, isEmailLink, isExternalLink, isPhoneLink} from './typeGuards'
 
 export const generateHref = {
-  internal: (link: LinkValue, hrefResolver?: (link: InternalLink) => string) => {
+  internal: (link: LinkValue, hrefResolver?: (link: InternalLink) => string | UrlObject) => {
     const internalLink = link as InternalLink
+    const resolvedHref =
+      internalLink.internalLink && hrefResolver ? hrefResolver(internalLink) : undefined
 
-    const href = internalLink.internalLink
-      ? hrefResolver
-        ? hrefResolver(internalLink)
-        : `/${internalLink.internalLink.slug?.current?.replace(/^\//, '')}`
-      : undefined
+    // Support UrlObjects, e.g. from Next.js
+    if (typeof resolvedHref === 'object' && 'pathname' in resolvedHref) {
+      resolvedHref.hash = internalLink.anchor?.replace(/^#/, '')
 
-    return href
-      ? href + (internalLink.parameters?.trim() || '') + (internalLink.anchor?.trim() || '')
-      : '#'
+      if (internalLink.parameters) {
+        const params = new URLSearchParams(internalLink.parameters)
+        const resolvedParams = new URLSearchParams(resolvedHref.query?.toString())
+
+        for (const [key, value] of params.entries()) {
+          resolvedParams.set(key, value)
+        }
+
+        resolvedHref.query = resolvedParams.toString()
+      }
+
+      return resolvedHref
+    }
+
+    let href =
+      resolvedHref ||
+      (internalLink.internalLink?.slug?.current
+        ? `/${internalLink.internalLink.slug.current.replace(/^\//, '')}`
+        : undefined)
+
+    if (href && typeof href === 'string') {
+      href += (internalLink.parameters?.trim() || '') + (internalLink.anchor?.trim() || '')
+    }
+
+    return href || '#'
   },
   external: (link: LinkValue) =>
     isExternalLink(link) && link.url
