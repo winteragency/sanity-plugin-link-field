@@ -53,13 +53,6 @@ export function LinkTypeInput({
 
   const selectedType = linkTypes.find((type) => type.value === value) || linkTypes[0]
 
-  useEffect(() => {
-    // Make sure there's always a default value
-    if (!value) {
-      onChange(set('internal'))
-    }
-  }, [onChange, value])
-
   return (
     <MenuButton
       button={
