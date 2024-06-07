@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.1](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.3.0...v1.3.1) (2024-06-07)
+
+### Bug Fixes
+
+- allow initiating plugin with no options object ([#15](https://github.com/winteragency/sanity-plugin-link-field/issues/15)) ([ad969ff](https://github.com/winteragency/sanity-plugin-link-field/commit/ad969ff9e7d836ae328055248748d2b8e93024d2))
+
 ## [1.3.0](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.2.2...v1.3.0) (2024-06-04)
 
 ### Features
