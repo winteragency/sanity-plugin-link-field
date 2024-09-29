@@ -5,6 +5,7 @@ import type {
   ObjectSchemaType,
   Path,
   ReferenceFilterOptions,
+  ReferenceFilterResolver,
   SanityDocument,
 } from 'sanity'
 
@@ -90,7 +91,7 @@ export interface LinkFieldPluginOptions {
    * @see https://www.sanity.io/docs/reference-type#1ecd78ab1655
    * @defaultValue undefined
    */
-  referenceFilterOptions?: ReferenceFilterOptions
+  referenceFilterOptions?: ReferenceFilterOptions | ReferenceFilterResolver
 
   /**
    * Make internal links use weak references
