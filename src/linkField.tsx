@@ -58,12 +58,16 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
     enableLinkParameters = true,
     enableAnchorLinks = true,
     customLinkTypes = [],
+    icon,
+    preview,
   } = opts || {}
 
-  const linkType = {
+  const linkType = defineType({
     name: 'link',
     title: 'Link',
     type: 'object',
+    icon,
+    preview,
     fieldsets: [
       {
         name: 'advanced',
@@ -256,12 +260,12 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
       input: (props: ObjectInputProps) =>
         LinkInput({customLinkTypes, ...props, value: props.value as LinkValue}),
     },
-  }
+  })
 
   return {
     name: 'link-field',
     schema: {
-      types: [defineType(linkType)],
+      types: [linkType],
     },
   }
 })
