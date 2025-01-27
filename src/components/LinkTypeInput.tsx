@@ -1,7 +1,6 @@
 import {ChevronDownIcon} from '@sanity/icons'
 import {Button, Menu, MenuButton, MenuItem} from '@sanity/ui'
 import {AtSignIcon, GlobeIcon, LinkIcon, PhoneIcon} from 'lucide-react'
-import {useEffect} from 'react'
 import {set, type StringInputProps} from 'sanity'
 import styled from 'styled-components'
 
