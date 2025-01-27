@@ -1,9 +1,11 @@
 import {ComponentType} from 'react'
 import type {
+  BaseSchemaDefinition,
   CurrentUser,
   ObjectInputProps,
   ObjectSchemaType,
   Path,
+  PreviewConfig,
   ReferenceFilterOptions,
   SanityDocument,
 } from 'sanity'
@@ -158,6 +160,10 @@ export interface LinkFieldPluginOptions {
    * ```
    */
   customLinkTypes?: CustomLinkType[]
+
+  icon?: BaseSchemaDefinition['icon']
+
+  preview?: PreviewConfig
 }
 
 /**
