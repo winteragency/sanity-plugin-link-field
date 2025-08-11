@@ -101,7 +101,7 @@
   },
   "peerDependencies": {
     "react": "^18 || ^19",
-    "sanity": "^3"
+    "sanity": "^3 || ^4"
   },
   "engines": {
     "node": ">=18"
