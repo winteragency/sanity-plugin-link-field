@@ -1,4 +1,5 @@
 import {Box, Flex, Stack, Text} from '@sanity/ui'
+import {memo} from 'react'
 import {type FieldMember, FormFieldValidationStatus, ObjectInputMember} from 'sanity'
 import styled from 'styled-components'
 
@@ -23,7 +24,7 @@ const FullWidthStack = styled(Stack)`
  *
  * The rest of the fields ("blank" and "advanced") are rendered as usual.
  */
-export function LinkInput(props: LinkInputProps) {
+export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
   const [textField, typeField, linkField, ...otherFields] = props.members as FieldMember[]
   const {options} = props.schemaType
 
@@ -138,4 +139,4 @@ export function LinkInput(props: LinkInputProps) {
       ))}
     </Stack>
   )
-}
+})
