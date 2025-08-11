@@ -82,7 +82,7 @@
     "@sanity/pkg-utils": "^6.6.6",
     "@sanity/plugin-kit": "^4.0.4",
     "@sanity/semantic-release-preset": "^4.1.7",
-    "@types/react": "^18.2.79",
+    "@types/react": "^18.2.79 || ^19",
     "@typescript-eslint/eslint-plugin": "^7.7.0",
     "@typescript-eslint/parser": "^7.7.0",
     "eslint": "^8.0.0",
@@ -100,7 +100,7 @@
     "typescript": "^5.4.5"
   },
   "peerDependencies": {
-    "react": "^18",
+    "react": "^18 || ^19",
     "sanity": "^3"
   },
   "engines": {
