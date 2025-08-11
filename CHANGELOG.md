@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.1](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.4.0...v1.4.1) (2025-08-11)
+
+### Bug Fixes
+
+- update peer dependency to support Sanity v4 ([#29](https://github.com/winteragency/sanity-plugin-link-field/issues/29)) ([7542e1b](https://github.com/winteragency/sanity-plugin-link-field/commit/7542e1babef8ad55685acffb0c9d5a74c7c4863b))
+
 ## [1.4.0](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.3.2...v1.4.0) (2025-01-27)
 
 ### Features
