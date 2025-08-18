@@ -5,6 +5,7 @@ import {set, type StringInputProps} from 'sanity'
 import styled from 'styled-components'
 
 import {CustomLinkType, LinkFieldPluginOptions, LinkType} from '../types'
+import {memo} from 'react'
 
 const defaultLinkTypes: LinkType[] = [
   {title: 'Internal', value: 'internal', icon: LinkIcon},
@@ -33,7 +34,7 @@ const LinkTypeMenuItem = styled(MenuItem)`
  * Custom input component for the "type" field on the link object.
  * Renders a button with an icon and a dropdown menu to select the link type.
  */
-export function LinkTypeInput({
+export const LinkTypeInput = memo(function LinkTypeInput({
   value,
   onChange,
   customLinkTypes = [],
@@ -81,4 +82,4 @@ export function LinkTypeInput({
       }
     />
   )
-}
+})

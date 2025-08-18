@@ -92,7 +92,13 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
         initialValue: 'internal',
         validation: (Rule) => Rule.required(),
         components: {
-          input: (props) => LinkTypeInput({customLinkTypes, linkableSchemaTypes, ...props}),
+          input: (props) => (
+            <LinkTypeInput
+              customLinkTypes={customLinkTypes}
+              linkableSchemaTypes={linkableSchemaTypes}
+              {...props}
+            />
+          ),
         },
       }),
 
@@ -162,7 +168,7 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
         description: descriptions?.external,
         hidden: ({parent}) => !parent || !isCustomLink(parent as LinkValue),
         components: {
-          input: (props) => CustomLinkInput({customLinkTypes, ...props}),
+          input: (props) => <CustomLinkInput customLinkTypes={customLinkTypes} {...props} />,
         },
       }),
 
@@ -257,8 +263,9 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
         : []),
     ],
     components: {
-      input: (props: ObjectInputProps) =>
-        LinkInput({customLinkTypes, ...props, value: props.value as LinkValue}),
+      input: (props: ObjectInputProps) => (
+        <LinkInput customLinkTypes={customLinkTypes} {...props} value={props.value as LinkValue} />
+      ),
     },
   })
 
