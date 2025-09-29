@@ -1,5 +1,5 @@
 import {Select, Spinner} from '@sanity/ui'
-import {useEffect, useState} from 'react'
+import {memo, useEffect, useState} from 'react'
 import {SanityDocument, set, type StringInputProps, useFormValue, useWorkspace} from 'sanity'
 import styled from 'styled-components'
 
@@ -13,7 +13,7 @@ const OptionsSpinner = styled(Spinner)`
  * Custom input component used for custom link types.
  * Renders a dropdown with the available options for the custom link type.
  */
-export function CustomLinkInput(
+export const CustomLinkInput = memo(function CustomLinkInput(
   props: StringInputProps & {
     customLinkTypes: CustomLinkType[]
   },
@@ -56,4 +56,4 @@ export function CustomLinkInput(
   ) : (
     <OptionsSpinner />
   )
-}
+})
