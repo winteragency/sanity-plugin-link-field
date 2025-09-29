@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.2](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.4.1...v1.4.2) (2025-09-29)
+
+### Bug Fixes
+
+- memoize input components ([#27](https://github.com/winteragency/sanity-plugin-link-field/issues/27)) ([0d3f7bc](https://github.com/winteragency/sanity-plugin-link-field/commit/0d3f7bc57cd1a6a0ba55acae48c2340528be3f10))
+
 ## [1.4.1](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.4.0...v1.4.1) (2025-08-11)
 
 ### Bug Fixes
