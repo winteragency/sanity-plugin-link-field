@@ -4,7 +4,7 @@ import {CustomLinkInput} from './components/CustomLinkInput'
 import {LinkInput} from './components/LinkInput'
 import {LinkTypeInput} from './components/LinkTypeInput'
 import {isCustomLink} from './helpers/typeGuards'
-import type {LinkFieldPluginOptions, LinkValue} from './types'
+import type {LinkFieldPluginOptions, LinkSchemaType, LinkValue} from './types'
 
 /**
  * A plugin that adds a custom Link field for creating internal and external links,
@@ -264,7 +264,10 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
     ],
     components: {
       input: (props: ObjectInputProps) => (
-        <LinkInput customLinkTypes={customLinkTypes} {...props} value={props.value as LinkValue} />
+        <LinkInput
+          customLinkTypes={customLinkTypes}
+          {...(props as ObjectInputProps<LinkValue, LinkSchemaType>)}
+        />
       ),
     },
   })
