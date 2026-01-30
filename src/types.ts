@@ -40,6 +40,63 @@ export interface PhoneLink {
   phone?: string
 }
 
+export interface DocumentLink extends CustomizableLink {
+  type: 'document'
+  documentLink?: {
+    _type: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any
+  }
+}
+
+export interface ImageLink extends CustomizableLink {
+  type: 'image'
+  imageLink?: {
+    _type: 'image'
+    asset?: {
+      _ref: string
+      _type: 'reference'
+    }
+  }
+}
+
+export interface VideoLink extends CustomizableLink {
+  type: 'video'
+  videoLink?: {
+    _type: 'file'
+    asset?: {
+      _ref: string
+      _type: 'reference'
+    }
+  }
+}
+
+export interface AudioLink extends CustomizableLink {
+  type: 'audio'
+  audioLink?: {
+    _type: 'file'
+    asset?: {
+      _ref: string
+      _type: 'reference'
+    }
+  }
+}
+
+export interface SMSLink {
+  type: 'sms'
+  sms?: string
+}
+
+export interface WhatsAppLink {
+  type: 'whatsapp'
+  whatsapp?: string
+}
+
+export interface FaxLink {
+  type: 'fax'
+  fax?: string
+}
+
 export interface CustomLink extends CustomizableLink {
   type: string
   value?: string
@@ -49,7 +106,20 @@ export type LinkValue = {
   _key?: string
   _type?: 'link'
   text?: string
-} & (InternalLink | ExternalLink | EmailLink | PhoneLink | CustomLink)
+} & (
+  | InternalLink
+  | ExternalLink
+  | EmailLink
+  | PhoneLink
+  | DocumentLink
+  | ImageLink
+  | VideoLink
+  | AudioLink
+  | SMSLink
+  | WhatsAppLink
+  | FaxLink
+  | CustomLink
+)
 
 export interface LinkType {
   title: string
@@ -107,6 +177,13 @@ export interface LinkFieldPluginOptions {
     external?: string
     email?: string
     phone?: string
+    document?: string
+    image?: string
+    video?: string
+    audio?: string
+    sms?: string
+    whatsapp?: string
+    fax?: string
     text?: string
     blank?: string
     advanced?: string
