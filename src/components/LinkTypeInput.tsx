@@ -1,6 +1,18 @@
 import {ChevronDownIcon} from '@sanity/icons'
 import {Button, Menu, MenuButton, MenuItem} from '@sanity/ui'
-import {AtSignIcon, GlobeIcon, LinkIcon, PhoneIcon} from 'lucide-react'
+import {
+  AtSignIcon,
+  AudioLines,
+  FileTextIcon,
+  GlobeIcon,
+  ImageIcon,
+  LinkIcon,
+  MessageCircle,
+  PhoneIcon,
+  Printer,
+  SmartphoneIcon,
+  VideoIcon,
+} from 'lucide-react'
 import {set, type StringInputProps} from 'sanity'
 import styled from 'styled-components'
 
@@ -12,6 +24,13 @@ const defaultLinkTypes: LinkType[] = [
   {title: 'URL', value: 'external', icon: GlobeIcon},
   {title: 'Email', value: 'email', icon: AtSignIcon},
   {title: 'Phone', value: 'phone', icon: PhoneIcon},
+  {title: 'Document', value: 'document', icon: FileTextIcon},
+  {title: 'Image', value: 'image', icon: ImageIcon},
+  {title: 'Video', value: 'video', icon: VideoIcon},
+  {title: 'Audio', value: 'audio', icon: AudioLines},
+  {title: 'SMS', value: 'sms', icon: MessageCircle},
+  {title: 'WhatsApp', value: 'whatsapp', icon: SmartphoneIcon},
+  {title: 'Fax', value: 'fax', icon: Printer},
 ]
 
 const LinkTypeButton = styled(Button)`

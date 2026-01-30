@@ -2,7 +2,14 @@ import React, {type ElementType, type ForwardedRef, forwardRef} from 'react'
 
 import {generateHref} from '../helpers/generateHref'
 import {getLinkText} from '../helpers/getLinkText'
-import {isCustomLink, isEmailLink, isPhoneLink} from '../helpers/typeGuards'
+import {
+  isCustomLink,
+  isEmailLink,
+  isFaxLink,
+  isPhoneLink,
+  isSMSLink,
+  isWhatsAppLink,
+} from '../helpers/typeGuards'
 import {InternalLink, LinkValue} from '../types'
 
 type LinkProps = {
@@ -33,7 +40,16 @@ const Link = forwardRef(
             ? generateHref[link.type]?.(link, hrefResolver)
             : generateHref[isCustomLink(link) ? 'custom' : link.type]?.(link)
         }
-        target={!isPhoneLink(link) && !isEmailLink(link) && link.blank ? '_blank' : undefined}
+        target={
+          !isPhoneLink(link) &&
+          !isEmailLink(link) &&
+          !isSMSLink(link) &&
+          !isWhatsAppLink(link) &&
+          !isFaxLink(link) &&
+          link.blank
+            ? '_blank'
+            : undefined
+        }
         ref={ref}
         {...props}
       >
