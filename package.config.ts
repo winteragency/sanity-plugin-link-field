@@ -7,10 +7,14 @@ export default defineConfig({
   // Remove this block to enable strict export validation
   extract: {
     rules: {
-      'ae-forgotten-export': 'off',
-      'ae-incompatible-release-tags': 'off',
-      'ae-internal-missing-underscore': 'off',
-      'ae-missing-release-tag': 'off',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      'ae-forgotten-export': 'off' as any,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      'ae-incompatible-release-tags': 'off' as any,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      'ae-internal-missing-underscore': 'off' as any,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      'ae-missing-release-tag': 'off' as any,
     },
   },
 })
