@@ -26,8 +26,8 @@ function isLucideIcon(icon: ComponentType): boolean {
  * Create a sized wrapper for lucide icons
  */
 function createSizedIcon(Icon: LucideIcon): ComponentType {
-  function SizedIcon() {
-    return <Icon size={ICON_SIZE} />
+  function SizedIcon(props: Record<string, unknown>) {
+    return <Icon size={ICON_SIZE} {...props} />
   }
   SizedIcon.displayName = `SizedIcon(${Icon.displayName || Icon.name || 'Unknown'})`
   return SizedIcon

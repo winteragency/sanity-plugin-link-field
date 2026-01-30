@@ -85,7 +85,7 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
           />
 
           <Stack space={2} style={{width: '100%'}}>
-            {/* Render the input for the selected type of link (withouts its label) */}
+            {/* Render the input for the selected type of link (without its label) */}
             <ObjectInputMember
               member={{
                 ...linkField,
