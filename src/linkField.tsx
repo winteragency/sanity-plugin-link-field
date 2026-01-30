@@ -4,7 +4,7 @@ import {CustomLinkInput} from './components/CustomLinkInput'
 import {LinkInput} from './components/LinkInput'
 import {LinkTypeInput} from './components/LinkTypeInput'
 import {isCustomLink} from './helpers/typeGuards'
-import type {LinkFieldPluginOptions, LinkValue} from './types'
+import type {LinkFieldPluginOptions, LinkInputProps, LinkValue} from './types'
 
 /**
  * A plugin that adds a custom Link field for creating internal and external links,
@@ -51,6 +51,13 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
       external: 'Link to an absolute URL to a page on another website.',
       email: 'Link to send an e-mail to the given address.',
       phone: 'Link to call the given phone number.',
+      document: 'Link to a document file.',
+      image: 'Link to an image.',
+      video: 'Link to a video file.',
+      audio: 'Link to an audio file.',
+      sms: 'Link to send an SMS to the given phone number.',
+      whatsapp: 'Link to open a WhatsApp chat with the given phone number.',
+      fax: 'Link to send a fax to the given number.',
       advanced: 'Optional. Add anchor links and custom parameters.',
       parameters: 'Optional. Add custom parameters to the URL, such as UTM tags.',
       anchor: 'Optional. Add an anchor to link to a specific section on the page.',
@@ -161,6 +168,110 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
         hidden: ({parent}) => parent?.type !== 'phone',
       }),
 
+      // Document
+      defineField({
+        name: 'documentLink',
+        type: 'file',
+        description: descriptions?.document,
+        hidden: ({parent}) => parent?.type !== 'document',
+      }),
+
+      // Image
+      defineField({
+        name: 'imageLink',
+        type: 'image',
+        description: descriptions?.image,
+        hidden: ({parent}) => parent?.type !== 'image',
+      }),
+
+      // Video
+      defineField({
+        name: 'videoLink',
+        type: 'file',
+        options: {
+          accept: 'video/*',
+        },
+        description: descriptions?.video,
+        hidden: ({parent}) => parent?.type !== 'video',
+      }),
+
+      // Audio
+      defineField({
+        name: 'audioLink',
+        type: 'file',
+        options: {
+          accept: 'audio/*',
+        },
+        description: descriptions?.audio,
+        hidden: ({parent}) => parent?.type !== 'audio',
+      }),
+
+      // SMS
+      defineField({
+        name: 'sms',
+        type: 'string',
+        description: descriptions?.sms,
+        validation: (rule) =>
+          rule.custom((value, context) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            if (!value || (context.parent as any)?.type !== 'sms') {
+              return true
+            }
+
+            return (
+              (new RegExp(/^\+?[0-9\s-]*$/).test(value) &&
+                !value.startsWith('-') &&
+                !value.endsWith('-')) ||
+              'Must be a valid phone number'
+            )
+          }),
+        hidden: ({parent}) => parent?.type !== 'sms',
+      }),
+
+      // WhatsApp
+      defineField({
+        name: 'whatsapp',
+        type: 'string',
+        description: descriptions?.whatsapp,
+        validation: (rule) =>
+          rule.custom((value, context) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            if (!value || (context.parent as any)?.type !== 'whatsapp') {
+              return true
+            }
+
+            return (
+              (new RegExp(/^\+?[0-9\s-]*$/).test(value) &&
+                !value.startsWith('-') &&
+                !value.endsWith('-')) ||
+              'Must be a valid phone number'
+            )
+          }),
+        hidden: ({parent}) => parent?.type !== 'whatsapp',
+      }),
+
+      // Fax
+      defineField({
+        name: 'fax',
+        type: 'string',
+        description: descriptions?.fax,
+        validation: (rule) =>
+          rule.custom((value, context) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            if (!value || (context.parent as any)?.type !== 'fax') {
+              return true
+            }
+
+            return (
+              (new RegExp(/^\+?[0-9\s-]*$/).test(value) &&
+                !value.startsWith('-') &&
+                !value.endsWith('-')) ||
+              'Must be a valid phone number'
+            )
+          }),
+        hidden: ({parent}) => parent?.type !== 'fax',
+      }),
+
       // Custom
       defineField({
         name: 'value',
@@ -179,7 +290,12 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
         type: 'boolean',
         initialValue: false,
         description: descriptions.blank,
-        hidden: ({parent}) => parent?.type === 'email' || parent?.type === 'phone',
+        hidden: ({parent}) =>
+          parent?.type === 'email' ||
+          parent?.type === 'phone' ||
+          parent?.type === 'sms' ||
+          parent?.type === 'whatsapp' ||
+          parent?.type === 'fax',
       }),
 
       // Parameters
@@ -194,12 +310,15 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
                     description: descriptions.parameters,
                     validation: (rule) =>
                       rule.custom((value, context) => {
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        const parentType = (context.parent as any)?.type
                         if (
                           !value ||
-                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          (context.parent as any)?.type === 'email' ||
-                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          (context.parent as any)?.type === 'phone'
+                          parentType === 'email' ||
+                          parentType === 'phone' ||
+                          parentType === 'sms' ||
+                          parentType === 'whatsapp' ||
+                          parentType === 'fax'
                         ) {
                           return true
                         }
@@ -214,7 +333,12 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
 
                         return true
                       }),
-                    hidden: ({parent}) => parent?.type === 'email' || parent?.type === 'phone',
+                    hidden: ({parent}) =>
+                      parent?.type === 'email' ||
+                      parent?.type === 'phone' ||
+                      parent?.type === 'sms' ||
+                      parent?.type === 'whatsapp' ||
+                      parent?.type === 'fax',
                     fieldset: 'advanced',
                   }),
                 ]
@@ -230,12 +354,15 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
                     description: descriptions.anchor,
                     validation: (rule) =>
                       rule.custom((value, context) => {
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        const parentType = (context.parent as any)?.type
                         if (
                           !value ||
-                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          (context.parent as any)?.type === 'email' ||
-                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          (context.parent as any)?.type === 'phone'
+                          parentType === 'email' ||
+                          parentType === 'phone' ||
+                          parentType === 'sms' ||
+                          parentType === 'whatsapp' ||
+                          parentType === 'fax'
                         ) {
                           return true
                         }
@@ -254,7 +381,12 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
                           ) || 'Invalid URL fragment'
                         )
                       }),
-                    hidden: ({parent}) => parent?.type === 'email' || parent?.type === 'phone',
+                    hidden: ({parent}) =>
+                      parent?.type === 'email' ||
+                      parent?.type === 'phone' ||
+                      parent?.type === 'sms' ||
+                      parent?.type === 'whatsapp' ||
+                      parent?.type === 'fax',
                     fieldset: 'advanced',
                   }),
                 ]
@@ -264,7 +396,11 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
     ],
     components: {
       input: (props: ObjectInputProps) => (
-        <LinkInput customLinkTypes={customLinkTypes} {...props} value={props.value as LinkValue} />
+        <LinkInput
+          {...(props as unknown as LinkInputProps)}
+          customLinkTypes={customLinkTypes}
+          value={props.value as LinkValue}
+        />
       ),
     },
   })
