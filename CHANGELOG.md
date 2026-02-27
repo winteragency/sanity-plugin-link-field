@@ -11,12 +11,6 @@ All notable changes to this project will be documented in this file. See
 
 * add Sanity 5 support and migrate to ESM ([fb9fb30](https://github.com/winteragency/sanity-plugin-link-field/commit/fb9fb303ab0c31afc26c65a718d483c4412f5084))
 
-## [1.5.0](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.4.2...v1.5.0) (2026-02-27)
-
-### Features
-
-* add Sanity 5 support and migrate to ESM ([fb9fb30](https://github.com/winteragency/sanity-plugin-link-field/commit/fb9fb303ab0c31afc26c65a718d483c4412f5084))
-
 ## [1.4.2](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.4.1...v1.4.2) (2025-09-29)
 
 ### Bug Fixes
