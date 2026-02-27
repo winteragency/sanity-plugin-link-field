@@ -45,8 +45,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Lint & Build
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           cache: npm
           node-version: lts/*
@@ -87,8 +87,8 @@ jobs:
         run: |
           git config --global core.autocrlf false
           git config --global core.eol lf
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           cache: npm
           node-version: ${{ matrix.node }}
@@ -107,12 +107,12 @@ jobs:
     runs-on: ubuntu-latest
     name: Semantic release
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           # Need to fetch entire commit history to
           # analyze every commit since last release
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           cache: npm
           node-version: lts/*

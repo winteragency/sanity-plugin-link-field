@@ -1,21 +1,9 @@
 import {Box, Flex, Stack, Text} from '@sanity/ui'
 import {memo} from 'react'
 import {type FieldMember, FormFieldValidationStatus, ObjectInputMember} from 'sanity'
-import styled from 'styled-components'
 
 import {isCustomLink} from '../helpers/typeGuards'
 import {LinkInputProps} from '../types'
-
-const ValidationErrorWrapper = styled(Box)`
-  contain: size;
-  margin-bottom: 6px;
-  margin-left: auto;
-  margin-right: 12px;
-`
-
-const FullWidthStack = styled(Stack)`
-  width: 100%;
-`
 
 /**
  * Custom input component for the link object.
@@ -96,8 +84,8 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
             {...renderProps}
           />
 
-          <FullWidthStack space={2}>
-            {/* Render the input for the selected type of link (withouts its label) */}
+          <Stack space={2} style={{width: '100%'}}>
+            {/* Render the input for the selected type of link (without its label) */}
             <ObjectInputMember
               member={{
                 ...linkField,
@@ -114,15 +102,22 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
 
             {/* Render any validation errors for the link field */}
             {linkFieldValidation.length > 0 && (
-              <ValidationErrorWrapper>
+              <Box
+                style={{
+                  contain: 'size',
+                  marginBottom: '6px',
+                  marginLeft: 'auto',
+                  marginRight: '12px',
+                }}
+              >
                 <FormFieldValidationStatus
                   fontSize={1}
                   placement="top"
                   validation={linkFieldValidation}
                 />
-              </ValidationErrorWrapper>
+              </Box>
             )}
-          </FullWidthStack>
+          </Stack>
         </Flex>
 
         {/* Render the description of the selected link field, if any */}
