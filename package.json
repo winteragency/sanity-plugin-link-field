@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-link-field",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "description": "A custom Link field for Sanity Studio",
   "keywords": [
     "sanity",
