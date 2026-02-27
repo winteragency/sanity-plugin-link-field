@@ -39,6 +39,7 @@ concurrency:
 
 permissions:
   contents: read # for checkout
+  id-token: write
 
 jobs:
   build:
@@ -50,6 +51,7 @@ jobs:
         with:
           cache: npm
           node-version: lts/*
+          registry-url: https://registry.npmjs.org
       - run: npm clean-install
         # Linting can be skipped
       - run: npm run lint --if-present
@@ -125,4 +127,3 @@ jobs:
         if: always()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
