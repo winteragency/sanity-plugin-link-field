@@ -4,18 +4,20 @@ import {generateHref} from '../helpers/generateHref'
 import {getLinkText} from '../helpers/getLinkText'
 import {
   isCustomLink,
+  isDocumentLink,
   isEmailLink,
   isFaxLink,
+  isMediaLink,
   isPhoneLink,
   isSMSLink,
   isWhatsAppLink,
 } from '../helpers/typeGuards'
-import {InternalLink, LinkValue} from '../types'
+import {DocumentLink, InternalLink, LinkValue, MediaLink} from '../types'
 
 type LinkProps = {
   link?: LinkValue
   as?: ElementType
-  hrefResolver?: (link: InternalLink) => string
+  hrefResolver?: (link: InternalLink | DocumentLink | MediaLink) => string
 } & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | 'target'>
 
 const Link = forwardRef(
@@ -32,13 +34,18 @@ const Link = forwardRef(
       children = getLinkText(link)
     }
 
+    const href =
+      link.type === 'internal'
+        ? generateHref.internal(link, hrefResolver)
+        : isDocumentLink(link)
+          ? generateHref.document(link, hrefResolver)
+          : isMediaLink(link)
+            ? generateHref.media(link, hrefResolver)
+            : generateHref[isCustomLink(link) ? 'custom' : link.type]?.(link)
+
     return (
       <Component
-        href={
-          link.type === 'internal'
-            ? generateHref[link.type]?.(link, hrefResolver)
-            : generateHref[isCustomLink(link) ? 'custom' : link.type]?.(link)
-        }
+        href={href}
         target={
           !isPhoneLink(link) &&
           !isEmailLink(link) &&

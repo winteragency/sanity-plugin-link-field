@@ -49,31 +49,9 @@ export interface DocumentLink extends CustomizableLink {
   }
 }
 
-export interface ImageLink extends CustomizableLink {
-  type: 'image'
-  imageLink?: {
-    _type: 'image'
-    asset?: {
-      _ref: string
-      _type: 'reference'
-    }
-  }
-}
-
-export interface VideoLink extends CustomizableLink {
-  type: 'video'
-  videoLink?: {
-    _type: 'file'
-    asset?: {
-      _ref: string
-      _type: 'reference'
-    }
-  }
-}
-
-export interface AudioLink extends CustomizableLink {
-  type: 'audio'
-  audioLink?: {
+export interface MediaLink extends CustomizableLink {
+  type: 'media'
+  mediaLink?: {
     _type: 'file'
     asset?: {
       _ref: string
@@ -112,14 +90,23 @@ export type LinkValue = {
   | EmailLink
   | PhoneLink
   | DocumentLink
-  | ImageLink
-  | VideoLink
-  | AudioLink
+  | MediaLink
   | SMSLink
   | WhatsAppLink
   | FaxLink
   | CustomLink
 )
+
+export type BuiltInLinkType =
+  | 'internal'
+  | 'external'
+  | 'email'
+  | 'phone'
+  | 'document'
+  | 'media'
+  | 'sms'
+  | 'whatsapp'
+  | 'fax'
 
 export interface LinkType {
   title: string
@@ -178,9 +165,7 @@ export interface LinkFieldPluginOptions {
     email?: string
     phone?: string
     document?: string
-    image?: string
-    video?: string
-    audio?: string
+    media?: string
     sms?: string
     whatsapp?: string
     fax?: string
@@ -237,6 +222,13 @@ export interface LinkFieldPluginOptions {
    * ```
    */
   customLinkTypes?: CustomLinkType[]
+
+  /**
+   * Built-in link types that should be available in the dropdown.
+   * Use this to hide built-in options that your editors do not need.
+   * @defaultValue ['internal', 'external', 'email', 'phone']
+   */
+  enabledBuiltInLinkTypes?: BuiltInLinkType[]
 
   icon?: BaseSchemaDefinition['icon']
 

@@ -1,16 +1,14 @@
 import type {
-  AudioLink,
   CustomLink,
   DocumentLink,
   EmailLink,
   ExternalLink,
   FaxLink,
-  ImageLink,
   InternalLink,
   LinkValue,
+  MediaLink,
   PhoneLink,
   SMSLink,
-  VideoLink,
   WhatsAppLink,
 } from '../types'
 
@@ -24,11 +22,7 @@ export const isPhoneLink = (link: LinkValue): link is PhoneLink => link.type ===
 
 export const isDocumentLink = (link: LinkValue): link is DocumentLink => link.type === 'document'
 
-export const isImageLink = (link: LinkValue): link is ImageLink => link.type === 'image'
-
-export const isVideoLink = (link: LinkValue): link is VideoLink => link.type === 'video'
-
-export const isAudioLink = (link: LinkValue): link is AudioLink => link.type === 'audio'
+export const isMediaLink = (link: LinkValue): link is MediaLink => link.type === 'media'
 
 export const isSMSLink = (link: LinkValue): link is SMSLink => link.type === 'sms'
 
@@ -43,9 +37,7 @@ export const isCustomLink = (link: LinkValue): link is CustomLink =>
     'email',
     'phone',
     'document',
-    'image',
-    'video',
-    'audio',
+    'media',
     'sms',
     'whatsapp',
     'fax',
