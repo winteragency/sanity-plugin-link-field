@@ -3,3 +3,5 @@ pnpm-lock.yaml
 yarn.lock
 package-lock.json
 README.md
+CHANGELOG.md
+LICENSE

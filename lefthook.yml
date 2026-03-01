@@ -8,6 +8,7 @@ pre-commit:
   parallel: true
   commands:
     prettier:
+      glob: '*.{js,jsx,ts,tsx,json,md,yml,yaml,css,scss,html}'
       run: npx -y prettier --check {staged_files}
     types:
       glob: '*.{ts,tsx}'

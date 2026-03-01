@@ -39,17 +39,19 @@ concurrency:
 
 permissions:
   contents: read # for checkout
+  id-token: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
     name: Lint & Build
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           cache: npm
           node-version: lts/*
+          registry-url: https://registry.npmjs.org
       - run: npm clean-install
         # Linting can be skipped
       - run: npm run lint --if-present
@@ -87,8 +89,8 @@ jobs:
         run: |
           git config --global core.autocrlf false
           git config --global core.eol lf
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           cache: npm
           node-version: ${{ matrix.node }}
@@ -107,12 +109,12 @@ jobs:
     runs-on: ubuntu-latest
     name: Semantic release
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           # Need to fetch entire commit history to
           # analyze every commit since last release
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           cache: npm
           node-version: lts/*
@@ -125,4 +127,3 @@ jobs:
         if: always()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}

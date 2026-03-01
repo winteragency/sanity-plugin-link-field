@@ -146,7 +146,7 @@ export interface CustomLinkType extends LinkType {
 /**
  * Global options for the link field plugin
  *
- * @todo: Should be overridable on the field level
+ * TODO: Should be overridable on the field level
  */
 export interface LinkFieldPluginOptions {
   /**

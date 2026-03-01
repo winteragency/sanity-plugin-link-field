@@ -29,7 +29,6 @@ const Link = forwardRef(
 
     // If no link text is provided, try and find a fallback
     if (!children) {
-      // eslint-disable-next-line no-param-reassign
       children = getLinkText(link)
     }
 
