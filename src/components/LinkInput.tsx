@@ -27,6 +27,9 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
   const customLinkTypes = options?.customLinkTypes ?? props.customLinkTypes
   const weakReferences = options?.weakReferences ?? props.weakReferences
   const referenceFilterOptions = options?.referenceFilterOptions ?? props.referenceFilterOptions
+  const hasFieldLevelLinkableSchemaTypes = Array.isArray(options?.linkableSchemaTypes)
+  const hasFieldLevelWeakReferences = typeof options?.weakReferences === 'boolean'
+  const hasFieldLevelReferenceFilterOptions = typeof options?.referenceFilterOptions !== 'undefined'
 
   const {
     field: {
@@ -70,11 +73,19 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
   } as Record<string, unknown>
 
   if (selectedFieldName === 'internalLink') {
-    linkFieldSchemaType.to = linkableSchemaTypes.map((type) => ({type}))
-    linkFieldSchemaType.weak = weakReferences
-    linkFieldSchemaType.options = {
-      disableNew: true,
-      ...referenceFilterOptions,
+    if (hasFieldLevelLinkableSchemaTypes) {
+      linkFieldSchemaType.to = linkableSchemaTypes.map((type) => ({type}))
+    }
+
+    if (hasFieldLevelWeakReferences) {
+      linkFieldSchemaType.weak = weakReferences
+    }
+
+    if (hasFieldLevelReferenceFilterOptions) {
+      linkFieldSchemaType.options = {
+        disableNew: true,
+        ...referenceFilterOptions,
+      }
     }
   }
 
