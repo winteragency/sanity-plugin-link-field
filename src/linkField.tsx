@@ -13,6 +13,82 @@ const validatePhoneNumber = (value: string) =>
 const isCommunicationType = (type?: string) =>
   type === 'email' || type === 'phone' || type === 'sms' || type === 'whatsapp' || type === 'fax'
 
+const defaultLinkPreview = {
+  select: {
+    text: 'text',
+    type: 'type',
+    url: 'url',
+    email: 'email',
+    phone: 'phone',
+    documentAssetRef: 'documentLink.asset._ref',
+    mediaAssetRef: 'mediaLink.asset._ref',
+    sms: 'sms',
+    whatsapp: 'whatsapp',
+    fax: 'fax',
+    internalTitle: 'internalLink.title',
+    internalSlug: 'internalLink.slug.current',
+    internalRef: 'internalLink._ref',
+    customValue: 'value',
+  },
+  prepare: ({
+    text,
+    type,
+    url,
+    email,
+    phone,
+    documentAssetRef,
+    mediaAssetRef,
+    sms,
+    whatsapp,
+    fax,
+    internalTitle,
+    internalSlug,
+    internalRef,
+    customValue,
+  }: {
+    text?: string
+    type?: string
+    url?: string
+    email?: string
+    phone?: string
+    documentAssetRef?: string
+    mediaAssetRef?: string
+    sms?: string
+    whatsapp?: string
+    fax?: string
+    internalTitle?: string
+    internalSlug?: string
+    internalRef?: string
+    customValue?: string
+  }) => {
+    const titleFromType =
+      type === 'internal'
+        ? internalTitle || (internalSlug ? `/${internalSlug}` : undefined) || internalRef
+        : type === 'external'
+          ? url
+          : type === 'email'
+            ? email
+            : type === 'phone'
+              ? phone
+              : type === 'document'
+                ? documentAssetRef
+                : type === 'media'
+                  ? mediaAssetRef
+                  : type === 'sms'
+                    ? sms
+                    : type === 'whatsapp'
+                      ? whatsapp
+                      : type === 'fax'
+                        ? fax
+                        : customValue
+
+    return {
+      title: text || titleFromType || 'Link',
+      subtitle: type ? `Type: ${type}` : undefined,
+    }
+  },
+}
+
 /**
  * A plugin that adds a custom Link field for creating internal and external links,
  * as well as `mailto` and `tel`-links, all using the same intuitive UI.
@@ -88,7 +164,7 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
     title: 'Link',
     type: 'object',
     icon,
-    preview,
+    preview: preview || defaultLinkPreview,
     fieldsets: [
       {
         name: 'advanced',
