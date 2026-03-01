@@ -1,7 +1,14 @@
 import {Box, Flex, Stack, Text} from '@sanity/ui'
 import {memo} from 'react'
-import {type FieldMember, FormFieldValidationStatus, ObjectInputMember} from 'sanity'
+import {
+  type FieldMember,
+  FormFieldValidationStatus,
+  ObjectInputMember,
+  type StringInputProps,
+} from 'sanity'
 
+import {CustomLinkInput} from './CustomLinkInput'
+import {LinkTypeInput} from './LinkTypeInput'
 import {isCustomLink} from '../helpers/typeGuards'
 import {LinkInputProps} from '../types'
 
@@ -15,6 +22,14 @@ import {LinkInputProps} from '../types'
 export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
   const [textField, typeField, linkField, ...otherFields] = props.members as FieldMember[]
   const {options} = props.schemaType
+  const enabledBuiltInLinkTypes = options?.enabledBuiltInLinkTypes ?? props.enabledBuiltInLinkTypes
+  const linkableSchemaTypes = options?.linkableSchemaTypes ?? props.linkableSchemaTypes
+  const customLinkTypes = options?.customLinkTypes ?? props.customLinkTypes
+  const weakReferences = options?.weakReferences ?? props.weakReferences
+  const referenceFilterOptions = options?.referenceFilterOptions ?? props.referenceFilterOptions
+  const hasFieldLevelLinkableSchemaTypes = Array.isArray(options?.linkableSchemaTypes)
+  const hasFieldLevelWeakReferences = typeof options?.weakReferences === 'boolean'
+  const hasFieldLevelReferenceFilterOptions = typeof options?.referenceFilterOptions !== 'undefined'
 
   const {
     field: {
@@ -26,7 +41,7 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
   const description =
     // If a custom link type is used, use its description if it has one.
     props.value && isCustomLink(props.value)
-      ? props.customLinkTypes.find((type) => type.value === props.value?.type)?.description
+      ? customLinkTypes.find((type) => type.value === props.value?.type)?.description
       : // Fallback to the description of the current link type field.
         linkFieldDescription
 
@@ -40,6 +55,49 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
     renderPreview: props.renderPreview,
   }
 
+  const textFieldSchemaType = {
+    ...textField.field.schemaType,
+    title: options?.textLabel || textField.field.schemaType.title,
+    ...(options?.enableText && options?.requireText
+      ? {
+          validation: (rule: {required: () => {error: (message: string) => unknown}}) =>
+            rule.required().error('Link label is required'),
+        }
+      : {}),
+  }
+
+  const selectedFieldName = (linkField as {name?: string}).name
+  const linkFieldSchemaType = {
+    ...linkField.field.schemaType,
+    title: undefined,
+  } as Record<string, unknown>
+
+  if (selectedFieldName === 'internalLink') {
+    if (hasFieldLevelLinkableSchemaTypes) {
+      linkFieldSchemaType.to = linkableSchemaTypes.map((type) => ({type}))
+    }
+
+    if (hasFieldLevelWeakReferences) {
+      linkFieldSchemaType.weak = weakReferences
+    }
+
+    if (hasFieldLevelReferenceFilterOptions) {
+      linkFieldSchemaType.options = {
+        disableNew: true,
+        ...referenceFilterOptions,
+      }
+    }
+  }
+
+  if (selectedFieldName === 'value') {
+    linkFieldSchemaType.components = {
+      ...linkField.field.schemaType.components,
+      input: (inputProps: StringInputProps) => (
+        <CustomLinkInput customLinkTypes={customLinkTypes} {...inputProps} />
+      ),
+    }
+  }
+
   return (
     <Stack space={4}>
       {/* Render the text field if enabled */}
@@ -49,10 +107,7 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
             ...textField,
             field: {
               ...textField.field,
-              schemaType: {
-                ...textField.field.schemaType,
-                title: options?.textLabel || textField.field.schemaType.title,
-              },
+              schemaType: textFieldSchemaType as unknown as typeof textField.field.schemaType,
             },
           }}
           {...renderProps}
@@ -78,6 +133,17 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
                 schemaType: {
                   ...typeField.field.schemaType,
                   title: undefined,
+                  components: {
+                    ...typeField.field.schemaType.components,
+                    input: (inputProps: StringInputProps) => (
+                      <LinkTypeInput
+                        customLinkTypes={customLinkTypes}
+                        linkableSchemaTypes={linkableSchemaTypes}
+                        enabledBuiltInLinkTypes={enabledBuiltInLinkTypes}
+                        {...inputProps}
+                      />
+                    ),
+                  },
                 },
               },
             }}
@@ -91,10 +157,7 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
                 ...linkField,
                 field: {
                   ...linkField.field,
-                  schemaType: {
-                    ...linkField.field.schemaType,
-                    title: undefined,
-                  },
+                  schemaType: linkFieldSchemaType as unknown as typeof linkField.field.schemaType,
                 },
               }}
               {...renderProps}

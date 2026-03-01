@@ -40,6 +40,41 @@ export interface PhoneLink {
   phone?: string
 }
 
+export interface DocumentLink extends CustomizableLink {
+  type: 'document'
+  documentLink?: {
+    _type: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any
+  }
+}
+
+export interface MediaLink extends CustomizableLink {
+  type: 'media'
+  mediaLink?: {
+    _type: 'file'
+    asset?: {
+      _ref: string
+      _type: 'reference'
+    }
+  }
+}
+
+export interface SMSLink {
+  type: 'sms'
+  sms?: string
+}
+
+export interface WhatsAppLink {
+  type: 'whatsapp'
+  whatsapp?: string
+}
+
+export interface FaxLink {
+  type: 'fax'
+  fax?: string
+}
+
 export interface CustomLink extends CustomizableLink {
   type: string
   value?: string
@@ -49,7 +84,29 @@ export type LinkValue = {
   _key?: string
   _type?: 'link'
   text?: string
-} & (InternalLink | ExternalLink | EmailLink | PhoneLink | CustomLink)
+} & (
+  | InternalLink
+  | ExternalLink
+  | EmailLink
+  | PhoneLink
+  | DocumentLink
+  | MediaLink
+  | SMSLink
+  | WhatsAppLink
+  | FaxLink
+  | CustomLink
+)
+
+export type BuiltInLinkType =
+  | 'internal'
+  | 'external'
+  | 'email'
+  | 'phone'
+  | 'document'
+  | 'media'
+  | 'sms'
+  | 'whatsapp'
+  | 'fax'
 
 export interface LinkType {
   title: string
@@ -107,6 +164,11 @@ export interface LinkFieldPluginOptions {
     external?: string
     email?: string
     phone?: string
+    document?: string
+    media?: string
+    sms?: string
+    whatsapp?: string
+    fax?: string
     text?: string
     blank?: string
     advanced?: string
@@ -161,6 +223,13 @@ export interface LinkFieldPluginOptions {
    */
   customLinkTypes?: CustomLinkType[]
 
+  /**
+   * Built-in link types that should be available in the dropdown.
+   * Use this to hide built-in options that your editors do not need.
+   * @defaultValue ['internal', 'external', 'email', 'phone']
+   */
+  enabledBuiltInLinkTypes?: BuiltInLinkType[]
+
   icon?: BaseSchemaDefinition['icon']
 
   preview?: PreviewConfig
@@ -177,10 +246,46 @@ export interface LinkFieldOptions {
   enableText?: boolean
 
   /**
+   * Whether the text/label should be required when `enableText` is true.
+   * @defaultValue false
+   */
+  requireText?: boolean
+
+  /**
    * The label for the text input field, if enabled using the `enableText` option.
    * @defaultValue Text
    */
   textLabel?: string
+
+  /**
+   * Built-in link types that should be shown for this specific field.
+   * Overrides the plugin-level `enabledBuiltInLinkTypes` for this field only.
+   */
+  enabledBuiltInLinkTypes?: BuiltInLinkType[]
+
+  /**
+   * Schema types that should be allowed in internal links for this specific field.
+   * Overrides the plugin-level `linkableSchemaTypes` for this field only.
+   */
+  linkableSchemaTypes?: string[]
+
+  /**
+   * Custom link types available for this specific field.
+   * Overrides the plugin-level `customLinkTypes` for this field only.
+   */
+  customLinkTypes?: CustomLinkType[]
+
+  /**
+   * Make internal links use weak references for this specific field.
+   * Overrides the plugin-level `weakReferences` for this field only.
+   */
+  weakReferences?: boolean
+
+  /**
+   * Custom filter options for internal links on this specific field.
+   * Overrides the plugin-level `referenceFilterOptions` for this field only.
+   */
+  referenceFilterOptions?: ReferenceFilterOptions
 }
 
 export type LinkSchemaType = Omit<ObjectSchemaType, 'options'> & {
@@ -189,4 +294,8 @@ export type LinkSchemaType = Omit<ObjectSchemaType, 'options'> & {
 
 export type LinkInputProps = ObjectInputProps<LinkValue, LinkSchemaType> & {
   customLinkTypes: CustomLinkType[]
+  enabledBuiltInLinkTypes: BuiltInLinkType[]
+  linkableSchemaTypes: string[]
+  weakReferences: boolean
+  referenceFilterOptions?: ReferenceFilterOptions
 }

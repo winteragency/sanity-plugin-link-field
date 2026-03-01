@@ -1,10 +1,21 @@
 import {ChevronDownIcon} from '@sanity/icons'
 import {Button, Menu, MenuButton, MenuItem} from '@sanity/ui'
-import {AtSignIcon, GlobeIcon, LinkIcon, PhoneIcon, type LucideIcon} from 'lucide-react'
+import {
+  AtSignIcon,
+  FileTextIcon,
+  GlobeIcon,
+  FolderOpen,
+  LinkIcon,
+  type LucideIcon,
+  MessageCircle,
+  PhoneIcon,
+  Printer,
+  SmartphoneIcon,
+} from 'lucide-react'
 import {type ComponentType, memo} from 'react'
 import {set, type StringInputProps} from 'sanity'
 
-import {CustomLinkType, LinkFieldPluginOptions, LinkType} from '../types'
+import {BuiltInLinkType, CustomLinkType, LinkFieldPluginOptions, LinkType} from '../types'
 
 const ICON_SIZE = 16
 
@@ -13,6 +24,11 @@ const defaultLinkTypes: LinkType[] = [
   {title: 'URL', value: 'external', icon: GlobeIcon},
   {title: 'Email', value: 'email', icon: AtSignIcon},
   {title: 'Phone', value: 'phone', icon: PhoneIcon},
+  {title: 'Document', value: 'document', icon: FileTextIcon},
+  {title: 'Media', value: 'media', icon: FolderOpen},
+  {title: 'SMS', value: 'sms', icon: MessageCircle},
+  {title: 'WhatsApp', value: 'whatsapp', icon: SmartphoneIcon},
+  {title: 'Fax', value: 'fax', icon: Printer},
 ]
 
 /**
@@ -52,19 +68,24 @@ export const LinkTypeInput = memo(function LinkTypeInput({
   onChange,
   customLinkTypes = [],
   linkableSchemaTypes,
+  enabledBuiltInLinkTypes,
 }: StringInputProps & {
   customLinkTypes?: CustomLinkType[]
   linkableSchemaTypes: LinkFieldPluginOptions['linkableSchemaTypes']
+  enabledBuiltInLinkTypes: BuiltInLinkType[]
 }) {
+  const enabledBuiltInLinkTypeSet = new Set(enabledBuiltInLinkTypes)
   const linkTypes = [
-    // Disable internal links if not enabled for any schema types
+    // Disable internal links if not enabled for any schema types.
     ...defaultLinkTypes.filter(
-      ({value}) => value !== 'internal' || linkableSchemaTypes?.length > 0,
+      ({value}) =>
+        enabledBuiltInLinkTypeSet.has(value as BuiltInLinkType) &&
+        (value !== 'internal' || linkableSchemaTypes?.length > 0),
     ),
     ...customLinkTypes,
   ]
 
-  const selectedType = linkTypes.find((type) => type.value === value) || linkTypes[0]
+  const selectedType = linkTypes.find((type) => type.value === value) || linkTypes[0] || null
 
   return (
     <MenuButton
@@ -72,11 +93,12 @@ export const LinkTypeInput = memo(function LinkTypeInput({
         <Button
           type="button"
           mode="ghost"
-          icon={getIcon(selectedType)}
+          icon={selectedType ? getIcon(selectedType) : LinkIcon}
           iconRight={ChevronDownIcon}
           title="Select link type"
-          aria-label={`Select link type (currently: ${selectedType.title})`}
+          aria-label={`Select link type${selectedType ? ` (currently: ${selectedType.title})` : ''}`}
           style={{height: '35px'}}
+          disabled={linkTypes.length === 0}
         />
       }
       id="link-type"

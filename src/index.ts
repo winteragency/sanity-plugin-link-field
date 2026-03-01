@@ -1,25 +1,36 @@
 export {requiredLinkField} from './helpers/requiredLinkField'
 export {
   isCustomLink,
+  isDocumentLink,
   isEmailLink,
   isExternalLink,
+  isFaxLink,
   isInternalLink,
+  isMediaLink,
   isPhoneLink,
+  isSMSLink,
+  isWhatsAppLink,
 } from './helpers/typeGuards'
 export {linkField} from './linkField'
 export type {
+  BuiltInLinkType,
   CustomizableLink,
   CustomLink,
   CustomLinkType,
   CustomLinkTypeOptions,
+  DocumentLink,
   EmailLink,
   ExternalLink,
+  FaxLink,
   InternalLink,
   LinkFieldOptions,
   LinkFieldPluginOptions,
   LinkInputProps,
-  LinkSchemaType,
   LinkType,
   LinkValue,
+  MediaLink,
+  LinkSchemaType,
   PhoneLink,
+  SMSLink,
+  WhatsAppLink,
 } from './types'
