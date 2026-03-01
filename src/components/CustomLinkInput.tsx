@@ -35,14 +35,15 @@ export const CustomLinkInput = memo(function CustomLinkInput(
 
   return options ? (
     <Select
+      value={props.value ?? ''}
       onChange={(e) => {
         props.onChange(set(e.currentTarget.value || ''))
       }}
     >
       <>
-        <option value="" selected={props.value === ''} disabled hidden />
+        <option value="" disabled hidden />
         {options.map((option) => (
-          <option key={option.value} value={option.value} selected={props.value === option.value}>
+          <option key={option.value} value={option.value}>
             {option.title}
           </option>
         ))}

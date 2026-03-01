@@ -30,20 +30,25 @@ export const generateHref = {
 
     // Support UrlObjects, e.g. from Next.js
     if (typeof resolvedHref === 'object' && 'pathname' in resolvedHref) {
-      resolvedHref.hash = internalLink.anchor?.replace(/^#/, '')
+      const merged: UrlObject = {...resolvedHref}
+      merged.hash = internalLink.anchor?.replace(/^#/, '')
 
       if (internalLink.parameters) {
         const params = new URLSearchParams(internalLink.parameters)
-        const resolvedParams = new URLSearchParams(resolvedHref.query?.toString())
+        const existingQuery =
+          typeof merged.query === 'string'
+            ? merged.query
+            : new URLSearchParams(merged.query as Record<string, string>).toString()
+        const resolvedParams = new URLSearchParams(existingQuery)
 
         for (const [key, value] of params.entries()) {
           resolvedParams.set(key, value)
         }
 
-        resolvedHref.query = resolvedParams.toString()
+        merged.query = resolvedParams.toString()
       }
 
-      return resolvedHref
+      return merged
     }
 
     const href =
@@ -70,24 +75,31 @@ export const generateHref = {
 
     // Support UrlObjects, e.g. from Next.js
     if (typeof resolvedHref === 'object' && 'pathname' in resolvedHref) {
-      resolvedHref.hash = documentLink.anchor?.replace(/^#/, '')
+      const merged: UrlObject = {...resolvedHref}
+      merged.hash = documentLink.anchor?.replace(/^#/, '')
 
       if (documentLink.parameters) {
         const params = new URLSearchParams(documentLink.parameters)
-        const resolvedParams = new URLSearchParams(resolvedHref.query?.toString())
+        const existingQuery =
+          typeof merged.query === 'string'
+            ? merged.query
+            : new URLSearchParams(merged.query as Record<string, string>).toString()
+        const resolvedParams = new URLSearchParams(existingQuery)
 
         for (const [key, value] of params.entries()) {
           resolvedParams.set(key, value)
         }
 
-        resolvedHref.query = resolvedParams.toString()
+        merged.query = resolvedParams.toString()
       }
 
-      return resolvedHref
+      return merged
     }
 
-    const href = resolvedHref || documentLink.documentLink?.asset?._ref
-    return href && typeof href === 'string' ? appendParamsAndAnchor(href, documentLink) : '#'
+    // Asset _ref values are not valid URLs; only use the resolved href
+    return resolvedHref && typeof resolvedHref === 'string'
+      ? appendParamsAndAnchor(resolvedHref, documentLink)
+      : '#'
   },
   media: (link: LinkValue, hrefResolver?: HrefResolver) => {
     const mediaLink = link as MediaLink
@@ -95,24 +107,31 @@ export const generateHref = {
 
     // Support UrlObjects, e.g. from Next.js
     if (typeof resolvedHref === 'object' && 'pathname' in resolvedHref) {
-      resolvedHref.hash = mediaLink.anchor?.replace(/^#/, '')
+      const merged: UrlObject = {...resolvedHref}
+      merged.hash = mediaLink.anchor?.replace(/^#/, '')
 
       if (mediaLink.parameters) {
         const params = new URLSearchParams(mediaLink.parameters)
-        const resolvedParams = new URLSearchParams(resolvedHref.query?.toString())
+        const existingQuery =
+          typeof merged.query === 'string'
+            ? merged.query
+            : new URLSearchParams(merged.query as Record<string, string>).toString()
+        const resolvedParams = new URLSearchParams(existingQuery)
 
         for (const [key, value] of params.entries()) {
           resolvedParams.set(key, value)
         }
 
-        resolvedHref.query = resolvedParams.toString()
+        merged.query = resolvedParams.toString()
       }
 
-      return resolvedHref
+      return merged
     }
 
-    const href = resolvedHref || mediaLink.mediaLink?.asset?._ref
-    return href && typeof href === 'string' ? appendParamsAndAnchor(href, mediaLink) : '#'
+    // Asset _ref values are not valid URLs; only use the resolved href
+    return resolvedHref && typeof resolvedHref === 'string'
+      ? appendParamsAndAnchor(resolvedHref, mediaLink)
+      : '#'
   },
   sms: (link: LinkValue) =>
     isSMSLink(link) && link.sms
@@ -121,8 +140,8 @@ export const generateHref = {
       : '#',
   whatsapp: (link: LinkValue) =>
     isWhatsAppLink(link) && link.whatsapp
-      ? // WhatsApp links use wa.me and need the + removed
-        `https://wa.me/${link.whatsapp?.replace(/\s+/g, '').replace(/^\+/, '').trim()}`
+      ? // wa.me requires digits only — strip everything except digits
+        `https://wa.me/${link.whatsapp.replace(/[^\d]/g, '')}`
       : '#',
   fax: (link: LinkValue) =>
     isFaxLink(link) && link.fax

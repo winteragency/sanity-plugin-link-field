@@ -1,4 +1,5 @@
 import React, {type ElementType, type ForwardedRef, forwardRef} from 'react'
+import {type UrlObject} from 'url'
 
 import {generateHref} from '../helpers/generateHref'
 import {getLinkText} from '../helpers/getLinkText'
@@ -17,7 +18,7 @@ import {DocumentLink, InternalLink, LinkValue, MediaLink} from '../types'
 type LinkProps = {
   link?: LinkValue
   as?: ElementType
-  hrefResolver?: (link: InternalLink | DocumentLink | MediaLink) => string
+  hrefResolver?: (link: InternalLink | DocumentLink | MediaLink) => string | UrlObject
 } & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | 'target'>
 
 const Link = forwardRef(

@@ -25,8 +25,8 @@ const defaultLinkPreview = {
     sms: 'sms',
     whatsapp: 'whatsapp',
     fax: 'fax',
-    internalTitle: 'internalLink.title',
-    internalSlug: 'internalLink.slug.current',
+    internalTitle: 'internalLink->title',
+    internalSlug: 'internalLink->slug.current',
     internalRef: 'internalLink._ref',
     customValue: 'value',
   },
@@ -151,13 +151,19 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
     preview,
   } = opts || {}
 
-  const initialBuiltInLinkType =
+  const firstAvailableType =
     (enabledBuiltInLinkTypes.includes('internal') && linkableSchemaTypes.length > 0
       ? 'internal'
-      : enabledBuiltInLinkTypes.find((type) => type !== 'internal')) ||
-    customLinkTypes[0]?.value ||
-    'internal'
-  const initialLinkType = initialBuiltInLinkType
+      : enabledBuiltInLinkTypes.find((type) => type !== 'internal')) || customLinkTypes[0]?.value
+
+  if (!firstAvailableType) {
+    console.warn(
+      '[sanity-plugin-link-field] No link types are enabled. ' +
+        'Set at least one entry in `enabledBuiltInLinkTypes` or provide `customLinkTypes`.',
+    )
+  }
+
+  const initialLinkType = firstAvailableType || 'internal'
 
   const linkType = defineType({
     name: 'link',
