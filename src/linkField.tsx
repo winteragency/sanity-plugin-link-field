@@ -423,6 +423,8 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
           customLinkTypes={customLinkTypes}
           enabledBuiltInLinkTypes={enabledBuiltInLinkTypes}
           linkableSchemaTypes={linkableSchemaTypes}
+          weakReferences={weakReferences}
+          referenceFilterOptions={referenceFilterOptions}
           {...(props as ObjectInputProps<LinkValue, LinkSchemaType>)}
         />
       ),

@@ -256,6 +256,30 @@ export interface LinkFieldOptions {
    * Overrides the plugin-level `enabledBuiltInLinkTypes` for this field only.
    */
   enabledBuiltInLinkTypes?: BuiltInLinkType[]
+
+  /**
+   * Schema types that should be allowed in internal links for this specific field.
+   * Overrides the plugin-level `linkableSchemaTypes` for this field only.
+   */
+  linkableSchemaTypes?: string[]
+
+  /**
+   * Custom link types available for this specific field.
+   * Overrides the plugin-level `customLinkTypes` for this field only.
+   */
+  customLinkTypes?: CustomLinkType[]
+
+  /**
+   * Make internal links use weak references for this specific field.
+   * Overrides the plugin-level `weakReferences` for this field only.
+   */
+  weakReferences?: boolean
+
+  /**
+   * Custom filter options for internal links on this specific field.
+   * Overrides the plugin-level `referenceFilterOptions` for this field only.
+   */
+  referenceFilterOptions?: ReferenceFilterOptions
 }
 
 export type LinkSchemaType = Omit<ObjectSchemaType, 'options'> & {
@@ -266,4 +290,6 @@ export type LinkInputProps = ObjectInputProps<LinkValue, LinkSchemaType> & {
   customLinkTypes: CustomLinkType[]
   enabledBuiltInLinkTypes: BuiltInLinkType[]
   linkableSchemaTypes: string[]
+  weakReferences: boolean
+  referenceFilterOptions?: ReferenceFilterOptions
 }
