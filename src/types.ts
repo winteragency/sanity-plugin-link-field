@@ -250,6 +250,12 @@ export interface LinkFieldOptions {
    * @defaultValue Text
    */
   textLabel?: string
+
+  /**
+   * Built-in link types that should be shown for this specific field.
+   * Overrides the plugin-level `enabledBuiltInLinkTypes` for this field only.
+   */
+  enabledBuiltInLinkTypes?: BuiltInLinkType[]
 }
 
 export type LinkSchemaType = Omit<ObjectSchemaType, 'options'> & {
@@ -258,4 +264,6 @@ export type LinkSchemaType = Omit<ObjectSchemaType, 'options'> & {
 
 export type LinkInputProps = ObjectInputProps<LinkValue, LinkSchemaType> & {
   customLinkTypes: CustomLinkType[]
+  enabledBuiltInLinkTypes: BuiltInLinkType[]
+  linkableSchemaTypes: string[]
 }

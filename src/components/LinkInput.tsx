@@ -1,7 +1,13 @@
 import {Box, Flex, Stack, Text} from '@sanity/ui'
 import {memo} from 'react'
-import {type FieldMember, FormFieldValidationStatus, ObjectInputMember} from 'sanity'
+import {
+  type FieldMember,
+  FormFieldValidationStatus,
+  ObjectInputMember,
+  type StringInputProps,
+} from 'sanity'
 
+import {LinkTypeInput} from './LinkTypeInput'
 import {isCustomLink} from '../helpers/typeGuards'
 import {LinkInputProps} from '../types'
 
@@ -15,6 +21,7 @@ import {LinkInputProps} from '../types'
 export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
   const [textField, typeField, linkField, ...otherFields] = props.members as FieldMember[]
   const {options} = props.schemaType
+  const enabledBuiltInLinkTypes = options?.enabledBuiltInLinkTypes || props.enabledBuiltInLinkTypes
 
   const {
     field: {
@@ -78,6 +85,17 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
                 schemaType: {
                   ...typeField.field.schemaType,
                   title: undefined,
+                  components: {
+                    ...typeField.field.schemaType.components,
+                    input: (inputProps: StringInputProps) => (
+                      <LinkTypeInput
+                        customLinkTypes={props.customLinkTypes}
+                        linkableSchemaTypes={props.linkableSchemaTypes}
+                        enabledBuiltInLinkTypes={enabledBuiltInLinkTypes}
+                        {...inputProps}
+                      />
+                    ),
+                  },
                 },
               },
             }}

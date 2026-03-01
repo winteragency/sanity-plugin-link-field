@@ -421,6 +421,8 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
       input: (props: ObjectInputProps) => (
         <LinkInput
           customLinkTypes={customLinkTypes}
+          enabledBuiltInLinkTypes={enabledBuiltInLinkTypes}
+          linkableSchemaTypes={linkableSchemaTypes}
           {...(props as ObjectInputProps<LinkValue, LinkSchemaType>)}
         />
       ),

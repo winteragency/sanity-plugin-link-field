@@ -354,6 +354,7 @@ For each individual link field you add to your schema, you can set these options
 | ------------- | ------------- | ------------- |
 | enableText  | `false`  | Whether the link should include an optional field for setting the link text/label. If enabled, this will be available on the resulting link object under the `.text` property. |
 | textLabel  | `Text`  | The label for the text input field, if enabled using the `enableText` option. |
+| enabledBuiltInLinkTypes | `undefined` | Built-in link types to show for this specific field. Overrides the plugin-level `enabledBuiltInLinkTypes`. |
 
 ## 🔏 License
 
