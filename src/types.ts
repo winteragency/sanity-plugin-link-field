@@ -246,6 +246,12 @@ export interface LinkFieldOptions {
   enableText?: boolean
 
   /**
+   * Whether the text/label should be required when `enableText` is true.
+   * @defaultValue false
+   */
+  requireText?: boolean
+
+  /**
    * The label for the text input field, if enabled using the `enableText` option.
    * @defaultValue Text
    */

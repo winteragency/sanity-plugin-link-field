@@ -52,6 +52,17 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
     renderPreview: props.renderPreview,
   }
 
+  const textFieldSchemaType = {
+    ...textField.field.schemaType,
+    title: options?.textLabel || textField.field.schemaType.title,
+    ...(options?.enableText && options?.requireText
+      ? {
+          validation: (rule: {required: () => {error: (message: string) => unknown}}) =>
+            rule.required().error('Link label is required'),
+        }
+      : {}),
+  }
+
   const selectedFieldName = (linkField as {name?: string}).name
   const linkFieldSchemaType = {
     ...linkField.field.schemaType,
@@ -85,10 +96,7 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
             ...textField,
             field: {
               ...textField.field,
-              schemaType: {
-                ...textField.field.schemaType,
-                title: options?.textLabel || textField.field.schemaType.title,
-              },
+              schemaType: textFieldSchemaType as unknown as typeof textField.field.schemaType,
             },
           }}
           {...renderProps}
