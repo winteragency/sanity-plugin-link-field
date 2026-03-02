@@ -40,8 +40,8 @@ export const requiredLinkField = (field: unknown): CustomValidatorResult => {
     return {message: 'Phone number is required', path: 'phone'}
   }
 
-  if (isDocumentLink(link) && !link.documentLink) {
-    return {message: 'Document is required', path: 'documentLink'}
+  if (isDocumentLink(link) && !link.documentLink?.asset) {
+    return {message: 'Document is required', path: 'documentLink.asset'}
   }
 
   if (isMediaLink(link) && !link.mediaLink?.asset) {

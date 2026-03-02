@@ -23,6 +23,27 @@ const appendParamsAndAnchor = (
 ) => href + (link.parameters?.trim() || '') + (link.anchor?.trim() || '')
 
 /**
+ * Safely converts a UrlObject.query (string | null | ParsedUrlQueryInput) to a query string.
+ */
+const normalizeQuery = (query: UrlObject['query']): string => {
+  if (!query) return ''
+  if (typeof query === 'string') return query
+
+  const params = new URLSearchParams()
+  for (const [key, value] of Object.entries(query)) {
+    if (value == null) continue
+    if (Array.isArray(value)) {
+      for (const item of value) {
+        params.append(key, String(item))
+      }
+    } else {
+      params.set(key, String(value))
+    }
+  }
+  return params.toString()
+}
+
+/**
  * Merges anchor and query parameters from a link into a UrlObject without mutating the input.
  */
 const mergeUrlObject = (
@@ -34,11 +55,7 @@ const mergeUrlObject = (
 
   if (link.parameters) {
     const params = new URLSearchParams(link.parameters)
-    const existingQuery =
-      typeof merged.query === 'string'
-        ? merged.query
-        : new URLSearchParams(merged.query as Record<string, string>).toString()
-    const resolvedParams = new URLSearchParams(existingQuery)
+    const resolvedParams = new URLSearchParams(normalizeQuery(merged.query))
 
     for (const [key, value] of params.entries()) {
       resolvedParams.set(key, value)

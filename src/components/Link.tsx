@@ -1,4 +1,4 @@
-import React, {type ElementType, type ForwardedRef, forwardRef} from 'react'
+import React, {type ElementType, type ForwardedRef, forwardRef, memo} from 'react'
 import {type UrlObject} from 'url'
 
 import {generateHref} from '../helpers/generateHref'
@@ -21,49 +21,51 @@ type LinkProps = {
   hrefResolver?: (link: InternalLink | DocumentLink | MediaLink) => string | UrlObject
 } & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | 'target'>
 
-const Link = forwardRef(
-  (
-    {link, as: Component = 'a', hrefResolver, children, ...props}: LinkProps,
-    ref: ForwardedRef<HTMLAnchorElement>,
-  ) => {
-    if (!link) {
-      return null
-    }
+const Link = memo(
+  forwardRef(
+    (
+      {link, as: Component = 'a', hrefResolver, children, ...props}: LinkProps,
+      ref: ForwardedRef<HTMLAnchorElement>,
+    ) => {
+      if (!link) {
+        return null
+      }
 
-    // If no link text is provided, try and find a fallback
-    if (!children) {
-      children = getLinkText(link)
-    }
+      // If no link text is provided, try and find a fallback
+      if (!children) {
+        children = getLinkText(link)
+      }
 
-    const href =
-      link.type === 'internal'
-        ? generateHref.internal(link, hrefResolver)
-        : isDocumentLink(link)
-          ? generateHref.document(link, hrefResolver)
-          : isMediaLink(link)
-            ? generateHref.media(link, hrefResolver)
-            : generateHref[isCustomLink(link) ? 'custom' : link.type]?.(link)
+      const href =
+        link.type === 'internal'
+          ? generateHref.internal(link, hrefResolver)
+          : isDocumentLink(link)
+            ? generateHref.document(link, hrefResolver)
+            : isMediaLink(link)
+              ? generateHref.media(link, hrefResolver)
+              : generateHref[isCustomLink(link) ? 'custom' : link.type]?.(link)
 
-    return (
-      <Component
-        href={href}
-        target={
-          !isPhoneLink(link) &&
-          !isEmailLink(link) &&
-          !isSMSLink(link) &&
-          !isWhatsAppLink(link) &&
-          !isFaxLink(link) &&
-          link.blank
-            ? '_blank'
-            : undefined
-        }
-        ref={ref}
-        {...props}
-      >
-        {children}
-      </Component>
-    )
-  },
+      return (
+        <Component
+          href={href}
+          target={
+            !isPhoneLink(link) &&
+            !isEmailLink(link) &&
+            !isSMSLink(link) &&
+            !isWhatsAppLink(link) &&
+            !isFaxLink(link) &&
+            link.blank
+              ? '_blank'
+              : undefined
+          }
+          ref={ref}
+          {...props}
+        >
+          {children}
+        </Component>
+      )
+    },
+  ),
 )
 
 Link.displayName = 'Link'

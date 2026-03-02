@@ -12,6 +12,12 @@ import {
   isWhatsAppLink,
 } from './typeGuards'
 
+const getAssetOriginalFilename = (asset: unknown): string | undefined => {
+  if (!asset || typeof asset !== 'object') return undefined
+  const originalFilename = (asset as {originalFilename?: unknown}).originalFilename
+  return typeof originalFilename === 'string' ? originalFilename : undefined
+}
+
 /**
  * Get the text to display for the given link.
  * Returns undefined when no meaningful text can be derived.
@@ -28,8 +34,18 @@ export const getLinkText = (link: LinkValue): string | undefined => {
   if (isSMSLink(link)) return link.sms || undefined
   if (isWhatsAppLink(link)) return link.whatsapp || undefined
   if (isFaxLink(link)) return link.fax || undefined
-  if (isDocumentLink(link)) return link.documentLink?.asset?._ref || undefined
-  if (isMediaLink(link)) return link.mediaLink?.asset?._ref || undefined
+  if (isDocumentLink(link)) {
+    return (
+      getAssetOriginalFilename(link.documentLink?.asset) ||
+      link.documentLink?.asset?._ref ||
+      undefined
+    )
+  }
+  if (isMediaLink(link)) {
+    return (
+      getAssetOriginalFilename(link.mediaLink?.asset) || link.mediaLink?.asset?._ref || undefined
+    )
+  }
   if (isCustomLink(link)) return link.value || undefined
 
   return undefined

@@ -43,9 +43,11 @@ export interface PhoneLink {
 export interface DocumentLink extends CustomizableLink {
   type: 'document'
   documentLink?: {
-    _type: string
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any
+    _type: 'file'
+    asset?: {
+      _ref: string
+      _type: 'reference'
+    }
   }
 }
 

@@ -1,13 +1,76 @@
-import {defineField, definePlugin, defineType, type ObjectInputProps} from 'sanity'
+import {
+  AtSignIcon,
+  FileTextIcon,
+  FolderOpen,
+  GlobeIcon,
+  LinkIcon,
+  type LucideIcon,
+  MessageCircle,
+  PhoneIcon,
+  Printer,
+  SmartphoneIcon,
+} from 'lucide-react'
+import {type ComponentType} from 'react'
+import {
+  defineField,
+  definePlugin,
+  defineType,
+  type ObjectInputProps,
+  type PreviewConfig,
+} from 'sanity'
 
 import {CustomLinkInput} from './components/CustomLinkInput'
 import {LinkInput} from './components/LinkInput'
 import {LinkTypeInput} from './components/LinkTypeInput'
 import {isCustomLink} from './helpers/typeGuards'
-import type {BuiltInLinkType, LinkFieldPluginOptions, LinkSchemaType, LinkValue} from './types'
+import type {
+  BuiltInLinkType,
+  CustomLinkType,
+  LinkFieldPluginOptions,
+  LinkSchemaType,
+  LinkValue,
+} from './types'
+
+const PHONE_REGEX = /^\+?[0-9\s-]*$/
+const ANCHOR_REGEX = /^([-?/:@._~!$&'()*+,;=a-zA-Z0-9]|%[0-9a-fA-F]{2})*$/
+
+/**
+ * Wrap a lucide ForwardRefExoticComponent in a plain function component
+ * so Sanity's preview system recognises it as renderable media
+ * (`typeof fn === 'function'`).
+ */
+const wrapIcon = (Icon: LucideIcon): ComponentType => {
+  function PreviewIcon() {
+    return <Icon />
+  }
+  PreviewIcon.displayName = Icon.displayName || Icon.name
+  return PreviewIcon
+}
+
+const BUILT_IN_LINK_TYPE_ICONS: Record<BuiltInLinkType, ComponentType> = {
+  internal: wrapIcon(LinkIcon),
+  external: wrapIcon(GlobeIcon),
+  email: wrapIcon(AtSignIcon),
+  phone: wrapIcon(PhoneIcon),
+  document: wrapIcon(FileTextIcon),
+  media: wrapIcon(FolderOpen),
+  sms: wrapIcon(MessageCircle),
+  whatsapp: wrapIcon(SmartphoneIcon),
+  fax: wrapIcon(Printer),
+}
+
+const getIconForLinkType = (
+  type: string | undefined,
+  customLinkTypes: CustomLinkType[],
+): ComponentType => {
+  if (type && type in BUILT_IN_LINK_TYPE_ICONS) {
+    return BUILT_IN_LINK_TYPE_ICONS[type as BuiltInLinkType]
+  }
+  return customLinkTypes.find((ct) => ct.value === type)?.icon ?? BUILT_IN_LINK_TYPE_ICONS.internal
+}
 
 const validatePhoneNumber = (value: string) =>
-  (new RegExp(/^\+?[0-9\s-]*$/).test(value) && !value.startsWith('-') && !value.endsWith('-')) ||
+  (PHONE_REGEX.test(value) && !value.startsWith('-') && !value.endsWith('-')) ||
   'Must be a valid phone number'
 
 /**
@@ -15,11 +78,14 @@ const validatePhoneNumber = (value: string) =>
  * Skips validation when the parent type doesn't match the given field name.
  */
 const makePhoneValidator =
-  (fieldName: string) =>
+  (fieldName: string, {requireDigits = false}: {requireDigits?: boolean} = {}) =>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (value: string | undefined, context: {parent?: any}): true | string => {
     if (!value || context.parent?.type !== fieldName) return true
-    return validatePhoneNumber(value)
+    const result = validatePhoneNumber(value)
+    if (result !== true) return result
+    if (requireDigits && !/\d/.test(value)) return 'Must contain at least one digit'
+    return true
   }
 
 const isCommunicationType = (type?: string) =>
@@ -32,7 +98,9 @@ type LinkPreviewSelection = {
   email?: string
   phone?: string
   documentAssetRef?: string
+  documentFilename?: string
   mediaAssetRef?: string
+  mediaFilename?: string
   sms?: string
   whatsapp?: string
   fax?: string
@@ -48,7 +116,9 @@ const getPreviewTitleFromType = ({
   email,
   phone,
   documentAssetRef,
+  documentFilename,
   mediaAssetRef,
+  mediaFilename,
   sms,
   whatsapp,
   fax,
@@ -67,9 +137,9 @@ const getPreviewTitleFromType = ({
     case 'phone':
       return phone
     case 'document':
-      return documentAssetRef
+      return documentFilename || documentAssetRef
     case 'media':
-      return mediaAssetRef
+      return mediaFilename || mediaAssetRef
     case 'sms':
       return sms
     case 'whatsapp':
@@ -81,7 +151,7 @@ const getPreviewTitleFromType = ({
   }
 }
 
-const defaultLinkPreview = {
+const createDefaultLinkPreview = (customLinkTypes: CustomLinkType[]) => ({
   select: {
     text: 'text',
     type: 'type',
@@ -89,7 +159,9 @@ const defaultLinkPreview = {
     email: 'email',
     phone: 'phone',
     documentAssetRef: 'documentLink.asset._ref',
+    documentFilename: 'documentLink.asset.originalFilename',
     mediaAssetRef: 'mediaLink.asset._ref',
+    mediaFilename: 'mediaLink.asset.originalFilename',
     sms: 'sms',
     whatsapp: 'whatsapp',
     fax: 'fax',
@@ -108,8 +180,43 @@ const defaultLinkPreview = {
       title: text || titleFromType || 'Link',
       // Keep compact one-line previews when editors provide explicit link text.
       subtitle: !hasLinkText && type ? `Type: ${type}` : undefined,
+      media: getIconForLinkType(type, customLinkTypes),
     }
   },
+})
+
+/**
+ * Wraps a user-provided preview (or the default) so that `media` always
+ * falls back to the link-type icon when the consumer doesn't supply one.
+ */
+const buildPreview = (
+  userPreview: LinkFieldPluginOptions['preview'],
+  customLinkTypes: CustomLinkType[],
+): PreviewConfig => {
+  const defaultPreview = createDefaultLinkPreview(customLinkTypes)
+  if (!userPreview) return defaultPreview
+
+  return {
+    select: {
+      ...defaultPreview.select,
+      ...userPreview.select,
+      _linkType: 'type',
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    prepare: (selection: any) => {
+      const linkType = selection._linkType as string | undefined
+      const defaultResult = defaultPreview.prepare?.(selection) ?? {}
+      const userResult = userPreview.prepare?.(selection) ?? {}
+      const result = {
+        ...defaultResult,
+        ...userResult,
+      }
+      return {
+        ...result,
+        media: result.media ?? getIconForLinkType(linkType, customLinkTypes),
+      }
+    },
+  }
 }
 
 /**
@@ -231,11 +338,7 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
             if (!value || isCommunicationType(parentType)) return true
             if (value.indexOf('#') !== 0) return 'Must start with #; eg. #page-section-1'
             if (value.length === 1) return 'Must contain at least one character'
-            return (
-              new RegExp(/^([-?/:@._~!$&'()*+,;=a-zA-Z0-9]|%[0-9a-fA-F]{2})*$/).test(
-                value.replace(/^#/, ''),
-              ) || 'Invalid URL fragment'
-            )
+            return ANCHOR_REGEX.test(value.replace(/^#/, '')) || 'Invalid URL fragment'
           }),
         hidden: ({parent}) => isCommunicationType(parent?.type),
         fieldset: 'advanced',
@@ -248,7 +351,7 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
     title: 'Link',
     type: 'object',
     icon,
-    preview: preview || defaultLinkPreview,
+    preview: buildPreview(preview, customLinkTypes),
     fieldsets: [
       {
         name: 'advanced',
@@ -332,6 +435,9 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
       defineField({
         name: 'documentLink',
         type: 'file',
+        options: {
+          storeOriginalFilename: true,
+        },
         description: descriptions.document,
         hidden: ({parent}) => parent?.type !== 'document',
       }),
@@ -341,6 +447,7 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
         name: 'mediaLink',
         type: 'file',
         options: {
+          storeOriginalFilename: true,
           accept: 'image/*,video/*,audio/*',
         },
         description: descriptions.media,
@@ -361,7 +468,7 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
         name: 'whatsapp',
         type: 'string',
         description: descriptions.whatsapp,
-        validation: (rule) => rule.custom(makePhoneValidator('whatsapp')),
+        validation: (rule) => rule.custom(makePhoneValidator('whatsapp', {requireDigits: true})),
         hidden: ({parent}) => parent?.type !== 'whatsapp',
       }),
 

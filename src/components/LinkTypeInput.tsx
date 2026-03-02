@@ -12,12 +12,14 @@ import {
   Printer,
   SmartphoneIcon,
 } from 'lucide-react'
-import {type ComponentType, memo} from 'react'
+import {type ComponentType, memo, useMemo} from 'react'
 import {set, type StringInputProps} from 'sanity'
 
 import {BuiltInLinkType, CustomLinkType, LinkFieldPluginOptions, LinkType} from '../types'
 
 const ICON_SIZE = 16
+const selectStyle = {height: '35px'} as const
+const sizedLucideIconCache = new WeakMap<LucideIcon, ComponentType>()
 
 const defaultLinkTypes: LinkType[] = [
   {title: 'Internal', value: 'internal', icon: LinkIcon},
@@ -50,11 +52,23 @@ function createSizedIcon(Icon: LucideIcon): ComponentType {
 }
 
 /**
+ * Return a stable sized icon component for lucide icons.
+ */
+function getSizedIcon(Icon: LucideIcon): ComponentType {
+  const cachedIcon = sizedLucideIconCache.get(Icon)
+  if (cachedIcon) return cachedIcon
+
+  const sizedIcon = createSizedIcon(Icon)
+  sizedLucideIconCache.set(Icon, sizedIcon)
+  return sizedIcon
+}
+
+/**
  * Get the icon component for a link type, wrapping lucide icons to set the correct size
  */
 function getIcon(type: LinkType): ComponentType {
   if (isLucideIcon(type.icon)) {
-    return createSizedIcon(type.icon as LucideIcon)
+    return getSizedIcon(type.icon as LucideIcon)
   }
   return type.icon
 }
@@ -76,19 +90,25 @@ export const LinkTypeInput = memo(function LinkTypeInput({
   linkableSchemaTypes: LinkFieldPluginOptions['linkableSchemaTypes']
   enabledBuiltInLinkTypes: BuiltInLinkType[]
 }) {
-  const isInlineLink = path.some((segment) => segment === 'markDefs')
-  const enabledBuiltInLinkTypeSet = new Set(enabledBuiltInLinkTypes)
-  const linkTypes = [
-    // Disable internal links if not enabled for any schema types.
-    ...defaultLinkTypes.filter(
-      ({value}) =>
-        enabledBuiltInLinkTypeSet.has(value as BuiltInLinkType) &&
-        (value !== 'internal' || linkableSchemaTypes?.length > 0),
-    ),
-    ...customLinkTypes,
-  ]
+  const isInlineLink = useMemo(() => path.some((segment) => segment === 'markDefs'), [path])
+  const linkTypes = useMemo(() => {
+    const enabledBuiltInLinkTypeSet = new Set(enabledBuiltInLinkTypes)
 
-  const selectedType = linkTypes.find((type) => type.value === value) || linkTypes[0] || null
+    return [
+      // Disable internal links if not enabled for any schema types.
+      ...defaultLinkTypes.filter(
+        ({value}) =>
+          enabledBuiltInLinkTypeSet.has(value as BuiltInLinkType) &&
+          (value !== 'internal' || linkableSchemaTypes?.length > 0),
+      ),
+      ...customLinkTypes,
+    ]
+  }, [customLinkTypes, enabledBuiltInLinkTypes, linkableSchemaTypes])
+
+  const selectedType = useMemo(
+    () => linkTypes.find((type) => type.value === value) || linkTypes[0] || null,
+    [linkTypes, value],
+  )
 
   if (isInlineLink) {
     return (
@@ -99,7 +119,7 @@ export const LinkTypeInput = memo(function LinkTypeInput({
         }}
         aria-label="Select link type"
         disabled={linkTypes.length === 0}
-        style={{height: '35px'}}
+        style={selectStyle}
       >
         {linkTypes.map((type) => (
           <option key={type.value} value={type.value}>
@@ -120,7 +140,7 @@ export const LinkTypeInput = memo(function LinkTypeInput({
           iconRight={ChevronDownIcon}
           title="Select link type"
           aria-label={`Select link type${selectedType ? ` (currently: ${selectedType.title})` : ''}`}
-          style={{height: '35px'}}
+          style={selectStyle}
           disabled={linkTypes.length === 0}
         />
       }
