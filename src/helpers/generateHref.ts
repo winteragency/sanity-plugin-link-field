@@ -33,7 +33,10 @@ const appendParamsAndAnchor = (
   let result = base
 
   if (params) {
-    result += base.includes('?') ? '&' + params.slice(1) : params
+    const normalizedParams = params.replace(/^[?&]+/, '')
+    if (normalizedParams) {
+      result += base.includes('?') ? `&${normalizedParams}` : `?${normalizedParams}`
+    }
   }
 
   result += anchor || existingHash

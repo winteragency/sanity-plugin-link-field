@@ -70,22 +70,31 @@ const getIconForLinkType = (
   return customLinkTypes.find((ct) => ct.value === type)?.icon ?? BUILT_IN_LINK_TYPE_ICONS.internal
 }
 
-const validatePhoneNumber = (value: string) =>
-  (PHONE_REGEX.test(value) && !value.startsWith('-') && !value.endsWith('-')) ||
-  'Must be a valid phone number'
+const validatePhoneNumber = (value: string): true | string => {
+  const trimmed = value.trim()
+  if (
+    !trimmed ||
+    !PHONE_REGEX.test(trimmed) ||
+    trimmed.startsWith('-') ||
+    trimmed.endsWith('-') ||
+    !/\d/.test(trimmed)
+  ) {
+    return 'Must be a valid phone number'
+  }
+  return true
+}
 
 /**
  * Returns a custom validation function for phone-like fields.
  * Skips validation when the parent type doesn't match the given field name.
  */
 const makePhoneValidator =
-  (fieldName: string, {requireDigits = false}: {requireDigits?: boolean} = {}) =>
+  (fieldName: string) =>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (value: string | undefined, context: {parent?: any}): true | string => {
     if (!value || context.parent?.type !== fieldName) return true
     const result = validatePhoneNumber(value)
     if (result !== true) return result
-    if (requireDigits && !/\d/.test(value)) return 'Must contain at least one digit'
     return true
   }
 
@@ -295,7 +304,7 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
     )
   }
 
-  const initialLinkType = firstAvailableType || 'internal'
+  const initialLinkType = firstAvailableType
 
   const advancedFields = []
 
@@ -351,6 +360,18 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
     type: 'object',
     icon,
     preview: buildPreview(preview, customLinkTypes),
+    validation: (rule) =>
+      rule.custom((value, context) => {
+        const fieldOptions = (context.type as LinkSchemaType).options
+        if (!fieldOptions?.enableText || !fieldOptions.requireText) return true
+        const text = (value as LinkValue | undefined)?.text
+        return text?.trim()
+          ? true
+          : {
+              message: 'Link label is required',
+              path: ['text'],
+            }
+      }),
     fieldsets: [
       {
         name: 'advanced',
@@ -467,7 +488,7 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
         name: 'whatsapp',
         type: 'string',
         description: descriptions.whatsapp,
-        validation: (rule) => rule.custom(makePhoneValidator('whatsapp', {requireDigits: true})),
+        validation: (rule) => rule.custom(makePhoneValidator('whatsapp')),
         hidden: ({parent}) => parent?.type !== 'whatsapp',
       }),
 
