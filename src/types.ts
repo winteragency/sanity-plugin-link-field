@@ -62,6 +62,10 @@ export interface MediaLink extends CustomizableLink {
   }
 }
 
+/**
+ * Communication-protocol links intentionally do not extend `CustomizableLink`.
+ * In the schema, these types hide `blank`, `parameters`, and `anchor`.
+ */
 export interface SMSLink {
   type: 'sms'
   sms?: string
