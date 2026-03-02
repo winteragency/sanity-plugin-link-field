@@ -12,6 +12,16 @@ import {
   isWhatsAppLink,
 } from './typeGuards'
 
+const getCustomDisplayText = (value?: string): string | undefined => {
+  if (!value) return undefined
+  const trimmed = value.trim()
+  if (!trimmed) return undefined
+  if (trimmed.startsWith('/') && !trimmed.startsWith('//')) {
+    return trimmed.replace(/^\/+/, '') || trimmed
+  }
+  return trimmed
+}
+
 const getAssetOriginalFilename = (asset: unknown): string | undefined => {
   if (!asset || typeof asset !== 'object') return undefined
   const originalFilename = (asset as {originalFilename?: unknown}).originalFilename
@@ -46,7 +56,7 @@ export const getLinkText = (link: LinkValue): string | undefined => {
       getAssetOriginalFilename(link.mediaLink?.asset) || link.mediaLink?.asset?._ref || undefined
     )
   }
-  if (isCustomLink(link)) return link.value || undefined
+  if (isCustomLink(link)) return getCustomDisplayText(link.value)
 
   return undefined
 }

@@ -91,6 +91,17 @@ const makePhoneValidator =
 const isCommunicationType = (type?: string) =>
   type === 'email' || type === 'phone' || type === 'sms' || type === 'whatsapp' || type === 'fax'
 
+const getCustomDisplayText = (value?: string): string | undefined => {
+  if (!value) return undefined
+  const trimmed = value.trim()
+  if (!trimmed) return undefined
+  // Display route-like custom values without a leading slash in previews.
+  if (trimmed.startsWith('/') && !trimmed.startsWith('//')) {
+    return trimmed.replace(/^\/+/, '') || trimmed
+  }
+  return trimmed
+}
+
 type LinkPreviewSelection = {
   text?: string
   type?: BuiltInLinkType | string
@@ -147,7 +158,7 @@ const getPreviewTitleFromType = ({
     case 'fax':
       return fax
     default:
-      return customValue
+      return getCustomDisplayText(customValue)
   }
 }
 
