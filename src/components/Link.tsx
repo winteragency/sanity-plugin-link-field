@@ -24,7 +24,7 @@ const Link = memo(
       }
 
       // If no link text is provided, try and find a fallback
-      if (!children) {
+      if (children == null) {
         const fallbackText = getLinkText(link)
         children =
           fallbackText && fallbackText.trim().length > 0 ? fallbackText : link.type || 'Link'
