@@ -1,5 +1,5 @@
 import {ChevronDownIcon} from '@sanity/icons'
-import {Button, Menu, MenuButton, MenuItem} from '@sanity/ui'
+import {Button, Menu, MenuButton, MenuItem, Select} from '@sanity/ui'
 import {
   AtSignIcon,
   FileTextIcon,
@@ -64,6 +64,8 @@ function getIcon(type: LinkType): ComponentType {
  * Renders a button with an icon and a dropdown menu to select the link type.
  */
 export const LinkTypeInput = memo(function LinkTypeInput({
+  id,
+  path,
   value,
   onChange,
   customLinkTypes = [],
@@ -74,6 +76,7 @@ export const LinkTypeInput = memo(function LinkTypeInput({
   linkableSchemaTypes: LinkFieldPluginOptions['linkableSchemaTypes']
   enabledBuiltInLinkTypes: BuiltInLinkType[]
 }) {
+  const isInlineLink = path.some((segment) => segment === 'markDefs')
   const enabledBuiltInLinkTypeSet = new Set(enabledBuiltInLinkTypes)
   const linkTypes = [
     // Disable internal links if not enabled for any schema types.
@@ -86,6 +89,26 @@ export const LinkTypeInput = memo(function LinkTypeInput({
   ]
 
   const selectedType = linkTypes.find((type) => type.value === value) || linkTypes[0] || null
+
+  if (isInlineLink) {
+    return (
+      <Select
+        value={selectedType?.value ?? ''}
+        onChange={(event) => {
+          onChange(set(event.currentTarget.value))
+        }}
+        aria-label="Select link type"
+        disabled={linkTypes.length === 0}
+        style={{height: '35px'}}
+      >
+        {linkTypes.map((type) => (
+          <option key={type.value} value={type.value}>
+            {type.title}
+          </option>
+        ))}
+      </Select>
+    )
+  }
 
   return (
     <MenuButton
@@ -101,7 +124,8 @@ export const LinkTypeInput = memo(function LinkTypeInput({
           disabled={linkTypes.length === 0}
         />
       }
-      id="link-type"
+      id={id}
+      popover={{portal: true}}
       menu={
         <Menu>
           {linkTypes.map((type) => (

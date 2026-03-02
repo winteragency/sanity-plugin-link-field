@@ -119,7 +119,7 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
         {/* If there's no text field, the label here is irrelevant */}
         {options?.enableText && (
           <Text as="label" weight="medium" size={1}>
-            Link
+            {options?.linkSectionLabel ?? 'Link'}
           </Text>
         )}
 

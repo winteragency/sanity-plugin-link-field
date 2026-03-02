@@ -132,8 +132,6 @@ export interface CustomLinkType extends LinkType {
 
 /**
  * Global options for the link field plugin
- *
- * TODO: Should be overridable on the field level
  */
 export interface LinkFieldPluginOptions {
   /**
@@ -169,6 +167,7 @@ export interface LinkFieldPluginOptions {
     sms?: string
     whatsapp?: string
     fax?: string
+    custom?: string
     text?: string
     blank?: string
     advanced?: string
@@ -256,6 +255,12 @@ export interface LinkFieldOptions {
    * @defaultValue Text
    */
   textLabel?: string
+
+  /**
+   * The label for the link section shown below the text field when `enableText` is true.
+   * @defaultValue Link
+   */
+  linkSectionLabel?: string
 
   /**
    * Built-in link types that should be shown for this specific field.
