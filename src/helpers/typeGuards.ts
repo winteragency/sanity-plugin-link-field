@@ -45,3 +45,6 @@ export const isFaxLink = (link: LinkValue): link is FaxLink => link.type === 'fa
 
 export const isCustomLink = (link: LinkValue): link is CustomLink =>
   !BUILT_IN_LINK_TYPES.includes(link.type as BuiltInLinkType)
+
+export const isCommunicationType = (type?: string): boolean =>
+  type === 'email' || type === 'phone' || type === 'sms' || type === 'whatsapp' || type === 'fax'

@@ -22,7 +22,8 @@ import {
 import {CustomLinkInput} from './components/CustomLinkInput'
 import {LinkInput} from './components/LinkInput'
 import {LinkTypeInput} from './components/LinkTypeInput'
-import {isCustomLink} from './helpers/typeGuards'
+import {getCustomDisplayText} from './helpers/getLinkText'
+import {isCommunicationType, isCustomLink} from './helpers/typeGuards'
 import type {
   BuiltInLinkType,
   CustomLinkType,
@@ -87,20 +88,6 @@ const makePhoneValidator =
     if (requireDigits && !/\d/.test(value)) return 'Must contain at least one digit'
     return true
   }
-
-const isCommunicationType = (type?: string) =>
-  type === 'email' || type === 'phone' || type === 'sms' || type === 'whatsapp' || type === 'fax'
-
-const getCustomDisplayText = (value?: string): string | undefined => {
-  if (!value) return undefined
-  const trimmed = value.trim()
-  if (!trimmed) return undefined
-  // Display route-like custom values without a leading slash in previews.
-  if (trimmed.startsWith('/') && !trimmed.startsWith('//')) {
-    return trimmed.replace(/^\/+/, '') || trimmed
-  }
-  return trimmed
-}
 
 type LinkPreviewSelection = {
   text?: string

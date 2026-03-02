@@ -1,5 +1,5 @@
 import {Box, Flex, Stack, Text} from '@sanity/ui'
-import {memo, useCallback, useEffect, useMemo} from 'react'
+import {memo, type ReactNode, useCallback, useEffect, useMemo} from 'react'
 import {
   set,
   type FieldMember,
@@ -52,7 +52,7 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
   useEffect(() => {
     if (!currentType || availableTypeValues.includes(currentType)) return
     if (availableTypeValues.length === 0) return
-    handleChange(set(availableTypeValues[0]))
+    handleChange(set(availableTypeValues[0], ['type']))
   }, [availableTypeValues, currentType, handleChange])
 
   const {
@@ -94,8 +94,8 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
   )
 
   const renderInlineField = useCallback(
-    (fieldProps: Parameters<typeof props.renderField>[0]) => <>{fieldProps.children}</>,
-    [props],
+    (fieldProps: {children: ReactNode}) => <>{fieldProps.children}</>,
+    [],
   )
 
   const inlineFieldRenderProps = useMemo(

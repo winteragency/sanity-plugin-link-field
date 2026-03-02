@@ -48,19 +48,21 @@ const Link = memo(
               ? generateHref.media(link, assetHrefResolver)
               : generateHref[isCustomLink(link) ? 'custom' : link.type]?.(link)
 
+      const target =
+        !isPhoneLink(link) &&
+        !isEmailLink(link) &&
+        !isSMSLink(link) &&
+        !isWhatsAppLink(link) &&
+        !isFaxLink(link) &&
+        link.blank
+          ? '_blank'
+          : undefined
+
       return (
         <Component
           href={href}
-          target={
-            !isPhoneLink(link) &&
-            !isEmailLink(link) &&
-            !isSMSLink(link) &&
-            !isWhatsAppLink(link) &&
-            !isFaxLink(link) &&
-            link.blank
-              ? '_blank'
-              : undefined
-          }
+          target={target}
+          rel={target === '_blank' ? 'noopener noreferrer' : undefined}
           ref={ref}
           {...props}
         >

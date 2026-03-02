@@ -20,7 +20,26 @@ const appendParamsAndAnchor = (
     parameters?: string
     anchor?: string
   },
-) => href + (link.parameters?.trim() || '') + (link.anchor?.trim() || '')
+): string => {
+  const params = link.parameters?.trim()
+  const anchor = link.anchor?.trim()
+
+  if (!params && !anchor) return href
+
+  const hashIdx = href.indexOf('#')
+  const base = hashIdx >= 0 ? href.slice(0, hashIdx) : href
+  const existingHash = hashIdx >= 0 ? href.slice(hashIdx) : ''
+
+  let result = base
+
+  if (params) {
+    result += base.includes('?') ? '&' + params.slice(1) : params
+  }
+
+  result += anchor || existingHash
+
+  return result
+}
 
 /**
  * Safely converts a UrlObject.query (string | null | ParsedUrlQueryInput) to a query string.
@@ -51,7 +70,10 @@ const mergeUrlObject = (
   link: {parameters?: string; anchor?: string},
 ): UrlObject => {
   const merged: UrlObject = {...resolvedHref}
-  merged.hash = link.anchor?.replace(/^#/, '')
+
+  if (link.anchor) {
+    merged.hash = link.anchor.replace(/^#/, '')
+  }
 
   if (link.parameters) {
     const params = new URLSearchParams(link.parameters)

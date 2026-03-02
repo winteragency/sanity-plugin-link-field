@@ -25,43 +25,43 @@ export const requiredLinkField = (field: unknown): CustomValidatorResult => {
   }
 
   if (isInternalLink(link) && !link.internalLink) {
-    return {message: 'Link is required', path: 'internalLink'}
+    return {message: 'Link is required', path: ['internalLink']}
   }
 
   if (isExternalLink(link) && !link.url) {
-    return {message: 'URL is required', path: 'url'}
+    return {message: 'URL is required', path: ['url']}
   }
 
   if (isEmailLink(link) && !link.email) {
-    return {message: 'E-mail is required', path: 'email'}
+    return {message: 'E-mail is required', path: ['email']}
   }
 
   if (isPhoneLink(link) && !link.phone) {
-    return {message: 'Phone number is required', path: 'phone'}
+    return {message: 'Phone number is required', path: ['phone']}
   }
 
   if (isDocumentLink(link) && !link.documentLink?.asset) {
-    return {message: 'Document is required', path: 'documentLink.asset'}
+    return {message: 'Document is required', path: ['documentLink']}
   }
 
   if (isMediaLink(link) && !link.mediaLink?.asset) {
-    return {message: 'Media file is required', path: 'mediaLink'}
+    return {message: 'Media file is required', path: ['mediaLink']}
   }
 
   if (isSMSLink(link) && !link.sms) {
-    return {message: 'Phone number is required', path: 'sms'}
+    return {message: 'Phone number is required', path: ['sms']}
   }
 
   if (isWhatsAppLink(link) && !link.whatsapp) {
-    return {message: 'Phone number is required', path: 'whatsapp'}
+    return {message: 'Phone number is required', path: ['whatsapp']}
   }
 
   if (isFaxLink(link) && !link.fax) {
-    return {message: 'Fax number is required', path: 'fax'}
+    return {message: 'Fax number is required', path: ['fax']}
   }
 
   if (isCustomLink(link) && !link.value) {
-    return {message: 'Value is required', path: 'value'}
+    return {message: 'Value is required', path: ['value']}
   }
 
   return true

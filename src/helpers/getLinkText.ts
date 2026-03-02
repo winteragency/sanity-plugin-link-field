@@ -12,7 +12,7 @@ import {
   isWhatsAppLink,
 } from './typeGuards'
 
-const getCustomDisplayText = (value?: string): string | undefined => {
+export const getCustomDisplayText = (value?: string): string | undefined => {
   if (!value) return undefined
   const trimmed = value.trim()
   if (!trimmed) return undefined
