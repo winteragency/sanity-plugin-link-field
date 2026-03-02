@@ -289,6 +289,7 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
     sms: 'Link to send an SMS to the given phone number.',
     whatsapp: 'Link to open a WhatsApp chat with the given phone number.',
     fax: 'Link to send a fax to the given number.',
+    custom: 'Link to a custom route or value.',
     advanced: 'Optional. Add anchor links and custom parameters.',
     parameters: 'Optional. Add custom parameters to the URL, such as UTM tags.',
     anchor: 'Optional. Add an anchor to link to a specific section on the page.',

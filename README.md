@@ -358,7 +358,7 @@ For each individual link field you add to your schema, you can set these options
 | enabledBuiltInLinkTypes | `undefined` | Built-in link types to show for this specific field. Overrides the plugin-level `enabledBuiltInLinkTypes`. |
 | linkableSchemaTypes | `undefined` | Allowed schema types for internal links on this specific field. Overrides plugin-level `linkableSchemaTypes`. |
 | customLinkTypes | `undefined` | Custom link types for this specific field. Overrides plugin-level `customLinkTypes`. |
-| linkSectionLabel | `undefined` | Custom label for the link field section in the Studio for this specific field. Overrides the plugin-level `linkSectionLabel`. |
+| linkSectionLabel | `undefined` | Custom label for the link field section in the Studio for this specific field. This option is only available at the field level. |
 | weakReferences | `undefined` | Whether internal links should use weak references for this specific field. Overrides plugin-level `weakReferences`. |
 | referenceFilterOptions | `undefined` | Reference input filter options for this specific field. Overrides plugin-level `referenceFilterOptions`. |
 

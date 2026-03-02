@@ -1,6 +1,7 @@
 import {Box, Flex, Stack, Text} from '@sanity/ui'
-import {memo, useCallback, useMemo} from 'react'
+import {memo, useCallback, useEffect, useMemo} from 'react'
 import {
+  set,
   type FieldMember,
   FormFieldValidationStatus,
   ObjectInputMember,
@@ -30,6 +31,8 @@ const validationBoxStyle = {
 export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
   const [textField, typeField, linkField, ...otherFields] = props.members as FieldMember[]
   const {options} = props.schemaType
+  const currentType = props.value?.type
+  const handleChange = props.onChange
   const enabledBuiltInLinkTypes = options?.enabledBuiltInLinkTypes ?? props.enabledBuiltInLinkTypes
   const linkableSchemaTypes = options?.linkableSchemaTypes ?? props.linkableSchemaTypes
   const customLinkTypes = options?.customLinkTypes ?? props.customLinkTypes
@@ -38,6 +41,19 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
   const hasFieldLevelLinkableSchemaTypes = Array.isArray(options?.linkableSchemaTypes)
   const hasFieldLevelWeakReferences = typeof options?.weakReferences === 'boolean'
   const hasFieldLevelReferenceFilterOptions = typeof options?.referenceFilterOptions !== 'undefined'
+  const availableTypeValues = useMemo(() => {
+    const builtInTypes = enabledBuiltInLinkTypes.filter(
+      (type) => type !== 'internal' || linkableSchemaTypes?.length > 0,
+    )
+    const customTypes = customLinkTypes.map((type) => type.value)
+    return [...builtInTypes, ...customTypes]
+  }, [customLinkTypes, enabledBuiltInLinkTypes, linkableSchemaTypes])
+
+  useEffect(() => {
+    if (!currentType || availableTypeValues.includes(currentType)) return
+    if (availableTypeValues.length === 0) return
+    handleChange(set(availableTypeValues[0]))
+  }, [availableTypeValues, currentType, handleChange])
 
   const {
     field: {

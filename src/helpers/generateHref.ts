@@ -11,8 +11,8 @@ import {
   isWhatsAppLink,
 } from './typeGuards'
 
-type HrefResolvableLink = InternalLink | DocumentLink | MediaLink
-type HrefResolver = (link: HrefResolvableLink) => string | UrlObject
+type InternalHrefResolver = (link: InternalLink) => string | UrlObject
+type AssetHrefResolver = (link: DocumentLink | MediaLink) => string | UrlObject
 
 const appendParamsAndAnchor = (
   href: string,
@@ -68,7 +68,7 @@ const mergeUrlObject = (
 }
 
 export const generateHref = {
-  internal: (link: LinkValue, hrefResolver?: HrefResolver) => {
+  internal: (link: LinkValue, hrefResolver?: InternalHrefResolver) => {
     const internalLink = link as InternalLink
     const resolvedHref =
       internalLink.internalLink && hrefResolver ? hrefResolver(internalLink) : undefined
@@ -91,7 +91,7 @@ export const generateHref = {
     isEmailLink(link) && link.email ? `mailto:${link.email.trim()}` : '#',
   phone: (link: LinkValue) =>
     isPhoneLink(link) && link.phone ? `tel:${link.phone.replace(/\s+/g, '')}` : '#',
-  document: (link: LinkValue, hrefResolver?: HrefResolver) => {
+  document: (link: LinkValue, hrefResolver?: AssetHrefResolver) => {
     const documentLink = link as DocumentLink
     const resolvedHref =
       documentLink.documentLink && hrefResolver ? hrefResolver(documentLink) : undefined
@@ -104,7 +104,7 @@ export const generateHref = {
       ? appendParamsAndAnchor(resolvedHref, documentLink)
       : '#'
   },
-  media: (link: LinkValue, hrefResolver?: HrefResolver) => {
+  media: (link: LinkValue, hrefResolver?: AssetHrefResolver) => {
     const mediaLink = link as MediaLink
     const resolvedHref = mediaLink.mediaLink && hrefResolver ? hrefResolver(mediaLink) : undefined
 
