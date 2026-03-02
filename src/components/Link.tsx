@@ -3,16 +3,7 @@ import {type UrlObject} from 'url'
 
 import {generateHref} from '../helpers/generateHref'
 import {getLinkText} from '../helpers/getLinkText'
-import {
-  isCustomLink,
-  isDocumentLink,
-  isEmailLink,
-  isFaxLink,
-  isMediaLink,
-  isPhoneLink,
-  isSMSLink,
-  isWhatsAppLink,
-} from '../helpers/typeGuards'
+import {isCommunicationLink} from '../helpers/typeGuards'
 import {DocumentLink, InternalLink, LinkValue, MediaLink} from '../types'
 
 type LinkProps = {
@@ -39,24 +30,28 @@ const Link = memo(
           fallbackText && fallbackText.trim().length > 0 ? fallbackText : link.type || 'Link'
       }
 
-      const href =
-        link.type === 'internal'
-          ? generateHref.internal(link, hrefResolver)
-          : isDocumentLink(link)
-            ? generateHref.document(link, assetHrefResolver)
-            : isMediaLink(link)
-              ? generateHref.media(link, assetHrefResolver)
-              : generateHref[isCustomLink(link) ? 'custom' : link.type]?.(link)
+      const resolveHref = (): string | UrlObject => {
+        switch (link.type) {
+          case 'internal':
+            return generateHref.internal(link, hrefResolver)
+          case 'document':
+            return generateHref.document(link, assetHrefResolver)
+          case 'media':
+            return generateHref.media(link, assetHrefResolver)
+          case 'external':
+          case 'email':
+          case 'phone':
+          case 'sms':
+          case 'whatsapp':
+          case 'fax':
+            return generateHref[link.type](link)
+          default:
+            return generateHref.custom(link)
+        }
+      }
 
-      const target =
-        !isPhoneLink(link) &&
-        !isEmailLink(link) &&
-        !isSMSLink(link) &&
-        !isWhatsAppLink(link) &&
-        !isFaxLink(link) &&
-        link.blank
-          ? '_blank'
-          : undefined
+      const href = resolveHref()
+      const target = !isCommunicationLink(link) && link.blank ? '_blank' : undefined
 
       return (
         <Component

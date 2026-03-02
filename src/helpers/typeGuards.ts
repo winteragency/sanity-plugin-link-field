@@ -13,6 +13,8 @@ import type {
   WhatsAppLink,
 } from '../types'
 
+type CommunicationLink = EmailLink | PhoneLink | SMSLink | WhatsAppLink | FaxLink
+
 export const BUILT_IN_LINK_TYPES: BuiltInLinkType[] = [
   'internal',
   'external',
@@ -45,6 +47,13 @@ export const isFaxLink = (link: LinkValue): link is FaxLink => link.type === 'fa
 
 export const isCustomLink = (link: LinkValue): link is CustomLink =>
   !BUILT_IN_LINK_TYPES.includes(link.type as BuiltInLinkType)
+
+export const isCommunicationLink = (link: LinkValue): link is CommunicationLink =>
+  link.type === 'email' ||
+  link.type === 'phone' ||
+  link.type === 'sms' ||
+  link.type === 'whatsapp' ||
+  link.type === 'fax'
 
 export const isCommunicationType = (type?: string): boolean =>
   type === 'email' || type === 'phone' || type === 'sms' || type === 'whatsapp' || type === 'fax'

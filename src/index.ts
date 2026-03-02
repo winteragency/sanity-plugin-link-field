@@ -1,5 +1,7 @@
 export {requiredLinkField} from './helpers/requiredLinkField'
 export {
+  isCommunicationLink,
+  isCommunicationType,
   isCustomLink,
   isDocumentLink,
   isEmailLink,

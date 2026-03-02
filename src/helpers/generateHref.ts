@@ -89,6 +89,22 @@ const mergeUrlObject = (
   return merged
 }
 
+const resolveAssetHref = (
+  link: DocumentLink | MediaLink,
+  assetField: unknown,
+  hrefResolver?: AssetHrefResolver,
+): string | UrlObject => {
+  const resolvedHref = assetField && hrefResolver ? hrefResolver(link) : undefined
+
+  if (typeof resolvedHref === 'object' && 'pathname' in resolvedHref) {
+    return mergeUrlObject(resolvedHref, link)
+  }
+
+  return resolvedHref && typeof resolvedHref === 'string'
+    ? appendParamsAndAnchor(resolvedHref, link)
+    : '#'
+}
+
 export const generateHref = {
   internal: (link: LinkValue, hrefResolver?: InternalHrefResolver) => {
     const internalLink = link as InternalLink
@@ -114,29 +130,12 @@ export const generateHref = {
   phone: (link: LinkValue) =>
     isPhoneLink(link) && link.phone ? `tel:${link.phone.replace(/\s+/g, '')}` : '#',
   document: (link: LinkValue, hrefResolver?: AssetHrefResolver) => {
-    const documentLink = link as DocumentLink
-    const resolvedHref =
-      documentLink.documentLink && hrefResolver ? hrefResolver(documentLink) : undefined
-
-    if (typeof resolvedHref === 'object' && 'pathname' in resolvedHref) {
-      return mergeUrlObject(resolvedHref, documentLink)
-    }
-
-    return resolvedHref && typeof resolvedHref === 'string'
-      ? appendParamsAndAnchor(resolvedHref, documentLink)
-      : '#'
+    const docLink = link as DocumentLink
+    return resolveAssetHref(docLink, docLink.documentLink, hrefResolver)
   },
   media: (link: LinkValue, hrefResolver?: AssetHrefResolver) => {
     const mediaLink = link as MediaLink
-    const resolvedHref = mediaLink.mediaLink && hrefResolver ? hrefResolver(mediaLink) : undefined
-
-    if (typeof resolvedHref === 'object' && 'pathname' in resolvedHref) {
-      return mergeUrlObject(resolvedHref, mediaLink)
-    }
-
-    return resolvedHref && typeof resolvedHref === 'string'
-      ? appendParamsAndAnchor(resolvedHref, mediaLink)
-      : '#'
+    return resolveAssetHref(mediaLink, mediaLink.mediaLink, hrefResolver)
   },
   sms: (link: LinkValue) =>
     isSMSLink(link) && link.sms ? `sms:${link.sms.replace(/\s+/g, '')}` : '#',
