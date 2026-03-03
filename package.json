@@ -69,10 +69,10 @@
     "lucide-react": "^0.576.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^20.4.0",
-    "@commitlint/config-conventional": "^20.4.0",
-    "@eslint/js": "^9",
-    "@sanity/pkg-utils": "^10.4.1",
+    "@commitlint/cli": "^20.4.2",
+    "@commitlint/config-conventional": "^20.4.2",
+    "@eslint/js": "^9.39.3",
+    "@sanity/pkg-utils": "^10.4.5",
     "@sanity/plugin-kit": "^4.0.20",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/exec": "^7.1.0",
@@ -81,7 +81,7 @@
     "conventional-changelog-conventionalcommits": "^9.2.0",
     "eslint": "^9",
     "eslint-config-prettier": "^10",
-    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "lefthook": "^2.0.16",
