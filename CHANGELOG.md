@@ -11,10 +11,6 @@ All notable changes to this project will be documented in this file. See
 
 * typegen crashes ([#36](https://github.com/winteragency/sanity-plugin-link-field/issues/36)) ([29a449b](https://github.com/winteragency/sanity-plugin-link-field/commit/29a449b975eab6c75f4099f83cf7e8043919cca8))
 
-### Reverts
-
-* Revert "chore(release): 1.5.0 [skip ci]" ([618c6d4](https://github.com/winteragency/sanity-plugin-link-field/commit/618c6d4f1944a2f8a6e1c0ea0a5a96c7658e44b1))
-
 ## [1.5.0](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.4.2...v1.5.0) (2026-02-27)
 
 ### Features
