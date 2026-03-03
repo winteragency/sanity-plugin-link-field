@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.1](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.5.0...v1.5.1) (2026-03-03)
+
+### Bug Fixes
+
+* typegen crashes ([#36](https://github.com/winteragency/sanity-plugin-link-field/issues/36)) ([29a449b](https://github.com/winteragency/sanity-plugin-link-field/commit/29a449b975eab6c75f4099f83cf7e8043919cca8))
+
 ## [1.5.0](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.4.2...v1.5.0) (2026-02-27)
 
 ### Features
