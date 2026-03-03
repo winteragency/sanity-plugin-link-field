@@ -1,4 +1,4 @@
-name: "Lint PR"
+name: 'Lint PR'
 
 on:
   pull_request_target:
@@ -40,4 +40,4 @@ jobs:
         with:
           header: pr-title-lint-error
           hide: true
-          hide_classify: "RESOLVED"
+          hide_classify: 'RESOLVED'
