@@ -18,7 +18,9 @@ export const CustomLinkInput = memo(function CustomLinkInput(
   const linkValue = useFormValue(props.path.slice(0, -1)) as LinkValue | null
   const [options, setOptions] = useState<CustomLinkTypeOptions[] | null>(null)
 
-  const customLinkType = props.customLinkTypes.find((type) => type.value === linkValue!.type)
+  const customLinkType = linkValue
+    ? props.customLinkTypes.find((type) => type.value === linkValue.type)
+    : undefined
 
   useEffect(() => {
     if (customLinkType) {

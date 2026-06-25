@@ -1,7 +1,8 @@
 import {Box, Flex, Stack, Text} from '@sanity/ui'
 import {memo} from 'react'
-import {type FieldMember, FormFieldValidationStatus, ObjectInputMember} from 'sanity'
+import {FormFieldValidationStatus, ObjectInputMember} from 'sanity'
 
+import {resolveLinkInputMembers} from '../helpers/linkInputMembers'
 import {isCustomLink} from '../helpers/typeGuards'
 import {LinkInputProps} from '../types'
 
@@ -13,7 +14,17 @@ import {LinkInputProps} from '../types'
  * The rest of the fields ("blank" and "advanced") are rendered as usual.
  */
 export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
-  const [textField, typeField, linkField, ...otherFields] = props.members as FieldMember[]
+  const {textField, typeField, linkField, otherFields, isReady} = resolveLinkInputMembers(
+    props.members,
+    props.value,
+  )
+
+  // In Sanity Studio v6, `members` can be undefined while form state is resolving.
+  // Fall back to the default object input to avoid runtime errors.
+  if (!props.members?.length || !isReady || !typeField || !linkField) {
+    return props.renderDefault(props)
+  }
+
   const {options} = props.schemaType
 
   const {
@@ -43,7 +54,7 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
   return (
     <Stack space={4}>
       {/* Render the text field if enabled */}
-      {options?.enableText && (
+      {options?.enableText && textField && (
         <ObjectInputMember
           member={{
             ...textField,
