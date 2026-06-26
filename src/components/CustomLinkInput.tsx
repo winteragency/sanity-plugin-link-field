@@ -23,17 +23,35 @@ export const CustomLinkInput = memo(function CustomLinkInput(
     : undefined
 
   useEffect(() => {
-    if (customLinkType) {
-      if (Array.isArray(customLinkType?.options)) {
-        setOptions(customLinkType.options)
-      } else {
-        customLinkType
-          .options(document, props.path, workspace.currentUser)
-          .then((options) => setOptions(options))
-      }
+    if (!customLinkType) {
+      setOptions(null)
+      return
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customLinkType, props.path, workspace.currentUser])
+
+    let active = true
+
+    if (Array.isArray(customLinkType.options)) {
+      setOptions(customLinkType.options)
+    } else {
+      setOptions(null)
+      customLinkType
+        .options(document, props.path, workspace.currentUser)
+        .then((loadedOptions) => {
+          if (active) {
+            setOptions(loadedOptions)
+          }
+        })
+        .catch(() => {
+          if (active) {
+            setOptions([])
+          }
+        })
+    }
+
+    return () => {
+      active = false
+    }
+  }, [customLinkType, document, props.path, workspace.currentUser])
 
   return options ? (
     <Select

@@ -2,7 +2,7 @@ import type {FieldMember, ObjectMember} from 'sanity'
 
 import type {LinkValue} from '../types'
 
-const OTHER_FIELD_NAMES = new Set(['blank', 'parameters', 'anchor'])
+const LINK_VALUE_FIELD_NAMES = new Set(['internalLink', 'url', 'email', 'phone', 'value'])
 
 export function getActiveLinkFieldName(type: LinkValue['type'] | undefined): string {
   switch (type) {
@@ -19,10 +19,6 @@ export function getActiveLinkFieldName(type: LinkValue['type'] | undefined): str
   }
 }
 
-function isFieldMember(member: ObjectMember): member is FieldMember {
-  return member.kind === 'field'
-}
-
 export function resolveLinkInputMembers(
   members: ObjectMember[] | undefined,
   value: LinkValue | undefined,
@@ -30,24 +26,36 @@ export function resolveLinkInputMembers(
   textField?: FieldMember
   typeField?: FieldMember
   linkField?: FieldMember
-  otherFields: FieldMember[]
-  isReady: boolean
+  otherFields: ObjectMember[]
 } {
-  const fieldMembers = (members ?? []).filter(isFieldMember)
-
-  const textField = fieldMembers.find((member) => member.name === 'text')
-  const typeField = fieldMembers.find((member) => member.name === 'type')
-  const linkField = fieldMembers.find(
-    (member) => member.name === getActiveLinkFieldName(value?.type ?? 'internal'),
+  const textField = members?.find(
+    (member): member is FieldMember => member.kind === 'field' && member.name === 'text',
+  )
+  const typeField = members?.find(
+    (member): member is FieldMember => member.kind === 'field' && member.name === 'type',
+  )
+  const linkField = members?.find(
+    (member): member is FieldMember =>
+      member.kind === 'field' && member.name === getActiveLinkFieldName(value?.type ?? 'internal'),
   )
 
-  const otherFields = fieldMembers.filter((member) => OTHER_FIELD_NAMES.has(member.name))
+  const otherFields = (members ?? []).filter((member) => {
+    if (member === textField || member === typeField || member === linkField) {
+      return false
+    }
+
+    // Inactive link-type fields stay in `members` but are rendered via `linkField`.
+    if (member.kind === 'field' && LINK_VALUE_FIELD_NAMES.has(member.name)) {
+      return false
+    }
+
+    return true
+  })
 
   return {
     textField,
     typeField,
     linkField,
     otherFields,
-    isReady: Boolean(typeField && linkField),
   }
 }
