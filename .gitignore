@@ -53,6 +53,9 @@ jspm_packages
 .yalc
 yalc.lock
 
+# Bun (project uses npm)
+bun.lock
+
 # npm package zips
 *.tgz
 
