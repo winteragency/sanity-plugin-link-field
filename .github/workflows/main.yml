@@ -53,6 +53,7 @@ jobs:
           cache: npm
           node-version-file: .nvmrc
           registry-url: https://registry.npmjs.org
+      - run: corepack prepare npm@11.17.0 --activate
       - run: npm clean-install
         # Linting can be skipped
       - run: npm run lint --if-present
@@ -96,6 +97,7 @@ jobs:
         with:
           cache: npm
           node-version: ${{ matrix.node }}
+      - run: corepack prepare npm@11.17.0 --activate
       - run: npm install
       - run: npm test --if-present
 
@@ -121,6 +123,7 @@ jobs:
         with:
           cache: npm
           node-version-file: .nvmrc
+      - run: corepack prepare npm@11.17.0 --activate
       - run: npm clean-install
       - run: npm audit signatures
         # Branches that will release new versions are defined in .releaserc.json

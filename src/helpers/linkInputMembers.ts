@@ -4,7 +4,7 @@ import type {LinkValue} from '../types'
 
 const LINK_VALUE_FIELD_NAMES = new Set(['internalLink', 'url', 'email', 'phone', 'value'])
 
-export function getActiveLinkFieldName(type: LinkValue['type'] | undefined): string {
+function getActiveLinkFieldName(type: LinkValue['type'] | undefined): string {
   switch (type) {
     case 'internal':
       return 'internalLink'

@@ -1,7 +1,7 @@
 import type {FieldMember, ObjectMember} from 'sanity'
 import {describe, expect, it} from 'vitest'
 
-import {getActiveLinkFieldName, resolveLinkInputMembers} from './linkInputMembers'
+import {resolveLinkInputMembers} from './linkInputMembers'
 
 function fieldMember(name: string): FieldMember {
   return {
@@ -18,20 +18,6 @@ function fieldsetMember(key: string): ObjectMember {
     name: key,
   } as unknown as ObjectMember
 }
-
-describe('getActiveLinkFieldName', () => {
-  it('returns the correct field name for built-in link types', () => {
-    expect(getActiveLinkFieldName('internal')).toBe('internalLink')
-    expect(getActiveLinkFieldName('external')).toBe('url')
-    expect(getActiveLinkFieldName('email')).toBe('email')
-    expect(getActiveLinkFieldName('phone')).toBe('phone')
-  })
-
-  it('falls back to value for custom link types', () => {
-    expect(getActiveLinkFieldName('archive')).toBe('value')
-    expect(getActiveLinkFieldName(undefined)).toBe('value')
-  })
-})
 
 describe('resolveLinkInputMembers', () => {
   it('returns empty otherFields when members is undefined', () => {
@@ -108,5 +94,17 @@ describe('resolveLinkInputMembers', () => {
     const result = resolveLinkInputMembers([typeField, internalLinkField], undefined)
 
     expect(result.linkField).toBe(internalLinkField)
+  })
+
+  it('selects email, phone, and custom link fields by type', () => {
+    const typeField = fieldMember('type')
+    const emailField = fieldMember('email')
+    const phoneField = fieldMember('phone')
+    const valueField = fieldMember('value')
+    const members = [typeField, emailField, phoneField, valueField]
+
+    expect(resolveLinkInputMembers(members, {type: 'email'}).linkField).toBe(emailField)
+    expect(resolveLinkInputMembers(members, {type: 'phone'}).linkField).toBe(phoneField)
+    expect(resolveLinkInputMembers(members, {type: 'archive'}).linkField).toBe(valueField)
   })
 })
