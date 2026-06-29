@@ -7,7 +7,7 @@ import prettierConfig from 'eslint-config-prettier'
 export default tseslint.config(
   // Global ignores
   {
-    ignores: ['dist/**', '*.cjs', 'package.config.ts'],
+    ignores: ['dist/**', 'example/**', '*.cjs', 'package.config.ts'],
   },
 
   // Base ESLint recommended rules

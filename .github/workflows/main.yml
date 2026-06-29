@@ -99,6 +99,8 @@ jobs:
           node-version: ${{ matrix.node }}
       - run: npm install
       - run: npm test --if-present
+      - run: npm run test:example
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 'lts/*'
 
   release:
     permissions:

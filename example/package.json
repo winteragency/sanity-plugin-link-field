@@ -1,0 +1,26 @@
+{
+  "name": "sanity-plugin-link-field-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev",
+    "validate": "sanity schema validate",
+    "extract": "sanity schema extract",
+    "typegen": "sanity typegen generate",
+    "test": "npm run validate && npm run extract && npm run typegen && vitest run"
+  },
+  "dependencies": {
+    "@sanity/icons": "^3",
+    "@sanity/ui": "^3",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-is": "^19.2.7",
+    "sanity": "^6.2.0",
+    "sanity-plugin-link-field": "file:..",
+    "styled-components": "^6"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.9"
+  }
+}

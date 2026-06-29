@@ -67,3 +67,9 @@ bun.lock
 
 # Compiled plugin
 dist
+
+# Example Studio generated artifacts
+example/node_modules
+example/schema.json
+example/sanity.types.ts
+example/.sanity
