@@ -97,7 +97,6 @@ jobs:
         with:
           cache: npm
           node-version: ${{ matrix.node }}
-      - run: corepack prepare npm@11.17.0 --activate
       - run: npm install
       - run: npm test --if-present
 
