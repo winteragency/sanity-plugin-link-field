@@ -82,6 +82,7 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
         <Flex gap={2} align="flex-start">
           {/* Render the type field (without its label) */}
           <ObjectInputMember
+            key={typeField.name}
             member={{
               ...typeField,
               field: {
@@ -98,6 +99,7 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
           <Stack space={2} style={{width: '100%'}}>
             {/* Render the input for the selected type of link (without its label) */}
             <ObjectInputMember
+              key={linkField.name}
               member={{
                 ...linkField,
                 field: {

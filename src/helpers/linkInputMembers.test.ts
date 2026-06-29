@@ -1,7 +1,7 @@
 import type {FieldMember, ObjectMember} from 'sanity'
 import {describe, expect, it} from 'vitest'
 
-import {resolveLinkInputMembers} from './linkInputMembers'
+import {getActiveLinkFieldName, resolveLinkInputMembers} from './linkInputMembers'
 
 function fieldMember(name: string): FieldMember {
   return {
@@ -18,6 +18,20 @@ function fieldsetMember(key: string): ObjectMember {
     name: key,
   } as unknown as ObjectMember
 }
+
+describe('getActiveLinkFieldName', () => {
+  it('returns the correct field name for built-in link types', () => {
+    expect(getActiveLinkFieldName('internal')).toBe('internalLink')
+    expect(getActiveLinkFieldName('external')).toBe('url')
+    expect(getActiveLinkFieldName('email')).toBe('email')
+    expect(getActiveLinkFieldName('phone')).toBe('phone')
+  })
+
+  it('falls back to value for custom link types', () => {
+    expect(getActiveLinkFieldName('archive')).toBe('value')
+    expect(getActiveLinkFieldName(undefined)).toBe('value')
+  })
+})
 
 describe('resolveLinkInputMembers', () => {
   it('returns empty otherFields when members is undefined', () => {
@@ -106,5 +120,34 @@ describe('resolveLinkInputMembers', () => {
     expect(resolveLinkInputMembers(members, {type: 'email'}).linkField).toBe(emailField)
     expect(resolveLinkInputMembers(members, {type: 'phone'}).linkField).toBe(phoneField)
     expect(resolveLinkInputMembers(members, {type: 'archive'}).linkField).toBe(valueField)
+  })
+
+  it('resolves link field when fieldset appears before core fields', () => {
+    const typeField = fieldMember('type')
+    const internalLinkField = fieldMember('internalLink')
+    const urlField = fieldMember('url')
+    const advancedFieldset = fieldsetMember('advanced')
+    const blankField = fieldMember('blank')
+
+    const result = resolveLinkInputMembers(
+      [advancedFieldset, blankField, urlField, typeField, internalLinkField],
+      {type: 'internal'},
+    )
+
+    expect(result.typeField).toBe(typeField)
+    expect(result.linkField).toBe(internalLinkField)
+    expect(result.otherFields).toEqual([advancedFieldset, blankField])
+  })
+
+  it('selects url when both internalLink and url members exist for external type', () => {
+    const typeField = fieldMember('type')
+    const internalLinkField = fieldMember('internalLink')
+    const urlField = fieldMember('url')
+
+    const result = resolveLinkInputMembers([typeField, internalLinkField, urlField], {
+      type: 'external',
+    })
+
+    expect(result.linkField).toBe(urlField)
   })
 })

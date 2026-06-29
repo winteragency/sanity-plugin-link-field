@@ -2,9 +2,10 @@ import {ChevronDownIcon} from '@sanity/icons'
 import {Button, Menu, MenuButton, MenuItem} from '@sanity/ui'
 import {AtSignIcon, GlobeIcon, LinkIcon, PhoneIcon, type LucideIcon} from 'lucide-react'
 import {type ComponentType, memo} from 'react'
-import {set, type StringInputProps} from 'sanity'
+import {PatchEvent, set, unset, type StringInputProps} from 'sanity'
 
-import {CustomLinkType, LinkFieldPluginOptions, LinkType} from '../types'
+import {getInactiveLinkFieldNames} from '../helpers/typeChangePatches'
+import type {CustomLinkType, LinkFieldPluginOptions, LinkType} from '../types'
 
 const ICON_SIZE = 16
 
@@ -88,7 +89,16 @@ export const LinkTypeInput = memo(function LinkTypeInput({
               text={type.title}
               icon={getIcon(type)}
               onClick={() => {
-                onChange(set(type.value))
+                if (type.value === value) {
+                  return
+                }
+
+                onChange(
+                  PatchEvent.from([
+                    set(type.value),
+                    ...getInactiveLinkFieldNames(type.value).map((field) => unset([field])),
+                  ]),
+                )
               }}
             />
           ))}
