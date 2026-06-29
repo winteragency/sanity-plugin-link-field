@@ -2,7 +2,18 @@ import type {FieldMember, ObjectMember} from 'sanity'
 
 import type {LinkValue} from '../types'
 
-const LINK_VALUE_FIELD_NAMES = new Set(['internalLink', 'url', 'email', 'phone', 'value'])
+const LINK_VALUE_FIELD_NAMES = new Set([
+  'internalLink',
+  'url',
+  'email',
+  'phone',
+  'documentLink',
+  'mediaLink',
+  'sms',
+  'whatsapp',
+  'fax',
+  'value',
+])
 
 function getActiveLinkFieldName(type: LinkValue['type'] | undefined): string {
   switch (type) {
@@ -14,6 +25,16 @@ function getActiveLinkFieldName(type: LinkValue['type'] | undefined): string {
       return 'email'
     case 'phone':
       return 'phone'
+    case 'document':
+      return 'documentLink'
+    case 'media':
+      return 'mediaLink'
+    case 'sms':
+      return 'sms'
+    case 'whatsapp':
+      return 'whatsapp'
+    case 'fax':
+      return 'fax'
     default:
       return 'value'
   }

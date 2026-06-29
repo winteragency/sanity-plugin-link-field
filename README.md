@@ -72,6 +72,13 @@ export const mySchema = defineType({
 
 Editors will be able to switch between internal links (using native references in Sanity), external links (for linking to other websites) as well as e-mail (`mailto`) and phone (`tel`) links:
 
+Additional built-in link types (`document`, `media`, `sms`, `whatsapp`, and `fax`) are available but hidden by default. Enable them with `enabledBuiltInLinkTypes` in your plugin or field options (see [Options](#-options)).
+
+#### Internal vs document links
+
+- **Internal** links reference structured Sanity documents (for example pages with slugs). Use your frontend `hrefResolver` to turn the referenced document into a route.
+- **Document** links point at downloadable file assets (PDFs, spreadsheets, etc.) stored in Sanity's asset pipeline—not at navigable site pages.
+
 The link object also includes additional fields for adding custom URL parameters and/or URL fragments to the end of an internal or external link. This can be used to add UTM campaign tracking or link to specific sections of a page, respectively. If you use the provided `Link` component, these will be handled automatically on the frontend.
 
 <img width="456" alt="link-field" src="https://github.com/winteragency/sanity-plugin-link-field/assets/1009069/ebbe0f9f-a2e1-4f13-8a7f-9972a5237296">
@@ -341,6 +348,7 @@ When configuring the plugin in `sanity.config.ts`, these are the global options 
 | weakReferences | `false` | Make internal links use [weak references](https://www.sanity.io/docs/reference-type#f45f659e7b28) |
 | referenceFilterOptions | `undefined` | Custom [filter options](https://www.sanity.io/docs/reference-type#1ecd78ab1655) passed to the reference input component for internal links. Use it to filter the documents that should be available for linking, eg. by locale. |
 | descriptions | *See [linkField.tsx](https://github.com/winteragency/sanity-plugin-link-field/blob/main/src/linkField.tsx)* | Override the descriptions of the different subfields. |
+| enabledBuiltInLinkTypes | `['internal', 'external', 'email', 'phone']` | Built-in link types that should be shown in the dropdown. Use this to hide optional built-in types like `document`, `media`, `sms`, `whatsapp`, and `fax`. |
 | enableLinkParameters | `true` | Whether the user should be able to set custom URL parameters for internal and external links. |
 | enableAnchorLinks | `true` | Whether the user should be able to set custom anchors (URL fragments) for internal and external links. |
 | customLinkTypes | `[]` | Any custom link types that should be available in the dropdown. This can be used to allow users to link to pre-defined routes that don't exist within Sanity, such as hardcoded routes in the frontend application, or dynamic content that is pulled in from an external system. See [Custom link types](#custom-link-types) |
@@ -352,7 +360,14 @@ For each individual link field you add to your schema, you can set these options
 | Option | Default Value | Description |
 | ------------- | ------------- | ------------- |
 | enableText  | `false`  | Whether the link should include an optional field for setting the link text/label. If enabled, this will be available on the resulting link object under the `.text` property. |
+| requireText | `false` | Whether the text/label should be required when `enableText` is true. |
 | textLabel  | `Text`  | The label for the text input field, if enabled using the `enableText` option. |
+| enabledBuiltInLinkTypes | `undefined` | Built-in link types to show for this specific field. Overrides the plugin-level `enabledBuiltInLinkTypes`. |
+| linkableSchemaTypes | `undefined` | Allowed schema types for internal links on this specific field. Overrides plugin-level `linkableSchemaTypes`. |
+| customLinkTypes | `undefined` | Custom link types for this specific field. Overrides plugin-level `customLinkTypes`. |
+| linkSectionLabel | `undefined` | Custom label for the link field section in the Studio for this specific field. This option is only available at the field level. |
+| weakReferences | `undefined` | Whether internal links should use weak references for this specific field. Overrides plugin-level `weakReferences`. |
+| referenceFilterOptions | `undefined` | Reference input filter options for this specific field. Overrides plugin-level `referenceFilterOptions`. |
 
 ## 🙌 Credits
 

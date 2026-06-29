@@ -107,4 +107,45 @@ describe('resolveLinkInputMembers', () => {
     expect(resolveLinkInputMembers(members, {type: 'phone'}).linkField).toBe(phoneField)
     expect(resolveLinkInputMembers(members, {type: 'archive'}).linkField).toBe(valueField)
   })
+
+  it('selects document, media, and communication link fields by type', () => {
+    const typeField = fieldMember('type')
+    const documentLinkField = fieldMember('documentLink')
+    const mediaLinkField = fieldMember('mediaLink')
+    const smsField = fieldMember('sms')
+    const whatsappField = fieldMember('whatsapp')
+    const faxField = fieldMember('fax')
+    const blankField = fieldMember('blank')
+    const members = [
+      typeField,
+      documentLinkField,
+      mediaLinkField,
+      smsField,
+      whatsappField,
+      faxField,
+      blankField,
+    ]
+
+    expect(resolveLinkInputMembers(members, {type: 'document'}).linkField).toBe(documentLinkField)
+    expect(resolveLinkInputMembers(members, {type: 'media'}).linkField).toBe(mediaLinkField)
+    expect(resolveLinkInputMembers(members, {type: 'sms'}).linkField).toBe(smsField)
+    expect(resolveLinkInputMembers(members, {type: 'whatsapp'}).linkField).toBe(whatsappField)
+    expect(resolveLinkInputMembers(members, {type: 'fax'}).linkField).toBe(faxField)
+  })
+
+  it('excludes inactive new link-type fields from otherFields', () => {
+    const typeField = fieldMember('type')
+    const mediaLinkField = fieldMember('mediaLink')
+    const documentLinkField = fieldMember('documentLink')
+    const smsField = fieldMember('sms')
+    const blankField = fieldMember('blank')
+
+    const result = resolveLinkInputMembers(
+      [typeField, mediaLinkField, documentLinkField, smsField, blankField],
+      {type: 'media'},
+    )
+
+    expect(result.linkField).toBe(mediaLinkField)
+    expect(result.otherFields).toEqual([blankField])
+  })
 })
