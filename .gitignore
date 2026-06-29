@@ -42,6 +42,12 @@ jspm_packages
 # VS Code settings
 .vscode
 
+# Cursor IDE (local only)
+.cursor
+
+# Fallow analysis output (local only)
+.fallow
+
 # IntelliJ
 .idea
 *.iml
