@@ -60,7 +60,8 @@
     "check:types": "tsc --pretty --noEmit",
     "check:format": "prettier --check .",
     "fix:format": "prettier --write .",
-    "fix:lint": "eslint src/ --fix --quiet"
+    "fix:lint": "eslint src/ --fix --quiet",
+    "test": "vitest run"
   },
   "dependencies": {
     "@sanity/icons": "^3",
@@ -93,21 +94,23 @@
     "semantic-release": "^25.0.3",
     "semantic-release-license": "^1.0.3",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8"
+    "typescript-eslint": "^8",
+    "vitest": "^3.2.6"
   },
   "peerDependencies": {
     "react": "^18 || ^19",
     "sanity": "^3 || ^4 || ^5 || ^6"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22.12"
   },
   "lint-staged": {
     "*.js": "eslint --cache --fix"
   },
   "sanityPlugin": {
     "verifyPackage": {
-      "eslintImports": false
+      "eslintImports": false,
+      "nodeEngine": false
     }
   },
   "browserslist": "extends @sanity/browserslist-config",

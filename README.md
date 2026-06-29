@@ -360,6 +360,8 @@ For each individual link field you add to your schema, you can set these options
 
 ## 🧪 Develop & test
 
+This plugin supports Sanity Studio v3 through v6.
+
 This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
 with default configuration for build & watch scripts.
 

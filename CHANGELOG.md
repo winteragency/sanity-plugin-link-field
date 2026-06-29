@@ -5,6 +5,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [Unreleased]
+
+### Features
+
+* add Sanity Studio v6 support
+
+### Bug Fixes
+
+* guard against undefined or incomplete object members during form state resolution in Studio v6
+* resolve link input fields by name instead of array position to stay compatible with fieldsets and decorations
+* harden custom link type option loading under React Strict Mode
+
 ## [1.5.1](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.5.0...v1.5.1) (2026-03-03)
 
 ### Bug Fixes

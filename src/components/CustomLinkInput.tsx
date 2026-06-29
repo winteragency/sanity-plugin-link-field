@@ -55,18 +55,17 @@ export const CustomLinkInput = memo(function CustomLinkInput(
 
   return options ? (
     <Select
+      value={props.value ?? ''}
       onChange={(e) => {
         props.onChange(set(e.currentTarget.value || ''))
       }}
     >
-      <>
-        <option value="" selected={props.value === ''} disabled hidden />
-        {options.map((option) => (
-          <option key={option.value} value={option.value} selected={props.value === option.value}>
-            {option.title}
-          </option>
-        ))}
-      </>
+      <option value="" disabled hidden />
+      {options.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.title}
+        </option>
+      ))}
     </Select>
   ) : (
     <Spinner style={{marginLeft: '0.5rem'}} />
