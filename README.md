@@ -362,6 +362,8 @@ For each individual link field you add to your schema, you can set these options
 
 This plugin supports Sanity Studio v3 through v6.
 
+**Requirements:** Node.js `>=22.12` (see [`.nvmrc`](.nvmrc) for the recommended LTS version) and npm `>=11.17`.
+
 This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
 with default configuration for build & watch scripts.
 

@@ -97,8 +97,10 @@
     "styled-components": "^5.2 || ^6"
   },
   "engines": {
-    "node": ">=22.12"
+    "node": ">=22.12",
+    "npm": ">=11.17.0"
   },
+  "packageManager": "npm@11.17.0",
   "lint-staged": {
     "*.js": "eslint --cache --fix"
   },
