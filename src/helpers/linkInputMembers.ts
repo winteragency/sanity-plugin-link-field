@@ -7,8 +7,7 @@ const LINK_VALUE_FIELD_NAMES = new Set([
   'url',
   'email',
   'phone',
-  'documentLink',
-  'mediaLink',
+  'assetLink',
   'sms',
   'whatsapp',
   'fax',
@@ -25,10 +24,8 @@ function getActiveLinkFieldName(type: LinkValue['type'] | undefined): string {
       return 'email'
     case 'phone':
       return 'phone'
-    case 'document':
-      return 'documentLink'
-    case 'media':
-      return 'mediaLink'
+    case 'asset':
+      return 'assetLink'
     case 'sms':
       return 'sms'
     case 'whatsapp':

@@ -2,13 +2,12 @@ import type {CustomValidatorResult} from 'sanity'
 
 import type {LinkValue} from '../types'
 import {
+  isAssetLink,
   isCustomLink,
-  isDocumentLink,
   isEmailLink,
   isExternalLink,
   isFaxLink,
   isInternalLink,
-  isMediaLink,
   isPhoneLink,
   isSMSLink,
   isWhatsAppLink,
@@ -41,12 +40,8 @@ export const requiredLinkField = (field: unknown): CustomValidatorResult => {
     return {message: 'Phone number is required', path: ['phone']}
   }
 
-  if (isDocumentLink(link) && !link.documentLink?.asset) {
-    return {message: 'Document is required', path: ['documentLink']}
-  }
-
-  if (isMediaLink(link) && !link.mediaLink?.asset) {
-    return {message: 'Media file is required', path: ['mediaLink']}
+  if (isAssetLink(link) && !link.assetLink?.asset) {
+    return {message: 'Asset is required', path: ['assetLink']}
   }
 
   if (isSMSLink(link) && !hasValue(link.sms)) {

@@ -1,12 +1,11 @@
 import {LinkValue} from '../types'
 import {
+  isAssetLink,
   isCustomLink,
-  isDocumentLink,
   isEmailLink,
   isExternalLink,
   isFaxLink,
   isInternalLink,
-  isMediaLink,
   isPhoneLink,
   isSMSLink,
   isWhatsAppLink,
@@ -44,16 +43,9 @@ export const getLinkText = (link: LinkValue): string | undefined => {
   if (isSMSLink(link)) return link.sms || undefined
   if (isWhatsAppLink(link)) return link.whatsapp || undefined
   if (isFaxLink(link)) return link.fax || undefined
-  if (isDocumentLink(link)) {
+  if (isAssetLink(link)) {
     return (
-      getAssetOriginalFilename(link.documentLink?.asset) ||
-      link.documentLink?.asset?._ref ||
-      undefined
-    )
-  }
-  if (isMediaLink(link)) {
-    return (
-      getAssetOriginalFilename(link.mediaLink?.asset) || link.mediaLink?.asset?._ref || undefined
+      getAssetOriginalFilename(link.assetLink?.asset) || link.assetLink?.asset?._ref || undefined
     )
   }
   if (isCustomLink(link)) return getCustomDisplayText(link.value)

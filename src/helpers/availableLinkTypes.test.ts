@@ -24,8 +24,8 @@ describe('availableLinkTypes', () => {
 
   it('includes opt-in types when explicitly enabled', () => {
     expect(
-      getAvailableBuiltInLinkTypeValues(['external', 'media', 'sms', 'whatsapp', 'fax'], ['page']),
-    ).toEqual(['external', 'media', 'sms', 'whatsapp', 'fax'])
+      getAvailableBuiltInLinkTypeValues(['external', 'asset', 'sms', 'whatsapp', 'fax'], ['page']),
+    ).toEqual(['external', 'asset', 'sms', 'whatsapp', 'fax'])
   })
 
   it('appends custom link type values', () => {

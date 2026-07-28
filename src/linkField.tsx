@@ -1,17 +1,4 @@
 import {
-  AtSignIcon,
-  FileTextIcon,
-  FolderOpen,
-  GlobeIcon,
-  LinkIcon,
-  type LucideIcon,
-  MessageCircle,
-  PhoneIcon,
-  Printer,
-  SmartphoneIcon,
-} from 'lucide-react'
-import {type ComponentType} from 'react'
-import {
   defineField,
   definePlugin,
   defineType,
@@ -22,6 +9,7 @@ import {
 import {CustomLinkInput} from './components/CustomLinkInput'
 import {LinkInput} from './components/LinkInput'
 import {LinkTypeInput} from './components/LinkTypeInput'
+import {getIconForLinkType} from './helpers/defaultLinkTypes'
 import {getCustomDisplayText} from './helpers/getLinkText'
 import {isCommunicationType, isCustomLink} from './helpers/typeGuards'
 import type {
@@ -34,41 +22,6 @@ import type {
 
 const PHONE_REGEX = /^\+?[0-9\s-]*$/
 const ANCHOR_REGEX = /^([-?/:@._~!$&'()*+,;=a-zA-Z0-9]|%[0-9a-fA-F]{2})*$/
-
-/**
- * Wrap a lucide ForwardRefExoticComponent in a plain function component
- * so Sanity's preview system recognises it as renderable media
- * (`typeof fn === 'function'`).
- */
-const wrapIcon = (Icon: LucideIcon): ComponentType => {
-  function PreviewIcon() {
-    return <Icon />
-  }
-  PreviewIcon.displayName = Icon.displayName || Icon.name
-  return PreviewIcon
-}
-
-const BUILT_IN_LINK_TYPE_ICONS: Record<BuiltInLinkType, ComponentType> = {
-  internal: wrapIcon(LinkIcon),
-  external: wrapIcon(GlobeIcon),
-  email: wrapIcon(AtSignIcon),
-  phone: wrapIcon(PhoneIcon),
-  document: wrapIcon(FileTextIcon),
-  media: wrapIcon(FolderOpen),
-  sms: wrapIcon(MessageCircle),
-  whatsapp: wrapIcon(SmartphoneIcon),
-  fax: wrapIcon(Printer),
-}
-
-const getIconForLinkType = (
-  type: string | undefined,
-  customLinkTypes: CustomLinkType[],
-): ComponentType => {
-  if (type && type in BUILT_IN_LINK_TYPE_ICONS) {
-    return BUILT_IN_LINK_TYPE_ICONS[type as BuiltInLinkType]
-  }
-  return customLinkTypes.find((ct) => ct.value === type)?.icon ?? BUILT_IN_LINK_TYPE_ICONS.internal
-}
 
 const validatePhoneNumber = (value: string): true | string => {
   const trimmed = value.trim()
@@ -104,10 +57,8 @@ type LinkPreviewSelection = {
   url?: string
   email?: string
   phone?: string
-  documentAssetRef?: string
-  documentFilename?: string
-  mediaAssetRef?: string
-  mediaFilename?: string
+  assetRef?: string
+  assetFilename?: string
   sms?: string
   whatsapp?: string
   fax?: string
@@ -122,10 +73,8 @@ const getPreviewTitleFromType = ({
   url,
   email,
   phone,
-  documentAssetRef,
-  documentFilename,
-  mediaAssetRef,
-  mediaFilename,
+  assetRef,
+  assetFilename,
   sms,
   whatsapp,
   fax,
@@ -143,10 +92,8 @@ const getPreviewTitleFromType = ({
       return email
     case 'phone':
       return phone
-    case 'document':
-      return documentFilename || documentAssetRef
-    case 'media':
-      return mediaFilename || mediaAssetRef
+    case 'asset':
+      return assetFilename || assetRef
     case 'sms':
       return sms
     case 'whatsapp':
@@ -165,10 +112,8 @@ const createDefaultLinkPreview = (customLinkTypes: CustomLinkType[]) => ({
     url: 'url',
     email: 'email',
     phone: 'phone',
-    documentAssetRef: 'documentLink.asset._ref',
-    documentFilename: 'documentLink.asset.originalFilename',
-    mediaAssetRef: 'mediaLink.asset._ref',
-    mediaFilename: 'mediaLink.asset.originalFilename',
+    assetRef: 'assetLink.asset._ref',
+    assetFilename: 'assetLink.asset.originalFilename',
     sms: 'sms',
     whatsapp: 'whatsapp',
     fax: 'fax',
@@ -280,8 +225,7 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
     external: 'Link to an absolute URL to a page on another website.',
     email: 'Link to send an e-mail to the given address.',
     phone: 'Link to call the given phone number.',
-    document: 'Link to a document file.',
-    media: 'Link to an image, video, or audio file.',
+    asset: 'Link to a Sanity file asset (PDF, image, video, audio, etc.).',
     sms: 'Link to send an SMS to the given phone number.',
     whatsapp: 'Link to open a WhatsApp chat with the given phone number.',
     fax: 'Link to send a fax to the given number.',
@@ -451,27 +395,15 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
         hidden: ({parent}) => parent?.type !== 'phone',
       }),
 
-      // Document
+      // Asset (files, images, video, audio, etc.)
       defineField({
-        name: 'documentLink',
+        name: 'assetLink',
         type: 'file',
         options: {
           storeOriginalFilename: true,
         },
-        description: descriptions.document,
-        hidden: ({parent}) => parent?.type !== 'document',
-      }),
-
-      // Media
-      defineField({
-        name: 'mediaLink',
-        type: 'file',
-        options: {
-          storeOriginalFilename: true,
-          accept: 'image/*,video/*,audio/*',
-        },
-        description: descriptions.media,
-        hidden: ({parent}) => parent?.type !== 'media',
+        description: descriptions.asset,
+        hidden: ({parent}) => parent?.type !== 'asset',
       }),
 
       // SMS

@@ -133,19 +133,15 @@ describe('generateHref', () => {
     })
   })
 
-  describe('document and media', () => {
+  describe('asset', () => {
     it('returns hash fallback without resolver', () => {
       expect(
-        generateHref.document({
-          type: 'document',
-          documentLink: {_type: 'file', asset: {_ref: 'file-abc', _type: 'reference'}},
-        }),
-      ).toBe('#')
-
-      expect(
-        generateHref.media({
-          type: 'media',
-          mediaLink: {_type: 'file', asset: {_ref: 'file-xyz', _type: 'reference'}},
+        generateHref.asset({
+          type: 'asset',
+          assetLink: {
+            _type: 'file',
+            asset: {_ref: 'file-abc', _type: 'reference'},
+          },
         }),
       ).toBe('#')
     })
@@ -154,14 +150,34 @@ describe('generateHref', () => {
       const nullResolver = () => null as unknown as string
 
       expect(
-        generateHref.document(
+        generateHref.asset(
           {
-            type: 'document',
-            documentLink: {_type: 'file', asset: {_ref: 'file-abc', _type: 'reference'}},
+            type: 'asset',
+            assetLink: {
+              _type: 'file',
+              asset: {_ref: 'file-abc', _type: 'reference'},
+            },
           },
           nullResolver,
         ),
       ).toBe('#')
+    })
+
+    it('uses assetHrefResolver when provided', () => {
+      expect(
+        generateHref.asset(
+          {
+            type: 'asset',
+            assetLink: {
+              _type: 'file',
+              asset: {_ref: 'file-abc', _type: 'reference'},
+            },
+            parameters: 'download=1',
+            anchor: '#preview',
+          },
+          () => 'https://cdn.example.com/file.pdf',
+        ),
+      ).toBe('https://cdn.example.com/file.pdf?download=1#preview')
     })
   })
 

@@ -40,20 +40,9 @@ export interface PhoneLink {
   phone?: string
 }
 
-export interface DocumentLink extends CustomizableLink {
-  type: 'document'
-  documentLink?: {
-    _type: 'file'
-    asset?: {
-      _ref: string
-      _type: 'reference'
-    }
-  }
-}
-
-export interface MediaLink extends CustomizableLink {
-  type: 'media'
-  mediaLink?: {
+export interface AssetLink extends CustomizableLink {
+  type: 'asset'
+  assetLink?: {
     _type: 'file'
     asset?: {
       _ref: string
@@ -95,8 +84,7 @@ export type LinkValue = {
   | ExternalLink
   | EmailLink
   | PhoneLink
-  | DocumentLink
-  | MediaLink
+  | AssetLink
   | SMSLink
   | WhatsAppLink
   | FaxLink
@@ -104,7 +92,7 @@ export type LinkValue = {
 )
 
 export type BuiltInLinkType =
-  'internal' | 'external' | 'email' | 'phone' | 'document' | 'media' | 'sms' | 'whatsapp' | 'fax'
+  'internal' | 'external' | 'email' | 'phone' | 'asset' | 'sms' | 'whatsapp' | 'fax'
 
 export interface LinkType {
   title: string
@@ -160,8 +148,7 @@ export interface LinkFieldPluginOptions {
     external?: string
     email?: string
     phone?: string
-    document?: string
-    media?: string
+    asset?: string
     sms?: string
     whatsapp?: string
     fax?: string

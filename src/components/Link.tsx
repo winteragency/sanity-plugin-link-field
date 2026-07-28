@@ -4,13 +4,13 @@ import {type UrlObject} from 'url'
 import {generateHref} from '../helpers/generateHref'
 import {getLinkText} from '../helpers/getLinkText'
 import {isCommunicationLink} from '../helpers/typeGuards'
-import {DocumentLink, InternalLink, LinkValue, MediaLink} from '../types'
+import type {AssetLink, InternalLink, LinkValue} from '../types'
 
 type LinkProps = {
   link?: LinkValue
   as?: ElementType
   hrefResolver?: (link: InternalLink) => string | UrlObject
-  assetHrefResolver?: (link: DocumentLink | MediaLink) => string | UrlObject
+  assetHrefResolver?: (link: AssetLink) => string | UrlObject
 } & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | 'target'>
 
 const Link = memo(
@@ -34,10 +34,8 @@ const Link = memo(
         switch (link.type) {
           case 'internal':
             return generateHref.internal(link, hrefResolver)
-          case 'document':
-            return generateHref.document(link, assetHrefResolver)
-          case 'media':
-            return generateHref.media(link, assetHrefResolver)
+          case 'asset':
+            return generateHref.asset(link, assetHrefResolver)
           case 'external':
           case 'email':
           case 'phone':

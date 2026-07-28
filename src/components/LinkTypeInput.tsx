@@ -1,77 +1,13 @@
 import {ChevronDownIcon} from '@sanity/icons'
 import {Button, Menu, MenuButton, MenuItem, Select} from '@sanity/ui'
-import {
-  AtSignIcon,
-  FileTextIcon,
-  GlobeIcon,
-  FolderOpen,
-  LinkIcon,
-  type LucideIcon,
-  MessageCircle,
-  PhoneIcon,
-  Printer,
-  SmartphoneIcon,
-} from 'lucide-react'
-import {type ComponentType, memo, useMemo} from 'react'
+import {LinkIcon} from 'lucide-react'
+import {memo, useMemo} from 'react'
 import {set, type StringInputProps} from 'sanity'
 
-import {BuiltInLinkType, CustomLinkType, LinkFieldPluginOptions, LinkType} from '../types'
+import {DEFAULT_LINK_TYPES, getLinkTypeOptionIcon} from '../helpers/defaultLinkTypes'
+import type {BuiltInLinkType, CustomLinkType, LinkFieldPluginOptions} from '../types'
 
-const ICON_SIZE = 16
 const selectStyle = {height: '35px'} as const
-const sizedLucideIconCache = new WeakMap<LucideIcon, ComponentType>()
-
-const defaultLinkTypes: LinkType[] = [
-  {title: 'Internal', value: 'internal', icon: LinkIcon},
-  {title: 'URL', value: 'external', icon: GlobeIcon},
-  {title: 'Email', value: 'email', icon: AtSignIcon},
-  {title: 'Phone', value: 'phone', icon: PhoneIcon},
-  {title: 'Document', value: 'document', icon: FileTextIcon},
-  {title: 'Media', value: 'media', icon: FolderOpen},
-  {title: 'SMS', value: 'sms', icon: MessageCircle},
-  {title: 'WhatsApp', value: 'whatsapp', icon: SmartphoneIcon},
-  {title: 'Fax', value: 'fax', icon: Printer},
-]
-
-/**
- * Check if the icon is a lucide icon (one of the default link types)
- */
-function isLucideIcon(icon: ComponentType): boolean {
-  return defaultLinkTypes.some((t) => t.icon === icon)
-}
-
-/**
- * Create a sized wrapper for lucide icons
- */
-function createSizedIcon(Icon: LucideIcon): ComponentType {
-  function SizedIcon(props: Record<string, unknown>) {
-    return <Icon size={ICON_SIZE} {...props} />
-  }
-  SizedIcon.displayName = `SizedIcon(${Icon.displayName || Icon.name || 'Unknown'})`
-  return SizedIcon
-}
-
-/**
- * Return a stable sized icon component for lucide icons.
- */
-function getSizedIcon(Icon: LucideIcon): ComponentType {
-  const cachedIcon = sizedLucideIconCache.get(Icon)
-  if (cachedIcon) return cachedIcon
-
-  const sizedIcon = createSizedIcon(Icon)
-  sizedLucideIconCache.set(Icon, sizedIcon)
-  return sizedIcon
-}
-
-/**
- * Get the icon component for a link type, wrapping lucide icons to set the correct size
- */
-function getIcon(type: LinkType): ComponentType {
-  if (isLucideIcon(type.icon)) {
-    return getSizedIcon(type.icon as LucideIcon)
-  }
-  return type.icon
-}
 
 /**
  * Custom input component for the "type" field on the link object.
@@ -96,7 +32,7 @@ export const LinkTypeInput = memo(function LinkTypeInput({
 
     return [
       // Disable internal links if not enabled for any schema types.
-      ...defaultLinkTypes.filter(
+      ...DEFAULT_LINK_TYPES.filter(
         ({value}) =>
           enabledBuiltInLinkTypeSet.has(value as BuiltInLinkType) &&
           (value !== 'internal' || linkableSchemaTypes?.length > 0),
@@ -136,7 +72,7 @@ export const LinkTypeInput = memo(function LinkTypeInput({
         <Button
           type="button"
           mode="ghost"
-          icon={selectedType ? getIcon(selectedType) : LinkIcon}
+          icon={selectedType ? getLinkTypeOptionIcon(selectedType) : LinkIcon}
           iconRight={ChevronDownIcon}
           title="Select link type"
           aria-label={`Select link type${selectedType ? ` (currently: ${selectedType.title})` : ''}`}
@@ -152,7 +88,7 @@ export const LinkTypeInput = memo(function LinkTypeInput({
             <MenuItem
               key={type.value}
               text={type.title}
-              icon={getIcon(type)}
+              icon={getLinkTypeOptionIcon(type)}
               onClick={() => {
                 onChange(set(type.value))
               }}

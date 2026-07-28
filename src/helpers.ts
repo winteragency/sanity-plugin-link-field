@@ -1,11 +1,10 @@
 export {
+  isAssetLink,
   isCustomLink,
-  isDocumentLink,
   isEmailLink,
   isExternalLink,
   isFaxLink,
   isInternalLink,
-  isMediaLink,
   isPhoneLink,
   isSMSLink,
   isWhatsAppLink,

@@ -1,13 +1,12 @@
 import type {
+  AssetLink,
   BuiltInLinkType,
   CustomLink,
-  DocumentLink,
   EmailLink,
   ExternalLink,
   FaxLink,
   InternalLink,
   LinkValue,
-  MediaLink,
   PhoneLink,
   SMSLink,
   WhatsAppLink,
@@ -20,8 +19,7 @@ export const BUILT_IN_LINK_TYPES: BuiltInLinkType[] = [
   'external',
   'email',
   'phone',
-  'document',
-  'media',
+  'asset',
   'sms',
   'whatsapp',
   'fax',
@@ -35,9 +33,7 @@ export const isEmailLink = (link: LinkValue): link is EmailLink => link.type ===
 
 export const isPhoneLink = (link: LinkValue): link is PhoneLink => link.type === 'phone'
 
-export const isDocumentLink = (link: LinkValue): link is DocumentLink => link.type === 'document'
-
-export const isMediaLink = (link: LinkValue): link is MediaLink => link.type === 'media'
+export const isAssetLink = (link: LinkValue): link is AssetLink => link.type === 'asset'
 
 export const isSMSLink = (link: LinkValue): link is SMSLink => link.type === 'sms'
 

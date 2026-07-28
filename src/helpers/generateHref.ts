@@ -1,6 +1,6 @@
 import {type UrlObject} from 'url'
 
-import {DocumentLink, InternalLink, LinkValue, MediaLink} from '../types'
+import {AssetLink, InternalLink, LinkValue} from '../types'
 import {
   isCustomLink,
   isEmailLink,
@@ -12,7 +12,7 @@ import {
 } from './typeGuards'
 
 type InternalHrefResolver = (link: InternalLink) => string | UrlObject
-type AssetHrefResolver = (link: DocumentLink | MediaLink) => string | UrlObject
+type AssetHrefResolver = (link: AssetLink) => string | UrlObject
 
 const appendParamsAndAnchor = (
   href: string,
@@ -93,7 +93,7 @@ const mergeUrlObject = (
 }
 
 const resolveAssetHref = (
-  link: DocumentLink | MediaLink,
+  link: AssetLink,
   assetField: unknown,
   hrefResolver?: AssetHrefResolver,
 ): string | UrlObject => {
@@ -132,13 +132,9 @@ export const generateHref = {
     isEmailLink(link) && link.email ? `mailto:${link.email.trim()}` : '#',
   phone: (link: LinkValue) =>
     isPhoneLink(link) && link.phone ? `tel:${link.phone.replace(/\s+/g, '')}` : '#',
-  document: (link: LinkValue, hrefResolver?: AssetHrefResolver) => {
-    const docLink = link as DocumentLink
-    return resolveAssetHref(docLink, docLink.documentLink, hrefResolver)
-  },
-  media: (link: LinkValue, hrefResolver?: AssetHrefResolver) => {
-    const mediaLink = link as MediaLink
-    return resolveAssetHref(mediaLink, mediaLink.mediaLink, hrefResolver)
+  asset: (link: LinkValue, hrefResolver?: AssetHrefResolver) => {
+    const assetLink = link as AssetLink
+    return resolveAssetHref(assetLink, assetLink.assetLink, hrefResolver)
   },
   sms: (link: LinkValue) =>
     isSMSLink(link) && link.sms ? `sms:${link.sms.replace(/\s+/g, '')}` : '#',

@@ -72,12 +72,12 @@ export const mySchema = defineType({
 
 Editors will be able to switch between internal links (using native references in Sanity), external links (for linking to other websites) as well as e-mail (`mailto`) and phone (`tel`) links:
 
-Additional built-in link types (`document`, `media`, `sms`, `whatsapp`, and `fax`) are available but hidden by default. Enable them with `enabledBuiltInLinkTypes` in your plugin or field options (see [Options](#-options)).
+Additional built-in link types (`asset`, `sms`, `whatsapp`, and `fax`) are available but hidden by default. Enable them with `enabledBuiltInLinkTypes` in your plugin or field options (see [Options](#-options)).
 
-#### Internal vs document links
+#### Internal vs asset links
 
 - **Internal** links reference structured Sanity documents (for example pages with slugs). Use your frontend `hrefResolver` to turn the referenced document into a route.
-- **Document** links point at downloadable file assets (PDFs, spreadsheets, etc.) stored in Sanity's asset pipeline—not at navigable site pages.
+- **Asset** links point at Sanity file assets (PDFs, images, video, audio, etc.) via a `file` field—not at navigable site pages. Provide an `assetHrefResolver` on the `Link` component to turn the asset reference into a usable CDN/download URL.
 
 The link object also includes additional fields for adding custom URL parameters and/or URL fragments to the end of an internal or external link. This can be used to add UTM campaign tracking or link to specific sections of a page, respectively. If you use the provided `Link` component, these will be handled automatically on the frontend.
 
@@ -157,6 +157,8 @@ import {resolveHref} from '@/lib/sanity/sanity.links'
 Notice the `hrefResolver` property. This is a callback used to resolve the `href` for internal links, and will differ depending on how your project is set up. The example above uses a `resolveHref` function defined elsewhere that will return the correct path depending on the document type and `slug`.
 
 If a `hrefResolver` is not provided, the component will naively attempt to look at the `slug` property of the linked document and generate a `href` like so: `/${link.internalLink.slug?.current}`. This will of course only work on the off chance that your documents all have a `slug` property (like if you're using [this approach to managing slugs](https://www.simeongriggs.dev/nextjs-sanity-slug-patterns)).
+
+For asset links, pass `assetHrefResolver` to resolve the Sanity file reference into a CDN or download URL (for example via `@sanity/asset-utils` or your project's file URL helper). Without it, asset links fall back to `#`.
 
 Regardless of how you choose to manage slugs for internal links, the component will automatically handle external links, add `target="_blank"` as needed, and add `mailto:` to e-mail links as well as `tel:` to phone links. For `tel:` links, it will strip any spaces in the phone number since these are not allowed in such links. Additionally, it will render [the link's text label (if enabled)](#field-level), or try and fall back to a good textual representation of the link if one hasn't been passed to the component (using the `children` property).
 
@@ -348,7 +350,7 @@ When configuring the plugin in `sanity.config.ts`, these are the global options 
 | weakReferences | `false` | Make internal links use [weak references](https://www.sanity.io/docs/reference-type#f45f659e7b28) |
 | referenceFilterOptions | `undefined` | Custom [filter options](https://www.sanity.io/docs/reference-type#1ecd78ab1655) passed to the reference input component for internal links. Use it to filter the documents that should be available for linking, eg. by locale. |
 | descriptions | *See [linkField.tsx](https://github.com/winteragency/sanity-plugin-link-field/blob/main/src/linkField.tsx)* | Override the descriptions of the different subfields. |
-| enabledBuiltInLinkTypes | `['internal', 'external', 'email', 'phone']` | Built-in link types that should be shown in the dropdown. Use this to hide optional built-in types like `document`, `media`, `sms`, `whatsapp`, and `fax`. |
+| enabledBuiltInLinkTypes | `['internal', 'external', 'email', 'phone']` | Built-in link types that should be shown in the dropdown. Use this to hide optional built-in types like `asset`, `sms`, `whatsapp`, and `fax`. |
 | enableLinkParameters | `true` | Whether the user should be able to set custom URL parameters for internal and external links. |
 | enableAnchorLinks | `true` | Whether the user should be able to set custom anchors (URL fragments) for internal and external links. |
 | customLinkTypes | `[]` | Any custom link types that should be available in the dropdown. This can be used to allow users to link to pre-defined routes that don't exist within Sanity, such as hardcoded routes in the frontend application, or dynamic content that is pulled in from an external system. See [Custom link types](#custom-link-types) |
