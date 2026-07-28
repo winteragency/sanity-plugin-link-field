@@ -4,6 +4,7 @@ import {CustomLinkInput} from './components/CustomLinkInput'
 import {LinkInput} from './components/LinkInput'
 import {LinkTypeInput} from './components/LinkTypeInput'
 import {isCustomLink} from './helpers/typeGuards'
+import {validateLinkTypeConsistency} from './helpers/validateLinkConsistency'
 import type {LinkFieldPluginOptions, LinkSchemaType, LinkValue} from './types'
 
 /**
@@ -68,6 +69,8 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
     type: 'object',
     icon,
     preview,
+    validation: (Rule) =>
+      Rule.custom((value) => validateLinkTypeConsistency(value as LinkValue | undefined)),
     fieldsets: [
       {
         name: 'advanced',

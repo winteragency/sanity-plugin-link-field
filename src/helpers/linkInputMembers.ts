@@ -2,9 +2,13 @@ import type {FieldMember, ObjectMember} from 'sanity'
 
 import type {LinkValue} from '../types'
 
-const LINK_VALUE_FIELD_NAMES = new Set(['internalLink', 'url', 'email', 'phone', 'value'])
+export const LINK_VALUE_FIELD_NAMES = ['internalLink', 'url', 'email', 'phone', 'value'] as const
 
-function getActiveLinkFieldName(type: LinkValue['type'] | undefined): string {
+export type LinkValueFieldName = (typeof LINK_VALUE_FIELD_NAMES)[number]
+
+const LINK_VALUE_FIELD_NAME_SET: ReadonlySet<string> = new Set(LINK_VALUE_FIELD_NAMES)
+
+export function getActiveLinkFieldName(type: LinkValue['type'] | undefined): string {
   switch (type) {
     case 'internal':
       return 'internalLink'
@@ -45,7 +49,7 @@ export function resolveLinkInputMembers(
     }
 
     // Inactive link-type fields stay in `members` but are rendered via `linkField`.
-    if (member.kind === 'field' && LINK_VALUE_FIELD_NAMES.has(member.name)) {
+    if (member.kind === 'field' && LINK_VALUE_FIELD_NAME_SET.has(member.name)) {
       return false
     }
 

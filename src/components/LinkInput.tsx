@@ -1,10 +1,13 @@
 import {Box, Flex, Stack, Text} from '@sanity/ui'
-import {memo} from 'react'
-import {FormFieldValidationStatus, ObjectInputMember} from 'sanity'
+import {memo, useCallback} from 'react'
+import {FormFieldValidationStatus, ObjectInputMember, PatchEvent} from 'sanity'
 
 import {resolveLinkInputMembers} from '../helpers/linkInputMembers'
+import {createLinkTypeChangePatches} from '../helpers/typeChangePatches'
 import {isCustomLink} from '../helpers/typeGuards'
-import {LinkInputProps} from '../types'
+import type {LinkInputProps} from '../types'
+
+import {LinkTypeChangeContext} from './linkTypeChangeContext'
 
 /**
  * Custom input component for the link object.
@@ -14,9 +17,17 @@ import {LinkInputProps} from '../types'
  * The rest of the fields ("blank" and "advanced") are rendered as usual.
  */
 export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
+  const {onChange} = props
   const {textField, typeField, linkField, otherFields} = resolveLinkInputMembers(
     props.members,
     props.value,
+  )
+
+  const handleLinkTypeChange = useCallback(
+    (nextType: string) => {
+      onChange(PatchEvent.from(createLinkTypeChangePatches(nextType)))
+    },
+    [onChange],
   )
 
   // In Sanity Studio v6, `members` can be undefined while form state is resolving.
@@ -52,58 +63,44 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
   }
 
   return (
-    <Stack space={4}>
-      {/* Render the text field if enabled */}
-      {options?.enableText && textField && (
-        <ObjectInputMember
-          member={{
-            ...textField,
-            field: {
-              ...textField.field,
-              schemaType: {
-                ...textField.field.schemaType,
-                title: options?.textLabel || textField.field.schemaType.title,
-              },
-            },
-          }}
-          {...renderProps}
-        />
-      )}
-
-      <Stack space={3}>
-        {/* Render a label for the link field if there's also a text field enabled. */}
-        {/* If there's no text field, the label here is irrelevant */}
-        {options?.enableText && (
-          <Text as="label" weight="medium" size={1}>
-            Link
-          </Text>
-        )}
-
-        <Flex gap={2} align="flex-start">
-          {/* Render the type field (without its label) */}
+    <LinkTypeChangeContext.Provider value={handleLinkTypeChange}>
+      <Stack gap={4}>
+        {/* Render the text field if enabled */}
+        {options?.enableText && textField && (
           <ObjectInputMember
             member={{
-              ...typeField,
+              ...textField,
               field: {
-                ...typeField.field,
+                ...textField.field,
                 schemaType: {
-                  ...typeField.field.schemaType,
-                  title: undefined,
+                  ...textField.field.schemaType,
+                  title: options?.textLabel || textField.field.schemaType.title,
                 },
               },
             }}
             {...renderProps}
           />
+        )}
 
-          <Stack space={2} style={{width: '100%'}}>
-            {/* Render the input for the selected type of link (without its label) */}
+        <Stack gap={3}>
+          {/* Render a label for the link field if there's also a text field enabled. */}
+          {/* If there's no text field, the label here is irrelevant */}
+          {options?.enableText && (
+            <Text as="label" weight="medium" size={1}>
+              Link
+            </Text>
+          )}
+
+          <Flex gap={2} align="flex-start">
+            {/* Render the type field (without its label) */}
             <ObjectInputMember
+              key={typeField.name}
               member={{
-                ...linkField,
+                ...typeField,
                 field: {
-                  ...linkField.field,
+                  ...typeField.field,
                   schemaType: {
-                    ...linkField.field.schemaType,
+                    ...typeField.field.schemaType,
                     title: undefined,
                   },
                 },
@@ -111,38 +108,56 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
               {...renderProps}
             />
 
-            {/* Render any validation errors for the link field */}
-            {linkFieldValidation.length > 0 && (
-              <Box
-                style={{
-                  contain: 'size',
-                  marginBottom: '6px',
-                  marginLeft: 'auto',
-                  marginRight: '12px',
+            <Stack gap={2} style={{width: '100%'}}>
+              {/* Render the input for the selected type of link (without its label) */}
+              <ObjectInputMember
+                key={linkField.name}
+                member={{
+                  ...linkField,
+                  field: {
+                    ...linkField.field,
+                    schemaType: {
+                      ...linkField.field.schemaType,
+                      title: undefined,
+                    },
+                  },
                 }}
-              >
-                <FormFieldValidationStatus
-                  fontSize={1}
-                  placement="top"
-                  validation={linkFieldValidation}
-                />
-              </Box>
-            )}
-          </Stack>
-        </Flex>
+                {...renderProps}
+              />
 
-        {/* Render the description of the selected link field, if any */}
-        {description && (
-          <Text muted size={1}>
-            {description}
-          </Text>
-        )}
+              {/* Render any validation errors for the link field */}
+              {linkFieldValidation.length > 0 && (
+                <Box
+                  style={{
+                    contain: 'size',
+                    marginBottom: '6px',
+                    marginLeft: 'auto',
+                    marginRight: '12px',
+                  }}
+                >
+                  <FormFieldValidationStatus
+                    fontSize={1}
+                    placement="top"
+                    validation={linkFieldValidation}
+                  />
+                </Box>
+              )}
+            </Stack>
+          </Flex>
+
+          {/* Render the description of the selected link field, if any */}
+          {description && (
+            <Text muted size={1}>
+              {description}
+            </Text>
+          )}
+        </Stack>
+
+        {/* Render the rest of the fields as usual */}
+        {otherFields.map((field) => (
+          <ObjectInputMember key={field.key} member={field} {...renderProps} />
+        ))}
       </Stack>
-
-      {/* Render the rest of the fields as usual */}
-      {otherFields.map((field) => (
-        <ObjectInputMember key={field.key} member={field} {...renderProps} />
-      ))}
-    </Stack>
+    </LinkTypeChangeContext.Provider>
   )
 })
