@@ -12,35 +12,42 @@ describe('requiredLinkField', () => {
   it('requires internalLink for internal links', () => {
     expect(requiredLinkField({type: 'internal'} as LinkValue)).toEqual({
       message: 'Link is required',
-      path: 'internalLink',
+      path: ['internalLink'],
     })
   })
 
   it('requires url for external links', () => {
     expect(requiredLinkField({type: 'external'} as LinkValue)).toEqual({
       message: 'URL is required',
-      path: 'url',
+      path: ['url'],
     })
   })
 
   it('requires email for email links', () => {
     expect(requiredLinkField({type: 'email'} as LinkValue)).toEqual({
       message: 'E-mail is required',
-      path: 'email',
+      path: ['email'],
     })
   })
 
   it('requires phone for phone links', () => {
     expect(requiredLinkField({type: 'phone'} as LinkValue)).toEqual({
-      message: 'Phone is required',
-      path: 'phone',
+      message: 'Phone number is required',
+      path: ['phone'],
+    })
+  })
+
+  it('requires assetLink for asset links', () => {
+    expect(requiredLinkField({type: 'asset'} as LinkValue)).toEqual({
+      message: 'Asset is required',
+      path: ['assetLink'],
     })
   })
 
   it('requires value for custom links', () => {
     expect(requiredLinkField({type: 'archive'} as LinkValue)).toEqual({
       message: 'Value is required',
-      path: 'value',
+      path: ['value'],
     })
   })
 
