@@ -5,6 +5,17 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.7.0](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.6.0...v1.7.0) (2026-07-28)
+
+### Features
+
+* add additional link types, ability to disable built-in link types, and per-field config options ([#35](https://github.com/winteragency/sanity-plugin-link-field/issues/35)) ([e1a636e](https://github.com/winteragency/sanity-plugin-link-field/commit/e1a636e5db9abaabc61ba6182f8606db0d0327b9))
+* add requireText option to require a link label ([#45](https://github.com/winteragency/sanity-plugin-link-field/issues/45)) ([d2ea7ca](https://github.com/winteragency/sanity-plugin-link-field/commit/d2ea7cac6d9df6d94563579b0dda003fa4e357c4))
+
+### Bug Fixes
+
+* prevent stale references and type desync when switching link type ([#41](https://github.com/winteragency/sanity-plugin-link-field/issues/41)) ([b0183f4](https://github.com/winteragency/sanity-plugin-link-field/commit/b0183f46d3dadaad8d2b3a93177a59f291537f7d))
+
 ## [1.6.0](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.5.1...v1.6.0) (2026-07-28)
 
 ### Features
