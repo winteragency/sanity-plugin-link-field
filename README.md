@@ -385,6 +385,8 @@ Further development and improvements were contributed by [@frodeste](https://git
 
 ### Thanks to
 
+Additional contributions were made by:
+
 <!-- readme: contributors,marcusforsberg/-,frodeste/-,semantic-release-bot/- -start -->
 <table>
 	<tbody>
