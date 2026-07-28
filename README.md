@@ -362,7 +362,7 @@ For each individual link field you add to your schema, you can set these options
 | Option | Default Value | Description |
 | ------------- | ------------- | ------------- |
 | enableText  | `false`  | Whether the link should include an optional field for setting the link text/label. If enabled, this will be available on the resulting link object under the `.text` property. |
-| requireText | `false` | Whether the text/label should be required when `enableText` is true. This only works as long as you do not add your own validation rules to the link field. See [Making a required link field](#3-making-a-required-link-field) for more details. |
+| requireText | `false` | Whether the text/label should be required when `enableText` is true. If you add field-level validation, ensure it includes `requiredLinkField` (passed directly to `rule.custom`) so the validation context is available. See [Making a required link field](#3-making-a-required-link-field) for more details. |
 | textLabel  | `Text`  | The label for the text input field, if enabled using the `enableText` option. |
 | enabledBuiltInLinkTypes | `undefined` | Built-in link types to show for this specific field. Overrides the plugin-level `enabledBuiltInLinkTypes`. |
 | linkableSchemaTypes | `undefined` | Allowed schema types for internal links on this specific field. Overrides plugin-level `linkableSchemaTypes`. |
