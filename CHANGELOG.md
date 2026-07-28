@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file. See
 
 ## [1.7.0](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.6.0...v1.7.0) (2026-07-28)
 
+Huge thanks to [@frodeste](https://github.com/frodeste) for the work behind the last couple of releases: Sanity Studio v6 support, additional link types and per-field configuration options, and a range of stability and bug fixes.
+
 ### Features
 
 * add additional link types, ability to disable built-in link types, and per-field config options ([#35](https://github.com/winteragency/sanity-plugin-link-field/issues/35)) ([e1a636e](https://github.com/winteragency/sanity-plugin-link-field/commit/e1a636e5db9abaabc61ba6182f8606db0d0327b9))
