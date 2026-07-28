@@ -1,13 +1,21 @@
 import {Box, Flex, Stack, Text} from '@sanity/ui'
 import {memo, type ReactNode, useCallback, useEffect, useMemo} from 'react'
-import {set, FormFieldValidationStatus, ObjectInputMember, type StringInputProps} from 'sanity'
+import {
+  FormFieldValidationStatus,
+  ObjectInputMember,
+  PatchEvent,
+  type StringInputProps,
+} from 'sanity'
 
-import {CustomLinkInput} from './CustomLinkInput'
-import {LinkTypeInput} from './LinkTypeInput'
 import {getAvailableLinkTypeValues} from '../helpers/availableLinkTypes'
 import {resolveLinkInputMembers} from '../helpers/linkInputMembers'
+import {createLinkTypeChangePatches} from '../helpers/typeChangePatches'
 import {isCustomLink} from '../helpers/typeGuards'
-import {LinkInputProps} from '../types'
+import type {LinkInputProps} from '../types'
+
+import {CustomLinkInput} from './CustomLinkInput'
+import {LinkTypeChangeContext} from './linkTypeChangeContext'
+import {LinkTypeInput} from './LinkTypeInput'
 
 const fullWidthStyle = {width: '100%'} as const
 const validationBoxStyle = {
@@ -25,14 +33,21 @@ const validationBoxStyle = {
  * The rest of the fields ("blank" and "advanced") are rendered as usual.
  */
 export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
+  const {onChange} = props
   const {textField, typeField, linkField, otherFields} = resolveLinkInputMembers(
     props.members,
     props.value,
   )
 
+  const handleLinkTypeChange = useCallback(
+    (nextType: string) => {
+      onChange(PatchEvent.from(createLinkTypeChangePatches(nextType)))
+    },
+    [onChange],
+  )
+
   const {options} = props.schemaType
   const currentType = props.value?.type
-  const handleChange = props.onChange
   const enabledBuiltInLinkTypes = options?.enabledBuiltInLinkTypes ?? props.enabledBuiltInLinkTypes
   const linkableSchemaTypes = options?.linkableSchemaTypes ?? props.linkableSchemaTypes
   const customLinkTypes = options?.customLinkTypes ?? props.customLinkTypes
@@ -49,9 +64,10 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
   useEffect(() => {
     if (!typeField || !linkField) return
     if (!currentType || availableTypeValues.includes(currentType)) return
-    if (availableTypeValues.length === 0) return
-    handleChange(set(availableTypeValues[0], ['type']))
-  }, [availableTypeValues, currentType, handleChange, linkField, typeField])
+    const nextType = availableTypeValues[0]
+    if (!nextType) return
+    handleLinkTypeChange(nextType)
+  }, [availableTypeValues, currentType, handleLinkTypeChange, linkField, typeField])
 
   const linkFieldValidation = linkField?.field.validation ?? []
   const linkFieldDescription = linkField?.field.schemaType.description
@@ -194,73 +210,75 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
   }
 
   return (
-    <Stack space={4}>
-      {options?.enableText && textField && textFieldSchemaType && (
-        <ObjectInputMember
-          member={{
-            ...textField,
-            field: {
-              ...textField.field,
-              schemaType: textFieldSchemaType as unknown as typeof textField.field.schemaType,
-            },
-          }}
-          {...renderProps}
-        />
-      )}
-
-      <Stack space={3}>
-        {options?.enableText && (
-          <Text as="label" weight="medium" size={1}>
-            {options?.linkSectionLabel ?? 'Link'}
-          </Text>
-        )}
-
-        <Flex gap={2} align="flex-start">
+    <LinkTypeChangeContext.Provider value={handleLinkTypeChange}>
+      <Stack gap={4}>
+        {options?.enableText && textField && textFieldSchemaType && (
           <ObjectInputMember
             member={{
-              ...typeField,
+              ...textField,
               field: {
-                ...typeField.field,
-                schemaType: typeFieldSchemaType as unknown as typeof typeField.field.schemaType,
+                ...textField.field,
+                schemaType: textFieldSchemaType as unknown as typeof textField.field.schemaType,
               },
             }}
-            {...inlineFieldRenderProps}
+            {...renderProps}
           />
+        )}
 
-          <Stack space={2} style={fullWidthStyle}>
+        <Stack gap={3}>
+          {options?.enableText && (
+            <Text as="label" weight="medium" size={1}>
+              {options?.linkSectionLabel ?? 'Link'}
+            </Text>
+          )}
+
+          <Flex gap={2} align="flex-start">
             <ObjectInputMember
               member={{
-                ...linkField,
+                ...typeField,
                 field: {
-                  ...linkField.field,
-                  schemaType: linkFieldSchemaType,
+                  ...typeField.field,
+                  schemaType: typeFieldSchemaType as unknown as typeof typeField.field.schemaType,
                 },
               }}
               {...inlineFieldRenderProps}
             />
 
-            {linkFieldValidation.length > 0 && (
-              <Box style={validationBoxStyle}>
-                <FormFieldValidationStatus
-                  fontSize={1}
-                  placement="top"
-                  validation={linkFieldValidation}
-                />
-              </Box>
-            )}
-          </Stack>
-        </Flex>
+            <Stack gap={2} style={fullWidthStyle}>
+              <ObjectInputMember
+                member={{
+                  ...linkField,
+                  field: {
+                    ...linkField.field,
+                    schemaType: linkFieldSchemaType,
+                  },
+                }}
+                {...inlineFieldRenderProps}
+              />
 
-        {description && (
-          <Text muted size={1}>
-            {description}
-          </Text>
-        )}
+              {linkFieldValidation.length > 0 && (
+                <Box style={validationBoxStyle}>
+                  <FormFieldValidationStatus
+                    fontSize={1}
+                    placement="top"
+                    validation={linkFieldValidation}
+                  />
+                </Box>
+              )}
+            </Stack>
+          </Flex>
+
+          {description && (
+            <Text muted size={1}>
+              {description}
+            </Text>
+          )}
+        </Stack>
+
+        {otherFields.map((field) => (
+          <ObjectInputMember key={field.key} member={field} {...renderProps} />
+        ))}
       </Stack>
-
-      {otherFields.map((field) => (
-        <ObjectInputMember key={field.key} member={field} {...renderProps} />
-      ))}
-    </Stack>
+    </LinkTypeChangeContext.Provider>
   )
 })

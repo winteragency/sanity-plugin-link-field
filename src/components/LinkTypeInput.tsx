@@ -1,11 +1,14 @@
 import {ChevronDownIcon} from '@sanity/icons'
 import {Button, Menu, MenuButton, MenuItem, Select} from '@sanity/ui'
 import {LinkIcon} from 'lucide-react'
-import {memo, useMemo} from 'react'
-import {type StringInputProps, set} from 'sanity'
+import {memo, useContext, useMemo} from 'react'
+import type {StringInputProps} from 'sanity'
 
 import {DEFAULT_LINK_TYPES, getLinkTypeOptionIcon} from '../helpers/defaultLinkTypes'
+import {applyLinkTypeChange} from '../helpers/typeChangePatches'
 import type {BuiltInLinkType, CustomLinkType, LinkFieldPluginOptions} from '../types'
+
+import {LinkTypeChangeContext} from './linkTypeChangeContext'
 
 const selectStyle = {height: '35px'} as const
 
@@ -26,6 +29,7 @@ export const LinkTypeInput = memo(function LinkTypeInput({
   linkableSchemaTypes: LinkFieldPluginOptions['linkableSchemaTypes']
   enabledBuiltInLinkTypes: BuiltInLinkType[]
 }) {
+  const changeLinkType = useContext(LinkTypeChangeContext)
   const isInlineLink = useMemo(() => path.some((segment) => segment === 'markDefs'), [path])
   const linkTypes = useMemo(() => {
     const enabledBuiltInLinkTypeSet = new Set(enabledBuiltInLinkTypes)
@@ -46,12 +50,21 @@ export const LinkTypeInput = memo(function LinkTypeInput({
     [linkTypes, value],
   )
 
+  const selectType = (nextType: string) => {
+    applyLinkTypeChange({
+      nextType,
+      currentType: value,
+      changeLinkType,
+      fieldOnChange: onChange,
+    })
+  }
+
   if (isInlineLink) {
     return (
       <Select
         value={selectedType?.value ?? ''}
         onChange={(event) => {
-          onChange(set(event.currentTarget.value))
+          selectType(event.currentTarget.value)
         }}
         aria-label="Select link type"
         disabled={linkTypes.length === 0}
@@ -90,7 +103,7 @@ export const LinkTypeInput = memo(function LinkTypeInput({
               text={type.title}
               icon={getLinkTypeOptionIcon(type)}
               onClick={() => {
-                onChange(set(type.value))
+                selectType(type.value)
               }}
             />
           ))}

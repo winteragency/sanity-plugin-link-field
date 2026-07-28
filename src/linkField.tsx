@@ -12,6 +12,7 @@ import {LinkTypeInput} from './components/LinkTypeInput'
 import {getIconForLinkType} from './helpers/defaultLinkTypes'
 import {getCustomDisplayText} from './helpers/getLinkText'
 import {isCommunicationType, isCustomLink} from './helpers/typeGuards'
+import {validateLinkTypeConsistency} from './helpers/validateLinkConsistency'
 import type {
   BuiltInLinkType,
   CustomLinkType,
@@ -305,17 +306,19 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
     icon,
     preview: buildPreview(preview, customLinkTypes),
     validation: (rule) =>
-      rule.custom((value, context) => {
-        const fieldOptions = (context.type as LinkSchemaType).options
-        if (!fieldOptions?.enableText || !fieldOptions.requireText) return true
-        const text = (value as LinkValue | undefined)?.text
-        return text?.trim()
-          ? true
-          : {
-              message: 'Link label is required',
-              path: ['text'],
-            }
-      }),
+      rule
+        .custom((value) => validateLinkTypeConsistency(value as LinkValue | undefined))
+        .custom((value, context) => {
+          const fieldOptions = (context.type as LinkSchemaType).options
+          if (!fieldOptions?.enableText || !fieldOptions.requireText) return true
+          const text = (value as LinkValue | undefined)?.text
+          return text?.trim()
+            ? true
+            : {
+                message: 'Link label is required',
+                path: ['text'],
+              }
+        }),
     fieldsets: [
       {
         name: 'advanced',
