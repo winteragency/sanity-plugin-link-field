@@ -17,8 +17,9 @@ export const demo = defineType({
       type: 'link',
       options: {
         enableText: true,
+        requireText: true,
       },
-      validation: (rule) => rule.custom((field) => requiredLinkField(field)),
+      validation: (rule) => rule.custom(requiredLinkField),
     }),
   ],
 })

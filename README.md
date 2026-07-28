@@ -109,9 +109,14 @@ defineField({
   name: 'link',
   title: 'Link',
   type: 'link',
-  validation: (rule) => rule.custom((field) => requiredLinkField(field)),
+  validation: (rule) => rule.custom(requiredLinkField),
 })
 ```
+
+Pass `requiredLinkField` directly to `rule.custom` (rather than wrapping it) so it also receives the validation context. This lets it enforce the [`requireText`](#field-level) option in addition to requiring the link itself.
+
+> [!NOTE]
+> A field-level `validation` overrides the link type's own validation. `requiredLinkField` re-checks `requireText` for you, but if you were to write a **fully custom** `validation` that doesn't call `requiredLinkField`, it would not enforce `requireText`.
 
 ### 4. Rendering links on the frontend
 
@@ -357,7 +362,7 @@ For each individual link field you add to your schema, you can set these options
 | Option | Default Value | Description |
 | ------------- | ------------- | ------------- |
 | enableText  | `false`  | Whether the link should include an optional field for setting the link text/label. If enabled, this will be available on the resulting link object under the `.text` property. |
-| requireText | `false` | Whether the text/label should be required when `enableText` is true. |
+| requireText | `false` | Whether the text/label should be required when `enableText` is true. This only works as long as you do not add your own validation rules to the link field. See [Making a required link field](#3-making-a-required-link-field) for more details. |
 | textLabel  | `Text`  | The label for the text input field, if enabled using the `enableText` option. |
 | enabledBuiltInLinkTypes | `undefined` | Built-in link types to show for this specific field. Overrides the plugin-level `enabledBuiltInLinkTypes`. |
 | linkableSchemaTypes | `undefined` | Allowed schema types for internal links on this specific field. Overrides plugin-level `linkableSchemaTypes`. |
