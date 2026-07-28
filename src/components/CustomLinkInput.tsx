@@ -18,35 +18,54 @@ export const CustomLinkInput = memo(function CustomLinkInput(
   const linkValue = useFormValue(props.path.slice(0, -1)) as LinkValue | null
   const [options, setOptions] = useState<CustomLinkTypeOptions[] | null>(null)
 
-  const customLinkType = props.customLinkTypes.find((type) => type.value === linkValue!.type)
+  const customLinkType = linkValue
+    ? props.customLinkTypes.find((type) => type.value === linkValue.type)
+    : undefined
 
   useEffect(() => {
-    if (customLinkType) {
-      if (Array.isArray(customLinkType?.options)) {
-        setOptions(customLinkType.options)
-      } else {
-        customLinkType
-          .options(document, props.path, workspace.currentUser)
-          .then((options) => setOptions(options))
-      }
+    if (!customLinkType) {
+      setOptions(null)
+      return
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customLinkType, props.path, workspace.currentUser])
+
+    let active = true
+
+    if (Array.isArray(customLinkType.options)) {
+      setOptions(customLinkType.options)
+    } else {
+      setOptions(null)
+      customLinkType
+        .options(document, props.path, workspace.currentUser)
+        .then((loadedOptions) => {
+          if (active) {
+            setOptions(loadedOptions)
+          }
+        })
+        .catch(() => {
+          if (active) {
+            setOptions([])
+          }
+        })
+    }
+
+    return () => {
+      active = false
+    }
+  }, [customLinkType, document, props.path, workspace.currentUser])
 
   return options ? (
     <Select
+      value={props.value ?? ''}
       onChange={(e) => {
         props.onChange(set(e.currentTarget.value || ''))
       }}
     >
-      <>
-        <option value="" selected={props.value === ''} disabled hidden />
-        {options.map((option) => (
-          <option key={option.value} value={option.value} selected={props.value === option.value}>
-            {option.title}
-          </option>
-        ))}
-      </>
+      <option value="" disabled hidden />
+      {options.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.title}
+        </option>
+      ))}
     </Select>
   ) : (
     <Spinner style={{marginLeft: '0.5rem'}} />
