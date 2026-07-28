@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.0](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.5.1...v1.6.0) (2026-07-28)
+
+### Features
+
+* add Sanity Studio v6 support ([#40](https://github.com/winteragency/sanity-plugin-link-field/issues/40)) ([cf86c16](https://github.com/winteragency/sanity-plugin-link-field/commit/cf86c16461d18c620e196cd48ee7c3c0e2c4e1ec))
+
 ## [1.5.1](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.5.0...v1.5.1) (2026-03-03)
 
 ### Bug Fixes
