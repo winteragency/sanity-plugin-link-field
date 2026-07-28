@@ -437,8 +437,25 @@ This plugin supports Sanity Studio v3 through v6.
 This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
 with default configuration for build & watch scripts.
 
+### Example Studio
+
+This repository includes a minimal example Studio in [`example/`](example/) that exercises the plugin, schema validation, and Sanity TypeGen.
+
+```sh
+npm run build
+cd example
+npm install
+npm run dev
+```
+
+Run the integration checks (schema validate, schema extract, typegen, and schema assertions):
+
+```sh
+npm run test:example
+```
+
 See [Testing a plugin in Sanity Studio](https://github.com/sanity-io/plugin-kit#testing-a-plugin-in-sanity-studio)
-on how to run this plugin with hotreload in the studio.
+for hot-reload development against an external Studio using `npm run link-watch`.
 
 ### Release new version
 
