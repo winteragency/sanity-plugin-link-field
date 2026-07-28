@@ -361,11 +361,67 @@ This plugin was originally built and open-sourced by [@marcusforsberg](https://g
 Further development and improvements were contributed by [@frodeste](https://github.com/frodeste), generously sponsored by [ProsessPilotene](https://prosesspilotene.no/).
 
 <!-- readme: marcusforsberg,frodeste -start -->
+<table>
+	<tbody>
+		<tr>
+            <td align="center">
+                <a href="https://github.com/marcusforsberg">
+                    <img src="https://avatars.githubusercontent.com/u/1009069?v=4" width="70;" alt="marcusforsberg"/>
+                    <br />
+                    <sub><b>Marcus Forsberg</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/frodeste">
+                    <img src="https://avatars.githubusercontent.com/u/11499574?v=4" width="70;" alt="frodeste"/>
+                    <br />
+                    <sub><b>Frode Stenstrøm</b></sub>
+                </a>
+            </td>
+		</tr>
+	<tbody>
+</table>
 <!-- readme: marcusforsberg,frodeste -end -->
 
 ### Thanks to
 
+Additional contributions were made by:
+
 <!-- readme: contributors,marcusforsberg/-,frodeste/-,semantic-release-bot/- -start -->
+<table>
+	<tbody>
+		<tr>
+            <td align="center">
+                <a href="https://github.com/RJWadley">
+                    <img src="https://avatars.githubusercontent.com/u/25678876?v=4" width="70;" alt="RJWadley"/>
+                    <br />
+                    <sub><b>Robbie</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/zumwalt">
+                    <img src="https://avatars.githubusercontent.com/u/786943?v=4" width="70;" alt="zumwalt"/>
+                    <br />
+                    <sub><b>Casey Zumwalt</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/areudev">
+                    <img src="https://avatars.githubusercontent.com/u/92673248?v=4" width="70;" alt="areudev"/>
+                    <br />
+                    <sub><b>Christos Kalivas</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/largis21">
+                    <img src="https://avatars.githubusercontent.com/u/65016384?v=4" width="70;" alt="largis21"/>
+                    <br />
+                    <sub><b>Lars-Ivar Giskegjerde</b></sub>
+                </a>
+            </td>
+		</tr>
+	<tbody>
+</table>
 <!-- readme: contributors,marcusforsberg/-,frodeste/-,semantic-release-bot/- -end -->
 
 ## 🔏 License
