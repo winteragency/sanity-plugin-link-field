@@ -1,11 +1,13 @@
 import {ChevronDownIcon} from '@sanity/icons'
 import {Button, Menu, MenuButton, MenuItem} from '@sanity/ui'
 import {AtSignIcon, GlobeIcon, LinkIcon, PhoneIcon, type LucideIcon} from 'lucide-react'
-import {type ComponentType, memo} from 'react'
-import {PatchEvent, set, unset, type StringInputProps} from 'sanity'
+import {type ComponentType, memo, useContext} from 'react'
+import type {StringInputProps} from 'sanity'
 
-import {getInactiveLinkFieldNames} from '../helpers/typeChangePatches'
+import {applyLinkTypeChange} from '../helpers/typeChangePatches'
 import type {CustomLinkType, LinkFieldPluginOptions, LinkType} from '../types'
+
+import {LinkTypeChangeContext} from './linkTypeChangeContext'
 
 const ICON_SIZE = 16
 
@@ -57,6 +59,8 @@ export const LinkTypeInput = memo(function LinkTypeInput({
   customLinkTypes?: CustomLinkType[]
   linkableSchemaTypes: LinkFieldPluginOptions['linkableSchemaTypes']
 }) {
+  const changeLinkType = useContext(LinkTypeChangeContext)
+
   const linkTypes = [
     // Disable internal links if not enabled for any schema types
     ...defaultLinkTypes.filter(
@@ -89,16 +93,12 @@ export const LinkTypeInput = memo(function LinkTypeInput({
               text={type.title}
               icon={getIcon(type)}
               onClick={() => {
-                if (type.value === value) {
-                  return
-                }
-
-                onChange(
-                  PatchEvent.from([
-                    set(type.value),
-                    ...getInactiveLinkFieldNames(type.value).map((field) => unset([field])),
-                  ]),
-                )
+                applyLinkTypeChange({
+                  nextType: type.value,
+                  currentType: value,
+                  changeLinkType,
+                  fieldOnChange: onChange,
+                })
               }}
             />
           ))}
