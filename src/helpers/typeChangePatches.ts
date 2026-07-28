@@ -1,4 +1,4 @@
-import {set, unset, type FormPatch, type PatchEvent} from 'sanity'
+import {type FormPatch, type PatchEvent, set, unset} from 'sanity'
 
 import type {LinkValue} from '../types'
 

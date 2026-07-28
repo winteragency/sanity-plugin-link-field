@@ -5,7 +5,7 @@ import {FormFieldValidationStatus, ObjectInputMember, PatchEvent} from 'sanity'
 import {resolveLinkInputMembers} from '../helpers/linkInputMembers'
 import {createLinkTypeChangePatches} from '../helpers/typeChangePatches'
 import {isCustomLink} from '../helpers/typeGuards'
-import {LinkInputProps} from '../types'
+import type {LinkInputProps} from '../types'
 
 import {LinkTypeChangeContext} from './linkTypeChangeContext'
 
@@ -64,7 +64,7 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
 
   return (
     <LinkTypeChangeContext.Provider value={handleLinkTypeChange}>
-      <Stack space={4}>
+      <Stack gap={4}>
         {/* Render the text field if enabled */}
         {options?.enableText && textField && (
           <ObjectInputMember
@@ -82,7 +82,7 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
           />
         )}
 
-        <Stack space={3}>
+        <Stack gap={3}>
           {/* Render a label for the link field if there's also a text field enabled. */}
           {/* If there's no text field, the label here is irrelevant */}
           {options?.enableText && (
@@ -108,7 +108,7 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
               {...renderProps}
             />
 
-            <Stack space={2} style={{width: '100%'}}>
+            <Stack gap={2} style={{width: '100%'}}>
               {/* Render the input for the selected type of link (without its label) */}
               <ObjectInputMember
                 key={linkField.name}
