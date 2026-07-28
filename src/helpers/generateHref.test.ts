@@ -66,6 +66,20 @@ describe('generateHref', () => {
     it('returns # when href cannot be resolved', () => {
       expect(generateHref.internal({type: 'internal'} as LinkValue)).toBe('#')
     })
+
+    it('handles null UrlObject resolver results without throwing', () => {
+      const nullResolver = () => null as unknown as string
+
+      expect(
+        generateHref.internal(
+          {
+            type: 'internal',
+            internalLink: {_type: 'page', slug: {current: 'x'}},
+          },
+          nullResolver,
+        ),
+      ).toBe('/x')
+    })
   })
 
   describe('external', () => {
@@ -106,6 +120,64 @@ describe('generateHref', () => {
 
     it('returns # when phone is missing', () => {
       expect(generateHref.phone({type: 'phone'} as LinkValue)).toBe('#')
+    })
+  })
+
+  describe('communication', () => {
+    it('generates sms, whatsapp, and fax hrefs', () => {
+      expect(generateHref.sms({type: 'sms', sms: '+1 555 123 4567'})).toBe('sms:+15551234567')
+      expect(generateHref.whatsapp({type: 'whatsapp', whatsapp: '+47 98 76 54 32'})).toBe(
+        'https://wa.me/4798765432',
+      )
+      expect(generateHref.fax({type: 'fax', fax: '555 0000'})).toBe('fax:5550000')
+    })
+  })
+
+  describe('asset', () => {
+    it('returns hash fallback without resolver', () => {
+      expect(
+        generateHref.asset({
+          type: 'asset',
+          assetLink: {
+            _type: 'file',
+            asset: {_ref: 'file-abc', _type: 'reference'},
+          },
+        }),
+      ).toBe('#')
+    })
+
+    it('handles null resolver results without throwing', () => {
+      const nullResolver = () => null as unknown as string
+
+      expect(
+        generateHref.asset(
+          {
+            type: 'asset',
+            assetLink: {
+              _type: 'file',
+              asset: {_ref: 'file-abc', _type: 'reference'},
+            },
+          },
+          nullResolver,
+        ),
+      ).toBe('#')
+    })
+
+    it('uses assetHrefResolver when provided', () => {
+      expect(
+        generateHref.asset(
+          {
+            type: 'asset',
+            assetLink: {
+              _type: 'file',
+              asset: {_ref: 'file-abc', _type: 'reference'},
+            },
+            parameters: 'download=1',
+            anchor: '#preview',
+          },
+          () => 'https://cdn.example.com/file.pdf',
+        ),
+      ).toBe('https://cdn.example.com/file.pdf?download=1#preview')
     })
   })
 

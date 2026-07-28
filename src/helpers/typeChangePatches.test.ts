@@ -8,19 +8,49 @@ import {
 
 describe('getInactiveLinkFieldNames', () => {
   it('returns all link value fields except the active one for built-in types', () => {
-    expect(getInactiveLinkFieldNames('internal')).toEqual(['url', 'email', 'phone', 'value'])
+    expect(getInactiveLinkFieldNames('internal')).toEqual([
+      'url',
+      'email',
+      'phone',
+      'assetLink',
+      'sms',
+      'whatsapp',
+      'fax',
+      'value',
+    ])
     expect(getInactiveLinkFieldNames('external')).toEqual([
       'internalLink',
       'email',
       'phone',
+      'assetLink',
+      'sms',
+      'whatsapp',
+      'fax',
       'value',
     ])
-    expect(getInactiveLinkFieldNames('email')).toEqual(['internalLink', 'url', 'phone', 'value'])
-    expect(getInactiveLinkFieldNames('phone')).toEqual(['internalLink', 'url', 'email', 'value'])
+    expect(getInactiveLinkFieldNames('asset')).toEqual([
+      'internalLink',
+      'url',
+      'email',
+      'phone',
+      'sms',
+      'whatsapp',
+      'fax',
+      'value',
+    ])
   })
 
   it('keeps value and clears built-in link fields for custom types', () => {
-    expect(getInactiveLinkFieldNames('archive')).toEqual(['internalLink', 'url', 'email', 'phone'])
+    expect(getInactiveLinkFieldNames('archive')).toEqual([
+      'internalLink',
+      'url',
+      'email',
+      'phone',
+      'assetLink',
+      'sms',
+      'whatsapp',
+      'fax',
+    ])
   })
 })
 
@@ -33,6 +63,10 @@ describe('createLinkTypeChangePatches', () => {
       {type: 'unset', path: ['internalLink']},
       {type: 'unset', path: ['email']},
       {type: 'unset', path: ['phone']},
+      {type: 'unset', path: ['assetLink']},
+      {type: 'unset', path: ['sms']},
+      {type: 'unset', path: ['whatsapp']},
+      {type: 'unset', path: ['fax']},
       {type: 'unset', path: ['value']},
     ])
   })
@@ -64,6 +98,10 @@ describe('createLinkTypeChangePatches', () => {
       {type: 'unset', path: ['url']},
       {type: 'unset', path: ['email']},
       {type: 'unset', path: ['phone']},
+      {type: 'unset', path: ['assetLink']},
+      {type: 'unset', path: ['sms']},
+      {type: 'unset', path: ['whatsapp']},
+      {type: 'unset', path: ['fax']},
     ])
   })
 })

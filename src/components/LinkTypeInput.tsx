@@ -1,75 +1,83 @@
 import {ChevronDownIcon} from '@sanity/icons'
-import {Button, Menu, MenuButton, MenuItem} from '@sanity/ui'
-import {AtSignIcon, GlobeIcon, LinkIcon, type LucideIcon, PhoneIcon} from 'lucide-react'
-import {type ComponentType, memo, useContext} from 'react'
+import {Button, Menu, MenuButton, MenuItem, Select} from '@sanity/ui'
+import {LinkIcon} from 'lucide-react'
+import {memo, useContext, useMemo} from 'react'
 import type {StringInputProps} from 'sanity'
 
+import {DEFAULT_LINK_TYPES, getLinkTypeOptionIcon} from '../helpers/defaultLinkTypes'
 import {applyLinkTypeChange} from '../helpers/typeChangePatches'
-import type {CustomLinkType, LinkFieldPluginOptions, LinkType} from '../types'
+import type {BuiltInLinkType, CustomLinkType, LinkFieldPluginOptions} from '../types'
 
 import {LinkTypeChangeContext} from './linkTypeChangeContext'
 
-const ICON_SIZE = 16
-
-const defaultLinkTypes: LinkType[] = [
-  {title: 'Internal', value: 'internal', icon: LinkIcon},
-  {title: 'URL', value: 'external', icon: GlobeIcon},
-  {title: 'Email', value: 'email', icon: AtSignIcon},
-  {title: 'Phone', value: 'phone', icon: PhoneIcon},
-]
-
-/**
- * Check if the icon is a lucide icon (one of the default link types)
- */
-function isLucideIcon(icon: ComponentType): boolean {
-  return defaultLinkTypes.some((t) => t.icon === icon)
-}
-
-/**
- * Create a sized wrapper for lucide icons
- */
-function createSizedIcon(Icon: LucideIcon): ComponentType {
-  function SizedIcon(props: Record<string, unknown>) {
-    return <Icon size={ICON_SIZE} {...props} />
-  }
-  SizedIcon.displayName = `SizedIcon(${Icon.displayName || Icon.name || 'Unknown'})`
-  return SizedIcon
-}
-
-/**
- * Get the icon component for a link type, wrapping lucide icons to set the correct size
- */
-function getIcon(type: LinkType): ComponentType {
-  if (isLucideIcon(type.icon)) {
-    return createSizedIcon(type.icon as LucideIcon)
-  }
-  return type.icon
-}
+const selectStyle = {height: '35px'} as const
 
 /**
  * Custom input component for the "type" field on the link object.
  * Renders a button with an icon and a dropdown menu to select the link type.
  */
 export const LinkTypeInput = memo(function LinkTypeInput({
+  id,
+  path,
   value,
   onChange,
   customLinkTypes = [],
   linkableSchemaTypes,
+  enabledBuiltInLinkTypes,
 }: StringInputProps & {
   customLinkTypes?: CustomLinkType[]
   linkableSchemaTypes: LinkFieldPluginOptions['linkableSchemaTypes']
+  enabledBuiltInLinkTypes: BuiltInLinkType[]
 }) {
   const changeLinkType = useContext(LinkTypeChangeContext)
+  const isInlineLink = useMemo(() => path.some((segment) => segment === 'markDefs'), [path])
+  const linkTypes = useMemo(() => {
+    const enabledBuiltInLinkTypeSet = new Set(enabledBuiltInLinkTypes)
 
-  const linkTypes = [
-    // Disable internal links if not enabled for any schema types
-    ...defaultLinkTypes.filter(
-      ({value}) => value !== 'internal' || linkableSchemaTypes?.length > 0,
-    ),
-    ...customLinkTypes,
-  ]
+    return [
+      // Disable internal links if not enabled for any schema types.
+      ...DEFAULT_LINK_TYPES.filter(
+        ({value}) =>
+          enabledBuiltInLinkTypeSet.has(value as BuiltInLinkType) &&
+          (value !== 'internal' || linkableSchemaTypes?.length > 0),
+      ),
+      ...customLinkTypes,
+    ]
+  }, [customLinkTypes, enabledBuiltInLinkTypes, linkableSchemaTypes])
 
-  const selectedType = linkTypes.find((type) => type.value === value) || linkTypes[0]
+  const selectedType = useMemo(
+    () => linkTypes.find((type) => type.value === value) || linkTypes[0] || null,
+    [linkTypes, value],
+  )
+
+  const selectType = (nextType: string) => {
+    applyLinkTypeChange({
+      nextType,
+      currentType: value,
+      changeLinkType,
+      fieldOnChange: onChange,
+    })
+  }
+
+  if (isInlineLink) {
+    return (
+      <Select
+        value={selectedType?.value ?? ''}
+        onChange={(event) => {
+          selectType(event.currentTarget.value)
+        }}
+        aria-label="Select link type"
+        disabled={linkTypes.length === 0}
+        style={selectStyle}
+      >
+        {linkTypes.map((type) => (
+          <option key={type.value} value={type.value}>
+            {type.title}
+          </option>
+        ))}
+      </Select>
+    )
+  }
 
   return (
     <MenuButton
@@ -77,28 +85,25 @@ export const LinkTypeInput = memo(function LinkTypeInput({
         <Button
           type="button"
           mode="ghost"
-          icon={getIcon(selectedType)}
+          icon={selectedType ? getLinkTypeOptionIcon(selectedType) : LinkIcon}
           iconRight={ChevronDownIcon}
           title="Select link type"
-          aria-label={`Select link type (currently: ${selectedType.title})`}
-          style={{height: '35px'}}
+          aria-label={`Select link type${selectedType ? ` (currently: ${selectedType.title})` : ''}`}
+          style={selectStyle}
+          disabled={linkTypes.length === 0}
         />
       }
-      id="link-type"
+      id={id}
+      popover={{portal: true}}
       menu={
         <Menu>
           {linkTypes.map((type) => (
             <MenuItem
               key={type.value}
               text={type.title}
-              icon={getIcon(type)}
+              icon={getLinkTypeOptionIcon(type)}
               onClick={() => {
-                applyLinkTypeChange({
-                  nextType: type.value,
-                  currentType: value,
-                  changeLinkType,
-                  fieldOnChange: onChange,
-                })
+                selectType(type.value)
               }}
             />
           ))}

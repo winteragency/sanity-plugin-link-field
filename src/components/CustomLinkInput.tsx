@@ -1,8 +1,11 @@
-import {Select, Spinner} from '@sanity/ui'
-import {memo, useEffect, useState} from 'react'
+import {Select, Spinner, Text} from '@sanity/ui'
+import {memo, useEffect, useMemo, useState} from 'react'
 import {SanityDocument, set, type StringInputProps, useFormValue, useWorkspace} from 'sanity'
 
 import {CustomLinkType, CustomLinkTypeOptions, LinkValue} from '../types'
+
+const errorTextStyle = {color: 'var(--card-critical-fg-color)'} as const
+const spinnerStyle = {marginLeft: '0.5rem'} as const
 
 /**
  * Custom input component used for custom link types.
@@ -16,42 +19,68 @@ export const CustomLinkInput = memo(function CustomLinkInput(
   const workspace = useWorkspace()
   const document = useFormValue([]) as SanityDocument
   const linkValue = useFormValue(props.path.slice(0, -1)) as LinkValue | null
-  const [options, setOptions] = useState<CustomLinkTypeOptions[] | null>(null)
+  const [asyncOptionsResult, setAsyncOptionsResult] = useState<{
+    key: string
+    options: CustomLinkTypeOptions[] | null
+    error: string | null
+  } | null>(null)
 
   const customLinkType = linkValue
     ? props.customLinkTypes.find((type) => type.value === linkValue.type)
     : undefined
+  const pathKey = useMemo(() => JSON.stringify(props.path), [props.path])
+  const requestKey = customLinkType ? `${customLinkType.value}:${pathKey}` : null
 
   useEffect(() => {
-    if (!customLinkType) {
-      setOptions(null)
-      return
-    }
+    if (!customLinkType || Array.isArray(customLinkType.options) || !requestKey) return () => {}
 
-    let active = true
+    let isCurrentRequest = true
 
-    if (Array.isArray(customLinkType.options)) {
-      setOptions(customLinkType.options)
-    } else {
-      setOptions(null)
-      customLinkType
-        .options(document, props.path, workspace.currentUser)
-        .then((loadedOptions) => {
-          if (active) {
-            setOptions(loadedOptions)
-          }
+    customLinkType
+      .options(document, props.path, workspace.currentUser)
+      .then((resolved) => {
+        if (!isCurrentRequest) return
+        setAsyncOptionsResult({
+          key: requestKey,
+          options: resolved,
+          error: null,
         })
-        .catch(() => {
-          if (active) {
-            setOptions([])
-          }
+      })
+      .catch(() => {
+        if (!isCurrentRequest) return
+        setAsyncOptionsResult({
+          key: requestKey,
+          options: null,
+          error: 'Failed to load options',
         })
-    }
+      })
 
     return () => {
-      active = false
+      isCurrentRequest = false
     }
-  }, [customLinkType, document, props.path, workspace.currentUser])
+    // document and props.path intentionally omitted; document._id and pathKey are stable enough
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- avoid refetching on every form edit
+  }, [customLinkType, document?._id, pathKey, requestKey, workspace.currentUser])
+
+  if (!customLinkType) return null
+
+  const options = Array.isArray(customLinkType.options)
+    ? customLinkType.options
+    : asyncOptionsResult?.key === requestKey
+      ? asyncOptionsResult.options
+      : null
+  const loadError =
+    !Array.isArray(customLinkType.options) && asyncOptionsResult?.key === requestKey
+      ? asyncOptionsResult.error
+      : null
+
+  if (loadError) {
+    return (
+      <Text size={1} style={errorTextStyle}>
+        {loadError}
+      </Text>
+    )
+  }
 
   return options ? (
     <Select
@@ -68,6 +97,6 @@ export const CustomLinkInput = memo(function CustomLinkInput(
       ))}
     </Select>
   ) : (
-    <Spinner style={{marginLeft: '0.5rem'}} />
+    <Spinner style={spinnerStyle} />
   )
 })

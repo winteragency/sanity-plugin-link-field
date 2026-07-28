@@ -2,7 +2,17 @@ import type {FieldMember, ObjectMember} from 'sanity'
 
 import type {LinkValue} from '../types'
 
-export const LINK_VALUE_FIELD_NAMES = ['internalLink', 'url', 'email', 'phone', 'value'] as const
+export const LINK_VALUE_FIELD_NAMES = [
+  'internalLink',
+  'url',
+  'email',
+  'phone',
+  'assetLink',
+  'sms',
+  'whatsapp',
+  'fax',
+  'value',
+] as const
 
 export type LinkValueFieldName = (typeof LINK_VALUE_FIELD_NAMES)[number]
 
@@ -18,6 +28,14 @@ export function getActiveLinkFieldName(type: LinkValue['type'] | undefined): str
       return 'email'
     case 'phone':
       return 'phone'
+    case 'asset':
+      return 'assetLink'
+    case 'sms':
+      return 'sms'
+    case 'whatsapp':
+      return 'whatsapp'
+    case 'fax':
+      return 'fax'
     default:
       return 'value'
   }

@@ -25,6 +25,10 @@ describe('getActiveLinkFieldName', () => {
     expect(getActiveLinkFieldName('external')).toBe('url')
     expect(getActiveLinkFieldName('email')).toBe('email')
     expect(getActiveLinkFieldName('phone')).toBe('phone')
+    expect(getActiveLinkFieldName('asset')).toBe('assetLink')
+    expect(getActiveLinkFieldName('sms')).toBe('sms')
+    expect(getActiveLinkFieldName('whatsapp')).toBe('whatsapp')
+    expect(getActiveLinkFieldName('fax')).toBe('fax')
   })
 
   it('falls back to value for custom link types', () => {
@@ -94,10 +98,14 @@ describe('resolveLinkInputMembers', () => {
     const urlField = fieldMember('url')
     const members = [typeField, internalLinkField, urlField]
 
-    const internalResult = resolveLinkInputMembers(members, {type: 'internal'})
+    const internalResult = resolveLinkInputMembers(members, {
+      type: 'internal',
+    })
     expect(internalResult.linkField).toBe(internalLinkField)
 
-    const externalResult = resolveLinkInputMembers(members, {type: 'external'})
+    const externalResult = resolveLinkInputMembers(members, {
+      type: 'external',
+    })
     expect(externalResult.linkField).toBe(urlField)
   })
 
@@ -120,6 +128,35 @@ describe('resolveLinkInputMembers', () => {
     expect(resolveLinkInputMembers(members, {type: 'email'}).linkField).toBe(emailField)
     expect(resolveLinkInputMembers(members, {type: 'phone'}).linkField).toBe(phoneField)
     expect(resolveLinkInputMembers(members, {type: 'archive'}).linkField).toBe(valueField)
+  })
+
+  it('selects asset and communication link fields by type', () => {
+    const typeField = fieldMember('type')
+    const assetLinkField = fieldMember('assetLink')
+    const smsField = fieldMember('sms')
+    const whatsappField = fieldMember('whatsapp')
+    const faxField = fieldMember('fax')
+    const blankField = fieldMember('blank')
+    const members = [typeField, assetLinkField, smsField, whatsappField, faxField, blankField]
+
+    expect(resolveLinkInputMembers(members, {type: 'asset'}).linkField).toBe(assetLinkField)
+    expect(resolveLinkInputMembers(members, {type: 'sms'}).linkField).toBe(smsField)
+    expect(resolveLinkInputMembers(members, {type: 'whatsapp'}).linkField).toBe(whatsappField)
+    expect(resolveLinkInputMembers(members, {type: 'fax'}).linkField).toBe(faxField)
+  })
+
+  it('excludes inactive new link-type fields from otherFields', () => {
+    const typeField = fieldMember('type')
+    const assetLinkField = fieldMember('assetLink')
+    const smsField = fieldMember('sms')
+    const blankField = fieldMember('blank')
+
+    const result = resolveLinkInputMembers([typeField, assetLinkField, smsField, blankField], {
+      type: 'asset',
+    })
+
+    expect(result.linkField).toBe(assetLinkField)
+    expect(result.otherFields).toEqual([blankField])
   })
 
   it('resolves link field when fieldset appears before core fields', () => {
