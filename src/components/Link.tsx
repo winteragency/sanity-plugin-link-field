@@ -1,5 +1,5 @@
 import React, {type ElementType, type ForwardedRef, forwardRef, memo} from 'react'
-import {type UrlObject} from 'url'
+import type {UrlObject} from 'url'
 
 import {generateHref} from '../helpers/generateHref'
 import {getLinkText} from '../helpers/getLinkText'

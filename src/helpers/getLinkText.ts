@@ -1,4 +1,4 @@
-import {LinkValue} from '../types'
+import type {LinkValue} from '../types'
 import {
   isAssetLink,
   isCustomLink,

@@ -2,7 +2,7 @@ import {ChevronDownIcon} from '@sanity/icons'
 import {Button, Menu, MenuButton, MenuItem, Select} from '@sanity/ui'
 import {LinkIcon} from 'lucide-react'
 import {memo, useMemo} from 'react'
-import {set, type StringInputProps} from 'sanity'
+import {type StringInputProps, set} from 'sanity'
 
 import {DEFAULT_LINK_TYPES, getLinkTypeOptionIcon} from '../helpers/defaultLinkTypes'
 import type {BuiltInLinkType, CustomLinkType, LinkFieldPluginOptions} from '../types'

@@ -80,10 +80,14 @@ describe('resolveLinkInputMembers', () => {
     const urlField = fieldMember('url')
     const members = [typeField, internalLinkField, urlField]
 
-    const internalResult = resolveLinkInputMembers(members, {type: 'internal'})
+    const internalResult = resolveLinkInputMembers(members, {
+      type: 'internal',
+    })
     expect(internalResult.linkField).toBe(internalLinkField)
 
-    const externalResult = resolveLinkInputMembers(members, {type: 'external'})
+    const externalResult = resolveLinkInputMembers(members, {
+      type: 'external',
+    })
     expect(externalResult.linkField).toBe(urlField)
   })
 

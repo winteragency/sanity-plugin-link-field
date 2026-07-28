@@ -1,6 +1,6 @@
-import {type UrlObject} from 'url'
+import type {UrlObject} from 'url'
 
-import {AssetLink, InternalLink, LinkValue} from '../types'
+import type {AssetLink, InternalLink, LinkValue} from '../types'
 import {
   isCustomLink,
   isEmailLink,
