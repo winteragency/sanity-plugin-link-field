@@ -3,7 +3,7 @@
 [![Latest Stable Version](https://img.shields.io/npm/v/sanity-plugin-link-field.svg)](https://www.npmjs.com/package/sanity-plugin-link-field) [![Weekly Downloads](https://img.shields.io/npm/dw/sanity-plugin-link-field?style=flat-square)](https://npm-stat.com/charts.html?package=sanity-plugin-link-field)
 [![License](https://img.shields.io/github/license/winteragency/sanity-plugin-link-field.svg)](https://github.com/winteragency/sanity-plugin-link-field) [![Made by Winter](https://img.shields.io/badge/made%20by-Winter-blue.svg)](https://winteragency.se)
 
-A custom Link field (and associated React component) that allows editors to easily create internal and external links, as well as `mailto` and `tel`-links, all using the same intuitive UI.
+A custom Link field (and associated React component) that allows editors to easily create internal and external links, as well as `mailto`, `tel`-links, and more, all using the same intuitive UI.
 
 <video controls src="https://github.com/winteragency/sanity-plugin-link-field/assets/1009069/5948b1d5-514b-4204-ab54-0bd710c6a6bc"></video>
 
@@ -72,16 +72,11 @@ export const mySchema = defineType({
 
 Editors will be able to switch between internal links (using native references in Sanity), external links (for linking to other websites) as well as e-mail (`mailto`) and phone (`tel`) links:
 
+<img width="456" alt="link-field" src="https://github.com/winteragency/sanity-plugin-link-field/assets/1009069/ebbe0f9f-a2e1-4f13-8a7f-9972a5237296">
+
 Additional built-in link types (`asset`, `sms`, `whatsapp`, and `fax`) are available but hidden by default. Enable them with `enabledBuiltInLinkTypes` in your plugin or field options (see [Options](#-options)).
 
-#### Internal vs asset links
-
-- **Internal** links reference structured Sanity documents (for example pages with slugs). Use your frontend `hrefResolver` to turn the referenced document into a route.
-- **Asset** links point at Sanity file assets (PDFs, images, video, audio, etc.) via a `file` field—not at navigable site pages. Provide an `assetHrefResolver` on the `Link` component to turn the asset reference into a usable CDN/download URL.
-
 The link object also includes additional fields for adding custom URL parameters and/or URL fragments to the end of an internal or external link. This can be used to add UTM campaign tracking or link to specific sections of a page, respectively. If you use the provided `Link` component, these will be handled automatically on the frontend.
-
-<img width="456" alt="link-field" src="https://github.com/winteragency/sanity-plugin-link-field/assets/1009069/ebbe0f9f-a2e1-4f13-8a7f-9972a5237296">
 
 You can also choose to enable an additional input field for setting the link's text/label:
 
@@ -350,7 +345,7 @@ When configuring the plugin in `sanity.config.ts`, these are the global options 
 | weakReferences | `false` | Make internal links use [weak references](https://www.sanity.io/docs/reference-type#f45f659e7b28) |
 | referenceFilterOptions | `undefined` | Custom [filter options](https://www.sanity.io/docs/reference-type#1ecd78ab1655) passed to the reference input component for internal links. Use it to filter the documents that should be available for linking, eg. by locale. |
 | descriptions | *See [linkField.tsx](https://github.com/winteragency/sanity-plugin-link-field/blob/main/src/linkField.tsx)* | Override the descriptions of the different subfields. |
-| enabledBuiltInLinkTypes | `['internal', 'external', 'email', 'phone']` | Built-in link types that should be shown in the dropdown. Use this to hide optional built-in types like `asset`, `sms`, `whatsapp`, and `fax`. |
+| enabledBuiltInLinkTypes | `['internal', 'external', 'email', 'phone']` | Built-in link types that should be shown in the dropdown. Use this to enable optional built-in types like `asset`, `sms`, `whatsapp`, and `fax`. |
 | enableLinkParameters | `true` | Whether the user should be able to set custom URL parameters for internal and external links. |
 | enableAnchorLinks | `true` | Whether the user should be able to set custom anchors (URL fragments) for internal and external links. |
 | customLinkTypes | `[]` | Any custom link types that should be available in the dropdown. This can be used to allow users to link to pre-defined routes that don't exist within Sanity, such as hardcoded routes in the frontend application, or dynamic content that is pulled in from an external system. See [Custom link types](#custom-link-types) |
