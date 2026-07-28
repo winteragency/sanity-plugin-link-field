@@ -360,6 +360,14 @@ This plugin was originally built and open-sourced by [@marcusforsberg](https://g
 
 Further development and improvements were contributed by [@frodeste](https://github.com/frodeste), generously sponsored by [ProsessPilotene](https://prosesspilotene.no/).
 
+<!-- readme: marcusforsberg,frodeste -start -->
+<!-- readme: marcusforsberg,frodeste -end -->
+
+### Thanks to
+
+<!-- readme: contributors,marcusforsberg/-,frodeste/-,semantic-release-bot/- -start -->
+<!-- readme: contributors,marcusforsberg/-,frodeste/-,semantic-release-bot/- -end -->
+
 ## 🔏 License
 
 [MIT](LICENSE) © [Winter Agency](https://winteragency.se)
