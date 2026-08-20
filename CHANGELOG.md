@@ -5,6 +5,28 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.7.0...v2.0.0) (2026-08-20)
+
+### ⚠ BREAKING CHANGES
+
+* the plugin now requires React 19 and styled-components 6.
+
+@sanity/ui v4 imports react/compiler-runtime, which React 18 does not export,
+and peer-requires styled-components ^6.1. Bundling it therefore raises the
+plugin's own floors. Sanity Studio v3 and v4 are dropped with them, since both
+run on React 18; v5 and v6 both require React 19.2 and are unaffected.
+
+Studios still on @sanity/ui v3, which is every release before sanity@6.9.2,
+keep working. The plugin resolves its own v4 copy alongside the Studio's v3,
+and @sanity/ui shares theme, layer and portal context across copies by design.
+That collapses to a single shared copy on sanity@6.9.2 and later.
+
+Co-authored-by: Claude Opus 5 <noreply@anthropic.com>
+
+### Bug Fixes
+
+* support @sanity/ui v4, restoring builds on current Sanity Studio ([#48](https://github.com/winteragency/sanity-plugin-link-field/issues/48)) ([0d55709](https://github.com/winteragency/sanity-plugin-link-field/commit/0d557099b18d86732e121261bfb39b86366efcac)), closes [#46](https://github.com/winteragency/sanity-plugin-link-field/issues/46)
+
 ## [1.7.0](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.6.0...v1.7.0) (2026-07-28)
 
 Huge thanks to [@frodeste](https://github.com/frodeste) for the work behind the last couple of releases: Sanity Studio v6 support, additional link types and per-field configuration options, and a range of stability and bug fixes.
