@@ -1,5 +1,6 @@
 import {ChevronDownIcon} from '@sanity/icons'
-import {Button, Menu, MenuButton, MenuItem, Select} from '@sanity/ui'
+import {Button, Select} from '@sanity/ui'
+import {Menu, MenuButton, MenuItem} from '@sanity/ui/menu'
 import {LinkIcon} from 'lucide-react'
 import {memo, useContext, useMemo} from 'react'
 import type {StringInputProps} from 'sanity'

@@ -447,7 +447,7 @@ Additional contributions were made by:
 
 ## 🧪 Develop & test
 
-This plugin supports Sanity Studio v3 through v6.
+This plugin supports Sanity Studio v5 and v6.
 
 **Requirements:** Node.js `>=22.12` (see [`.nvmrc`](.nvmrc) for the recommended LTS version) and npm `>=11.17`.
 
