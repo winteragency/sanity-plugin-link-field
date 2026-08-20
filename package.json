@@ -59,6 +59,7 @@
   },
   "dependencies": {
     "@sanity/icons": "^3",
+    "@sanity/ui": "^4",
     "lucide-react": "^1.22.0"
   },
   "devDependencies": {
@@ -67,7 +68,6 @@
     "@eslint/js": "^9.39.4",
     "@sanity/pkg-utils": "^10.7.2",
     "@sanity/plugin-kit": "^6.0.0",
-    "@sanity/ui": "^3",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/exec": "^7.1.0",
     "@semantic-release/git": "^10.0.1",
@@ -79,28 +79,28 @@
     "conventional-changelog-conventionalcommits": "^9.3.1",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
-    "jsdom": "^28.1.0",
     "eslint-plugin-prettier": "^5.5.6",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
+    "jsdom": "^28.1.0",
     "lefthook": "^2.1.9",
     "prettier": "^3.9.2",
     "prettier-plugin-packagejson": "^3.0.0",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
-    "sanity": "^6.2.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "sanity": "^6.9.2",
     "semantic-release": "^25.0.5",
     "semantic-release-license": "^1.0.3",
-    "styled-components": "^6",
+    "styled-components": "^6.1",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.62.0",
     "vitest": "^4.1.9"
   },
   "peerDependencies": {
-    "@sanity/ui": "^3",
-    "react": "^18 || ^19",
-    "sanity": "^3 || ^4 || ^5 || ^6",
-    "styled-components": "^5.2 || ^6"
+    "react": "^19",
+    "react-dom": "^19",
+    "sanity": "^5 || ^6",
+    "styled-components": "^6"
   },
   "engines": {
     "node": ">=22.12",

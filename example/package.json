@@ -11,13 +11,13 @@
   },
   "dependencies": {
     "@sanity/icons": "^3",
-    "@sanity/ui": "^3",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
-    "react-is": "^19.2.7",
-    "sanity": "^6.2.0",
+    "@sanity/ui": "^4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-is": "^19.2.8",
+    "sanity": "^6.9.2",
     "sanity-plugin-link-field": "file:..",
-    "styled-components": "^6"
+    "styled-components": "^6.1"
   },
   "devDependencies": {
     "typescript": "^5.9.3",
