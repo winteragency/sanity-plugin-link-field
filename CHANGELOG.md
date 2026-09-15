@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.0](https://github.com/winteragency/sanity-plugin-link-field/compare/v2.0.0...v2.1.0) (2026-09-15)
+
+### Features
+
+* allow changing the schema type name registered by the plugin ([#49](https://github.com/winteragency/sanity-plugin-link-field/issues/49)) ([e46122a](https://github.com/winteragency/sanity-plugin-link-field/commit/e46122ae7a8698bc0172055cc94b3d6cc374d63f))
+* control the advanced fields and new tab toggle per link field ([#51](https://github.com/winteragency/sanity-plugin-link-field/issues/51)) ([c120f7d](https://github.com/winteragency/sanity-plugin-link-field/commit/c120f7da3db2be5976d5deb128612df2478e4033))
+
 ## [2.0.0](https://github.com/winteragency/sanity-plugin-link-field/compare/v1.7.0...v2.0.0) (2026-08-20)
 
 ### ⚠ BREAKING CHANGES
