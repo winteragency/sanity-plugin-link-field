@@ -44,7 +44,7 @@ if (typeof window !== 'undefined') {
     } as unknown as typeof IntersectionObserver
   }
 
-  if (!window.scrollTo) {
-    window.scrollTo = (() => {}) as typeof window.scrollTo
-  }
+  // jsdom defines this one as a stub that throws "Not implemented", so it is
+  // replaced rather than filled in.
+  window.scrollTo = (() => {}) as typeof window.scrollTo
 }

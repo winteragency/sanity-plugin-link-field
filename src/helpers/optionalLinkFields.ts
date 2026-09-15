@@ -45,8 +45,9 @@ const isOptionalFieldName = (name: string): name is OptionalFieldName =>
  * Removes the members of optional fields that are turned off for this field,
  * dropping the "Advanced" fieldset entirely once it has no members left.
  *
- * The fields themselves always exist on the schema type, which is shared by
- * every link field in the Studio, so they are filtered out of the form instead.
+ * This only filters the fields that are present. The plugin-level options may
+ * already have left them out of the schema type, which every link field in the
+ * Studio shares, so field-level options can only hide, never restore.
  */
 export function filterOptionalLinkFieldMembers(
   members: ObjectMember[],
