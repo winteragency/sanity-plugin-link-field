@@ -12,6 +12,18 @@ cd example
 npm install
 ```
 
+The checked-in config uses the project ID `placeholder`, which is enough for
+`npm test`. To run the Studio itself you need a real Sanity project: copy
+`.env.example` to `.env.local` and set your own project ID.
+
+```sh
+cp .env.example .env.local
+```
+
+Both `sanity.config.ts` and `sanity.cli.ts` read `SANITY_STUDIO_PROJECT_ID` and
+fall back to `placeholder`. `.env.local` is gitignored, so your project ID stays
+out of the repository.
+
 ## Commands
 
 ```sh

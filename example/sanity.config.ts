@@ -9,7 +9,7 @@ import {page} from './schemaTypes/page'
 export default defineConfig({
   name: 'link-field-example',
   title: 'Link Field Example',
-  projectId: 'placeholder',
+  projectId: process.env.SANITY_STUDIO_PROJECT_ID || 'placeholder',
   dataset: 'production',
   plugins: [
     linkField({

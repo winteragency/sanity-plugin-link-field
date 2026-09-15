@@ -462,6 +462,7 @@ This repository includes a minimal example Studio in [`example/`](example/) that
 npm run build
 cd example
 npm install
+cp .env.example .env.local # set SANITY_STUDIO_PROJECT_ID to your own project
 npm run dev
 ```
 

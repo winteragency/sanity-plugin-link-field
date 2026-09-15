@@ -73,3 +73,8 @@ example/node_modules
 example/schema.json
 example/sanity.types.ts
 example/.sanity
+
+# Local environment files
+.env
+.env.*
+!.env.example
