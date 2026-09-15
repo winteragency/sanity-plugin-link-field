@@ -18,7 +18,9 @@ assignees: ''
 
 ## Steps to reproduce
 
-<!-- Numbered, from a fresh Studio if you can. A link to a minimal repo or a CodeSandbox beats a long list. -->
+<!-- Numbered, from a fresh Studio if you can. If the bug needs more than a few steps or a specific schema to show up, push a minimal repro repo and link it here instead. -->
+
+**Repro repo:** <!-- Link to a minimal repository that shows the bug. Delete this line if the steps below are enough. -->
 
 1.
 2.
@@ -49,7 +51,3 @@ assignees: ''
 ## Anything else
 
 <!-- Optional. Delete if empty. Workarounds you found, when it started, whether it happens in the `example` Studio in this repo. -->
-
----
-
-**Security issue?** Do not open a public issue for a vulnerability. Email [info@winteragency.se](mailto:info@winteragency.se) instead.
