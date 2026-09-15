@@ -46,6 +46,8 @@ export default defineConfig({
 
 If you set it to an empty array, the internal link option will be hidden entirely for all link fields.
 
+If the name `link` is already taken in your Studio, you can register the type under a different name using the `name` option. See [Renaming the schema type](#renaming-the-schema-type).
+
 > [!TIP]
 > See [Options](#-options) for all the plugin level options you can set.
 
@@ -258,6 +260,53 @@ marks: {
 
 ## ⚙️ Advanced
 
+### Renaming the schema type
+
+By default the plugin registers its schema type as `link`. If that name is already taken in your Studio, or you simply prefer another one, set the `name` option:
+
+```ts
+// sanity.config.ts
+export default defineConfig({
+  //...
+  plugins: [
+    linkField({
+      name: 'cta',
+    }),
+  ],
+})
+```
+
+The field is then used as `type: 'cta'` throughout your schema:
+
+```ts
+// mySchema.ts
+defineField({
+  name: 'cta',
+  title: 'Call to action',
+  type: 'cta',
+})
+```
+
+Everything else works exactly the same, including `requiredLinkField`, the `Link` component and the helpers, as they operate on the value rather than the schema type name.
+
+You can also register the plugin more than once to get several differently configured link types side by side:
+
+```ts
+// sanity.config.ts
+export default defineConfig({
+  //...
+  plugins: [
+    linkField({
+      linkableSchemaTypes: ['page', 'article'],
+    }),
+    linkField({
+      name: 'cta',
+      enabledBuiltInLinkTypes: ['internal', 'external'],
+    }),
+  ],
+})
+```
+
 ### Custom link types
 
 In addition to the built-in link types, it's possible to define a set of custom link types for the user to choose from. This can be used to allow users to link to pre-defined routes that do not exist in Sanity, such as hardcoded routes in your frontend application or dynamic routes loaded from an external system.
@@ -346,6 +395,7 @@ When configuring the plugin in `sanity.config.ts`, these are the global options 
 
 | Option | Default Value | Description |
 | ------------- | ------------- | ------------- |
+| name | `'link'` | The name of the schema type registered by the plugin, and the value of `type` when using the field in your schemas. See [Renaming the schema type](#renaming-the-schema-type). |
 | linkableSchemaTypes | `['page']` | An array of schema types that should be allowed in internal links. |
 | weakReferences | `false` | Make internal links use [weak references](https://www.sanity.io/docs/reference-type#f45f659e7b28) |
 | referenceFilterOptions | `undefined` | Custom [filter options](https://www.sanity.io/docs/reference-type#1ecd78ab1655) passed to the reference input component for internal links. Use it to filter the documents that should be available for linking, eg. by locale. |

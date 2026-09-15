@@ -77,7 +77,7 @@ export interface CustomLink extends CustomizableLink {
 
 export type LinkValue = {
   _key?: string
-  _type?: 'link'
+  _type?: string
   text?: string
 } & (
   | InternalLink
@@ -121,10 +121,30 @@ export interface CustomLinkType extends LinkType {
  */
 export interface LinkFieldPluginOptions {
   /**
+   * The name of the schema type registered by the plugin, and the value of `type`
+   * when using the field in your schemas.
+   *
+   * Change it when `link` collides with a schema type you already have, or register
+   * the plugin more than once to get several differently configured link types.
+   *
+   * @defaultValue 'link'
+   *
+   * @example
+   * ```ts
+   * // sanity.config.ts
+   * plugins: [linkField({name: 'cta'})]
+   *
+   * // mySchema.ts
+   * defineField({name: 'cta', type: 'cta'})
+   * ```
+   */
+  name?: string
+
+  /**
    * An array of schema types that should be allowed in internal links.
    * @defaultValue ['page']
    */
-  linkableSchemaTypes: string[]
+  linkableSchemaTypes?: string[]
 
   /**
    * Custom filter options passed to the reference input component for internal links.

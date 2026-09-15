@@ -26,6 +26,11 @@ export default defineConfig({
         },
       ],
     }),
+    linkField({
+      name: 'cta',
+      linkableSchemaTypes: ['page'],
+      enabledBuiltInLinkTypes: ['internal', 'external'],
+    }),
     structureTool(),
   ],
   schema: {
