@@ -11,6 +11,7 @@ import {LinkInput} from './components/LinkInput'
 import {LinkTypeInput} from './components/LinkTypeInput'
 import {getIconForLinkType} from './helpers/defaultLinkTypes'
 import {getCustomDisplayText} from './helpers/getLinkText'
+import {ADVANCED_FIELDSET_NAME} from './helpers/optionalLinkFields'
 import {isCommunicationType, isCustomLink} from './helpers/typeGuards'
 import {validateLinkTypeConsistency} from './helpers/validateLinkConsistency'
 import type {
@@ -231,6 +232,7 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
     descriptions: userDescriptions,
     enableLinkParameters = true,
     enableAnchorLinks = true,
+    enableNewTab = true,
     customLinkTypes = [],
     enabledBuiltInLinkTypes = ['internal', 'external', 'email', 'phone'],
     icon,
@@ -288,7 +290,7 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
             return true
           }),
         hidden: ({parent}) => isCommunicationType(parent?.type),
-        fieldset: 'advanced',
+        fieldset: ADVANCED_FIELDSET_NAME,
       }),
     )
   }
@@ -310,7 +312,7 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
             return ANCHOR_REGEX.test(value.replace(/^#/, '')) || 'Invalid URL fragment'
           }),
         hidden: ({parent}) => isCommunicationType(parent?.type),
-        fieldset: 'advanced',
+        fieldset: ADVANCED_FIELDSET_NAME,
       }),
     )
   }
@@ -335,17 +337,19 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
                 path: ['text'],
               }
         }),
-    fieldsets: [
-      {
-        name: 'advanced',
-        title: 'Advanced',
-        description: descriptions.advanced,
-        options: {
-          collapsible: true,
-          collapsed: true,
-        },
-      },
-    ],
+    fieldsets: advancedFields.length
+      ? [
+          {
+            name: ADVANCED_FIELDSET_NAME,
+            title: 'Advanced',
+            description: descriptions.advanced,
+            options: {
+              collapsible: true,
+              collapsed: true,
+            },
+          },
+        ]
+      : [],
     fields: [
       defineField({
         name: 'text',
@@ -464,14 +468,18 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
       }),
 
       // New tab
-      defineField({
-        title: 'Open in new window',
-        name: 'blank',
-        type: 'boolean',
-        initialValue: false,
-        description: descriptions.blank,
-        hidden: ({parent}) => isCommunicationType(parent?.type),
-      }),
+      ...(enableNewTab
+        ? [
+            defineField({
+              title: 'Open in new window',
+              name: 'blank',
+              type: 'boolean',
+              initialValue: false,
+              description: descriptions.blank,
+              hidden: ({parent}) => isCommunicationType(parent?.type),
+            }),
+          ]
+        : []),
 
       ...advancedFields,
     ],
@@ -483,6 +491,7 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
           linkableSchemaTypes={linkableSchemaTypes}
           weakReferences={weakReferences}
           referenceFilterOptions={referenceFilterOptions}
+          pluginOptions={{enableLinkParameters, enableAnchorLinks, enableNewTab}}
           {...(props as ObjectInputProps<LinkValue, LinkSchemaType>)}
         />
       ),

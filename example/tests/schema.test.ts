@@ -66,11 +66,62 @@ describe('extracted schema', () => {
   })
 })
 
+describe('internationalized link types', () => {
+  it('registers a wrapper type per fieldTypes entry', () => {
+    for (const name of [
+      'internationalizedArrayLink',
+      'internationalizedArrayLabelledLink',
+      'internationalizedArrayMinimalLink',
+    ]) {
+      expect(findType(name), name).toBeDefined()
+    }
+  })
+
+  it('wraps the link type in each array item', () => {
+    for (const name of [
+      'internationalizedArrayLinkValue',
+      'internationalizedArrayLabelledLinkValue',
+      'internationalizedArrayMinimalLinkValue',
+    ]) {
+      const itemType = findType(name)
+
+      expect(attributeNames(itemType), name).toEqual(expect.arrayContaining(['value', 'language']))
+      expect(itemType?.value?.attributes?.value?.value, name).toMatchObject({
+        type: 'inline',
+        name: 'link',
+      })
+    }
+  })
+
+  it('exposes the localized link fields on the localized demo document', () => {
+    const attributes = findType('localizedDemo')?.attributes
+
+    expect(attributes?.link?.value).toMatchObject({
+      type: 'inline',
+      name: 'internationalizedArrayLink',
+    })
+    expect(attributes?.labelledLink?.value).toMatchObject({
+      type: 'inline',
+      name: 'internationalizedArrayLabelledLink',
+    })
+    expect(attributes?.minimalLink?.value).toMatchObject({
+      type: 'inline',
+      name: 'internationalizedArrayMinimalLink',
+    })
+  })
+})
+
 describe('generated types', () => {
   const types = readFile('../sanity.types.ts')
 
   it('generates a type for each registered link type', () => {
     expect(types).toMatch(/export type Link = \{\s+_type: 'link'/)
     expect(types).toMatch(/export type Cta = \{\s+_type: 'cta'/)
+  })
+
+  it('generates types for the internationalized link arrays', () => {
+    expect(types).toMatch(/export type InternationalizedArrayLinkValue = /)
+    expect(types).toMatch(/export type InternationalizedArrayLabelledLinkValue = /)
+    expect(types).toMatch(/export type InternationalizedArrayMinimalLinkValue = /)
   })
 })

@@ -307,6 +307,85 @@ export default defineConfig({
 })
 ```
 
+### Localized links with `internationalized-array`
+
+The link field works as a field type for [`sanity-plugin-internationalized-array`](https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-internationalized-array), giving editors one link per language.
+
+Pass `link` in `fieldTypes` to get an `internationalizedArrayLink` type you can use in your schemas:
+
+```ts
+// sanity.config.ts
+import {defineConfig} from 'sanity'
+import {internationalizedArray} from 'sanity-plugin-internationalized-array'
+import {linkField} from 'sanity-plugin-link-field'
+
+export default defineConfig({
+  // ...
+  plugins: [
+    linkField(),
+    internationalizedArray({
+      languages: [
+        {id: 'en', title: 'English'},
+        {id: 'sv', title: 'Swedish'},
+      ],
+      fieldTypes: ['link'],
+    }),
+  ],
+})
+
+// mySchema.ts
+defineField({
+  name: 'link',
+  title: 'Link',
+  type: 'internationalizedArrayLink',
+})
+```
+
+#### Setting field options
+
+Field options cannot be set on the `internationalizedArrayLink` field itself, since those options belong to the array rather than to the link inside it. Declare them on the `fieldTypes` entry instead, which `internationalized-array` passes on to the link field:
+
+```ts
+import {defineField} from 'sanity'
+
+internationalizedArray({
+  languages,
+  fieldTypes: [
+    defineField({
+      name: 'link',
+      type: 'link',
+      options: {
+        enableText: true,
+      },
+    }),
+  ],
+})
+```
+
+Give the entry a different `name` to register more than one variant, each with its own options. A `menuLink` entry becomes an `internationalizedArrayMenuLink` type:
+
+```ts
+internationalizedArray({
+  languages,
+  fieldTypes: [
+    'link',
+    defineField({
+      name: 'menuLink',
+      type: 'link',
+      options: {
+        enableText: true,
+        enableLinkParameters: false,
+        enableAnchorLinks: false,
+        enableNewTab: false,
+      },
+    }),
+  ],
+})
+```
+
+> [!TIP]
+> A localized link repeats the whole link form once per language, so it gets tall quickly. Use `enableNewTab: false`, `enableLinkParameters: false` and `enableAnchorLinks: false` to drop the parts your editors don't need. See [Options](#field-level).
+
 ### Custom link types
 
 In addition to the built-in link types, it's possible to define a set of custom link types for the user to choose from. This can be used to allow users to link to pre-defined routes that do not exist in Sanity, such as hardcoded routes in your frontend application or dynamic routes loaded from an external system.
@@ -403,6 +482,7 @@ When configuring the plugin in `sanity.config.ts`, these are the global options 
 | enabledBuiltInLinkTypes | `['internal', 'external', 'email', 'phone']` | Built-in link types that should be shown in the dropdown. Use this to enable optional built-in types like `asset`, `sms`, `whatsapp`, and `fax`. |
 | enableLinkParameters | `true` | Whether the user should be able to set custom URL parameters for internal and external links. |
 | enableAnchorLinks | `true` | Whether the user should be able to set custom anchors (URL fragments) for internal and external links. |
+| enableNewTab | `true` | Whether the user should be able to make the link open in a new window. |
 | customLinkTypes | `[]` | Any custom link types that should be available in the dropdown. This can be used to allow users to link to pre-defined routes that don't exist within Sanity, such as hardcoded routes in the frontend application, or dynamic content that is pulled in from an external system. See [Custom link types](#custom-link-types) |
 
 ### Field level
@@ -420,6 +500,12 @@ For each individual link field you add to your schema, you can set these options
 | linkSectionLabel | `undefined` | Custom label for the link field section in the Studio for this specific field. This option is only available at the field level. |
 | weakReferences | `undefined` | Whether internal links should use weak references for this specific field. Overrides plugin-level `weakReferences`. |
 | referenceFilterOptions | `undefined` | Reference input filter options for this specific field. Overrides plugin-level `referenceFilterOptions`. |
+| enableLinkParameters | `undefined` | Whether to show the parameters field for this specific field. Overrides plugin-level `enableLinkParameters`. |
+| enableAnchorLinks | `undefined` | Whether to show the anchor field for this specific field. Overrides plugin-level `enableAnchorLinks`. |
+| enableNewTab | `undefined` | Whether to show the "Open in new window" toggle for this specific field. Overrides plugin-level `enableNewTab`. |
+
+> [!NOTE]
+> The plugin-level `enableLinkParameters`, `enableAnchorLinks` and `enableNewTab` remove fields from the schema type, while their field-level counterparts only hide them from that field's form. A field can therefore not show a field the plugin-level option removed. Hiding both `parameters` and `anchor` also hides the "Advanced" fieldset itself.
 
 ## 🙌 Credits
 
@@ -503,6 +589,18 @@ This plugin supports Sanity Studio v5 and v6.
 
 This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
 with default configuration for build & watch scripts.
+
+### Tests
+
+```sh
+npm test
+```
+
+Most tests are plain unit tests. The ones in [`src/test/`](src/test) render a real
+Sanity Studio form through the test harness in
+[`src/test/formHarness.tsx`](src/test/formHarness.tsx), so the plugin's input
+components are exercised exactly as they are in a running Studio, including when
+nested inside other plugins' fields.
 
 ### Example Studio
 

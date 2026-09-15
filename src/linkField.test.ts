@@ -124,3 +124,44 @@ describe('linkField schema type name', () => {
     expect(findField(ctaInstance.linkType, 'type')?.initialValue).toBe('email')
   })
 })
+
+describe('linkField optional fields', () => {
+  it('includes the new tab toggle and the advanced fieldset by default', () => {
+    const {linkType} = register()
+
+    expect(fieldNames(linkType)).toEqual(expect.arrayContaining(['blank', 'parameters', 'anchor']))
+    expect(linkType.fieldsets?.map((fieldset) => fieldset.name)).toEqual(['advanced'])
+  })
+
+  it('omits the new tab toggle when enableNewTab is false', () => {
+    const {linkType} = register({enableNewTab: false})
+
+    expect(fieldNames(linkType)).not.toContain('blank')
+    expect(linkType.fieldsets?.map((fieldset) => fieldset.name)).toEqual(['advanced'])
+  })
+
+  it('drops the fieldset when both advanced fields are individually disabled', () => {
+    const {linkType} = register({enableLinkParameters: false, enableAnchorLinks: false})
+
+    expect(linkType.fieldsets).toEqual([])
+  })
+
+  it('keeps the fieldset when only one advanced field is disabled', () => {
+    const {linkType} = register({enableLinkParameters: false})
+
+    expect(fieldNames(linkType)).toContain('anchor')
+    expect(linkType.fieldsets?.map((fieldset) => fieldset.name)).toEqual(['advanced'])
+  })
+
+  it('keeps the link type fields when every optional field is disabled', () => {
+    const {linkType} = register({
+      enableLinkParameters: false,
+      enableAnchorLinks: false,
+      enableNewTab: false,
+    })
+
+    expect(fieldNames(linkType)).toEqual(
+      expect.arrayContaining(['text', 'type', 'internalLink', 'url', 'email', 'phone', 'value']),
+    )
+  })
+})
