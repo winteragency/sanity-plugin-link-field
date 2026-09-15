@@ -193,6 +193,12 @@ export interface LinkFieldPluginOptions {
   enableAnchorLinks?: boolean
 
   /**
+   * Whether the user should be able to make the link open in a new window.
+   * @defaultValue true
+   */
+  enableNewTab?: boolean
+
+  /**
    * Any custom link types that should be available in the dropdown.
    *
    * This can be used to allow users to link to pre-defined routes that don't exist within Sanity,
@@ -296,6 +302,33 @@ export interface LinkFieldOptions {
    * Overrides the plugin-level `referenceFilterOptions` for this field only.
    */
   referenceFilterOptions?: ReferenceFilterOptions
+
+  /**
+   * Whether the parameters field should be shown for this specific field.
+   * Overrides the plugin-level `enableLinkParameters` for this field only.
+   *
+   * Only has an effect when the field is part of the schema, ie. when the
+   * plugin-level `enableLinkParameters` isn't `false`.
+   */
+  enableLinkParameters?: boolean
+
+  /**
+   * Whether the anchor field should be shown for this specific field.
+   * Overrides the plugin-level `enableAnchorLinks` for this field only.
+   *
+   * Only has an effect when the field is part of the schema, ie. when the
+   * plugin-level `enableAnchorLinks` isn't `false`.
+   */
+  enableAnchorLinks?: boolean
+
+  /**
+   * Whether the "Open in new window" toggle should be shown for this specific field.
+   * Overrides the plugin-level `enableNewTab` for this field only.
+   *
+   * Only has an effect when the field is part of the schema, ie. when the
+   * plugin-level `enableNewTab` isn't `false`.
+   */
+  enableNewTab?: boolean
 }
 
 export type LinkSchemaType = Omit<ObjectSchemaType, 'options'> & {
@@ -308,4 +341,9 @@ export type LinkInputProps = ObjectInputProps<LinkValue, LinkSchemaType> & {
   linkableSchemaTypes: string[]
   weakReferences: boolean
   referenceFilterOptions?: ReferenceFilterOptions
+  /** Resolved plugin-level defaults that field-level options can override. */
+  pluginOptions?: Pick<
+    LinkFieldPluginOptions,
+    'enableAnchorLinks' | 'enableLinkParameters' | 'enableNewTab'
+  >
 }

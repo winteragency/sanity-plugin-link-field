@@ -9,6 +9,10 @@ import {
 
 import {getAvailableLinkTypeValues} from '../helpers/availableLinkTypes'
 import {resolveLinkInputMembers} from '../helpers/linkInputMembers'
+import {
+  filterOptionalLinkFieldMembers,
+  resolveOptionalLinkFieldVisibility,
+} from '../helpers/optionalLinkFields'
 import {createLinkTypeChangePatches} from '../helpers/typeChangePatches'
 import {isCustomLink} from '../helpers/typeGuards'
 import type {LinkInputProps} from '../types'
@@ -34,8 +38,19 @@ const validationBoxStyle = {
  */
 export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
   const {onChange} = props
+  const {options} = props.schemaType
+
+  const members = useMemo(
+    () =>
+      filterOptionalLinkFieldMembers(
+        props.members ?? [],
+        resolveOptionalLinkFieldVisibility(props.pluginOptions, options),
+      ),
+    [options, props.members, props.pluginOptions],
+  )
+
   const {textField, typeField, linkField, otherFields} = resolveLinkInputMembers(
-    props.members,
+    members,
     props.value,
   )
 
@@ -46,7 +61,6 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
     [onChange],
   )
 
-  const {options} = props.schemaType
   const currentType = props.value?.type
   const enabledBuiltInLinkTypes = options?.enabledBuiltInLinkTypes ?? props.enabledBuiltInLinkTypes
   const linkableSchemaTypes = options?.linkableSchemaTypes ?? props.linkableSchemaTypes
@@ -206,7 +220,7 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
 
   // In Sanity Studio v6, `members` can be undefined while form state is resolving.
   if (!typeField || !linkField || !typeFieldSchemaType || !linkFieldSchemaType) {
-    return props.renderDefault(props)
+    return props.renderDefault({...props, members})
   }
 
   return (

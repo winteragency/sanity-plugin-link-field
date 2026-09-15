@@ -42,4 +42,7 @@ The generated `schema.json` and `sanity.types.ts` files are gitignored and recre
 - External, email, and phone link types
 - A custom `archive` link type
 - Required link validation via `requiredLinkField`
+- A second link type registered under the name `cta`
+- Localized links via `sanity-plugin-internationalized-array`, in three variants
+  with different field options (`Localized Demo`)
 - A GROQ query used by Sanity TypeGen
