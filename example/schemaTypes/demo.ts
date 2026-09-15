@@ -21,5 +21,10 @@ export const demo = defineType({
       },
       validation: (rule) => rule.custom(requiredLinkField),
     }),
+    defineField({
+      name: 'cta',
+      title: 'Call to action',
+      type: 'cta',
+    }),
   ],
 })

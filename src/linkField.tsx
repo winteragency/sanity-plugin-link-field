@@ -21,6 +21,8 @@ import type {
   LinkValue,
 } from './types'
 
+const DEFAULT_LINK_TYPE_NAME = 'link'
+
 const PHONE_REGEX = /^\+?[0-9\s-]*$/
 const ANCHOR_REGEX = /^([-?/:@._~!$&'()*+,;=a-zA-Z0-9]|%[0-9a-fA-F]{2})*$/
 
@@ -206,9 +208,23 @@ const buildPreview = (
  *  ]
  *});
  * ```
+ *
+ * @example Registering the type under another name
+ * ```ts
+ * // sanity.config.ts
+ * plugins: [linkField({name: 'cta'})]
+ *
+ * // mySchema.ts
+ * defineField({
+ *  name: 'cta',
+ *  title: 'Call to action',
+ *  type: 'cta'
+ * })
+ * ```
  */
 export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
   const {
+    name = DEFAULT_LINK_TYPE_NAME,
     linkableSchemaTypes = ['page'],
     weakReferences = false,
     referenceFilterOptions,
@@ -300,7 +316,7 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
   }
 
   const linkType = defineType({
-    name: 'link',
+    name,
     title: 'Link',
     type: 'object',
     icon,
@@ -474,7 +490,7 @@ export const linkField = definePlugin<LinkFieldPluginOptions | void>((opts) => {
   })
 
   return {
-    name: 'link-field',
+    name: name === DEFAULT_LINK_TYPE_NAME ? 'link-field' : `link-field-${name}`,
     schema: {
       types: [linkType],
     },

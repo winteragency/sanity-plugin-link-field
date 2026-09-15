@@ -7,7 +7,7 @@ import type {StringInputProps} from 'sanity'
 
 import {DEFAULT_LINK_TYPES, getLinkTypeOptionIcon} from '../helpers/defaultLinkTypes'
 import {applyLinkTypeChange} from '../helpers/typeChangePatches'
-import type {BuiltInLinkType, CustomLinkType, LinkFieldPluginOptions} from '../types'
+import type {BuiltInLinkType, CustomLinkType} from '../types'
 
 import {LinkTypeChangeContext} from './linkTypeChangeContext'
 
@@ -27,7 +27,7 @@ export const LinkTypeInput = memo(function LinkTypeInput({
   enabledBuiltInLinkTypes,
 }: StringInputProps & {
   customLinkTypes?: CustomLinkType[]
-  linkableSchemaTypes: LinkFieldPluginOptions['linkableSchemaTypes']
+  linkableSchemaTypes: string[]
   enabledBuiltInLinkTypes: BuiltInLinkType[]
 }) {
   const changeLinkType = useContext(LinkTypeChangeContext)
@@ -40,7 +40,7 @@ export const LinkTypeInput = memo(function LinkTypeInput({
       ...DEFAULT_LINK_TYPES.filter(
         ({value}) =>
           enabledBuiltInLinkTypeSet.has(value as BuiltInLinkType) &&
-          (value !== 'internal' || linkableSchemaTypes?.length > 0),
+          (value !== 'internal' || linkableSchemaTypes.length > 0),
       ),
       ...customLinkTypes,
     ]
