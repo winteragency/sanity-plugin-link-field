@@ -40,10 +40,13 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
   const {onChange} = props
   const {options} = props.schemaType
 
+  // Stays undefined until the form state resolves, so the default input below
+  // can resolve its own members rather than being handed an empty list.
   const members = useMemo(
     () =>
+      props.members &&
       filterOptionalLinkFieldMembers(
-        props.members ?? [],
+        props.members,
         resolveOptionalLinkFieldVisibility(props.pluginOptions, options),
       ),
     [options, props.members, props.pluginOptions],
@@ -220,7 +223,7 @@ export const LinkInput = memo(function LinkInput(props: LinkInputProps) {
 
   // In Sanity Studio v6, `members` can be undefined while form state is resolving.
   if (!typeField || !linkField || !typeFieldSchemaType || !linkFieldSchemaType) {
-    return props.renderDefault({...props, members})
+    return props.renderDefault(members ? {...props, members} : props)
   }
 
   return (
