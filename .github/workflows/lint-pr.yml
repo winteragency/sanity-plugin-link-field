@@ -5,13 +5,13 @@ on:
     types:
       - opened
       - edited
-      - synchronize
 
 permissions:
   pull-requests: write
 
 jobs:
   main:
+    if: github.event.action != 'edited' || github.event.changes.title
     name: Validate PR title
     runs-on: ubuntu-latest
     steps:
