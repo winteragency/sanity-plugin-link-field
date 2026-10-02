@@ -566,6 +566,13 @@ Additional contributions were made by:
                 </a>
             </td>
             <td align="center">
+                <a href="https://github.com/rlunden">
+                    <img src="https://avatars.githubusercontent.com/u/7823044?v=4" width="70;" alt="rlunden"/>
+                    <br />
+                    <sub><b>Rickard Lundén</b></sub>
+                </a>
+            </td>
+            <td align="center">
                 <a href="https://github.com/largis21">
                     <img src="https://avatars.githubusercontent.com/u/65016384?v=4" width="70;" alt="largis21"/>
                     <br />
