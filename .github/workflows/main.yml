@@ -51,7 +51,7 @@ jobs:
       - uses: actions/setup-node@v6.4.0
         with:
           cache: npm
-          node-version: lts/*
+          node-version-file: .nvmrc
           registry-url: https://registry.npmjs.org
       - run: corepack prepare npm@11.17.0 --activate
       - run: npm clean-install
@@ -123,7 +123,7 @@ jobs:
       - uses: actions/setup-node@v6.4.0
         with:
           cache: npm
-          node-version: lts/*
+          node-version-file: .nvmrc
       - run: corepack prepare npm@11.17.0 --activate
       - run: npm clean-install
       - run: npm audit signatures
