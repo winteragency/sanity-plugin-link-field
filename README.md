@@ -545,6 +545,13 @@ Additional contributions were made by:
 	<tbody>
 		<tr>
             <td align="center">
+                <a href="https://github.com/rlunden">
+                    <img src="https://avatars.githubusercontent.com/u/7823044?v=4" width="70;" alt="rlunden"/>
+                    <br />
+                    <sub><b>Rickard Lundén</b></sub>
+                </a>
+            </td>
+            <td align="center">
                 <a href="https://github.com/RJWadley">
                     <img src="https://avatars.githubusercontent.com/u/25678876?v=4" width="70;" alt="RJWadley"/>
                     <br />
